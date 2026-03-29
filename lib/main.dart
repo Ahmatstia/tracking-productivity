@@ -12,6 +12,7 @@ import 'package:life_os_productivity/features/routines/domain/routine_template_m
 import 'package:life_os_productivity/features/dashboard/presentation/pages/main_navigation_page.dart';
 import 'package:life_os_productivity/core/services/notification_service.dart';
 import 'package:life_os_productivity/features/analytics/domain/daily_review_model.dart';
+import 'package:life_os_productivity/features/profile/domain/user_profile_model.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -24,7 +25,7 @@ void main() async {
   Intl.defaultLocale = 'id_ID';
 
   await Hive.initFlutter();
-  
+
   // Init Notification Service
   await NotificationService().init();
 
@@ -32,13 +33,22 @@ void main() async {
   if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(SubTaskAdapter());
   if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(GoalModelAdapter());
   if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(TaskModelAdapter());
-  if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(TimeBlockModelAdapter());
-  if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(HabitPatternModelAdapter());
-  if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(FocusSessionModelAdapter());
-  if (!Hive.isAdapterRegistered(6)) Hive.registerAdapter(UserStatsModelAdapter());
-  if (!Hive.isAdapterRegistered(7)) Hive.registerAdapter(RoutineTemplateModelAdapter());
-  if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(RoutineBlockModelAdapter());
-  if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(DailyReviewModelAdapter());
+  if (!Hive.isAdapterRegistered(3))
+    Hive.registerAdapter(TimeBlockModelAdapter());
+  if (!Hive.isAdapterRegistered(4))
+    Hive.registerAdapter(HabitPatternModelAdapter());
+  if (!Hive.isAdapterRegistered(5))
+    Hive.registerAdapter(FocusSessionModelAdapter());
+  if (!Hive.isAdapterRegistered(6))
+    Hive.registerAdapter(UserStatsModelAdapter());
+  if (!Hive.isAdapterRegistered(7))
+    Hive.registerAdapter(RoutineTemplateModelAdapter());
+  if (!Hive.isAdapterRegistered(8))
+    Hive.registerAdapter(RoutineBlockModelAdapter());
+  if (!Hive.isAdapterRegistered(9))
+    Hive.registerAdapter(DailyReviewModelAdapter());
+  if (!Hive.isAdapterRegistered(10))
+    Hive.registerAdapter(UserProfileModelAdapter());
 
   // Open all Hive boxes
   await Hive.openBox<GoalModel>('goals_box');
@@ -49,6 +59,7 @@ void main() async {
   await Hive.openBox<UserStatsModel>('user_stats_box');
   await Hive.openBox<RoutineTemplateModel>('routine_templates_box');
   await Hive.openBox<DailyReviewModel>('daily_review_box');
+  await Hive.openBox<UserProfileModel>('user_profile_box');
 
   runApp(
     const ProviderScope(
