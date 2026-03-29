@@ -21,13 +21,23 @@ class FocusPage extends ConsumerWidget {
     final total = pomodoro.totalSeconds;
     final progress = pomodoro.remainingSeconds / total;
 
-    return Center(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 40),
+    return Scaffold(
+      backgroundColor: const Color(0xFF0D0D19), // Deep focus background
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(LucideIcons.arrowLeft, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 20),
             Text(
               pomodoro.isFocusMode ? "Focus Time" : "Break Time",
               style: const TextStyle(
@@ -109,7 +119,7 @@ class FocusPage extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 

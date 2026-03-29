@@ -23,6 +23,7 @@ dependencies:
   # UI & Animation
   percent_indicator: ^4.2.3
   flutter_animate: ^4.5.0
+  curved_navigation_bar: ^1.0.6
   
   # Notifications & Scheduling
   flutter_local_notifications: ^21.0.0

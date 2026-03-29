@@ -76,20 +76,43 @@ class _TodayPageState extends ConsumerState<TodayPage>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          Text(
-                            _greeting(),
-                            style: const TextStyle(color: Colors.white70, fontSize: 14),
+                          Builder(
+                            builder: (context) {
+                              return IconButton(
+                                icon: const Icon(LucideIcons.menu, color: Colors.white, size: 28),
+                                padding: EdgeInsets.zero,
+                                alignment: Alignment.centerLeft,
+                                onPressed: () {
+                                  // Find the root scaffold (MainNavigationPage) to show full-height drawer
+                                  ScaffoldState? outerScaffold = context.findRootAncestorStateOfType<ScaffoldState>();
+                                  if (outerScaffold != null) {
+                                    outerScaffold.openDrawer();
+                                  } else {
+                                    Scaffold.of(context).openDrawer(); // Fallback
+                                  }
+                                },
+                              );
+                            }
                           ),
-                          Text(
-                            _formatDate(_today),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _greeting(),
+                                style: const TextStyle(color: Colors.white70, fontSize: 13),
+                              ),
+                              Text(
+                                _formatDate(_today),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

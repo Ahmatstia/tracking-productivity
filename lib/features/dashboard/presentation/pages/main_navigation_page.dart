@@ -9,11 +9,12 @@ import 'package:life_os_productivity/features/goals/presentation/widgets/add_goa
 import 'package:life_os_productivity/features/goals/presentation/pages/goal_detail_page.dart';
 import 'package:life_os_productivity/features/tasks/presentation/pages/tasks_page.dart';
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
-import 'package:life_os_productivity/features/focus/presentation/pages/focus_page.dart';
 import 'package:life_os_productivity/features/planner/presentation/pages/today_page.dart';
 import 'package:life_os_productivity/features/routines/presentation/pages/routines_page.dart';
 import 'package:life_os_productivity/features/routines/presentation/widgets/add_routine_sheet.dart';
 import 'package:life_os_productivity/features/analytics/presentation/pages/analytics_dashboard_page.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:life_os_productivity/features/dashboard/presentation/widgets/app_drawer.dart';
 
 
 class MainNavigationPage extends ConsumerWidget {
@@ -91,14 +92,12 @@ class MainNavigationPage extends ConsumerWidget {
         ),
       ),
 
-      // ── Tab 4: Focus ──
-      const FocusPage(),
-
-      // ── Tab 5: Analytics ──
+      // ── Tab 4: Analytics ──
       const AnalyticsDashboardPage(),
     ];
 
     return Scaffold(
+      drawer: const AppDrawer(),
       body: pages[currentIndex],
       floatingActionButton: _buildFAB(context, ref, currentIndex, today),
       bottomNavigationBar: _buildNavBar(ref, currentIndex),
@@ -148,36 +147,22 @@ class MainNavigationPage extends ConsumerWidget {
   }
 
   Widget _buildNavBar(WidgetRef ref, int currentIndex) {
-    return NavigationBar(
-      selectedIndex: currentIndex,
-      onDestinationSelected: (index) => ref.read(navIndexProvider.notifier).state = index,
-      backgroundColor: const Color(0xFF161626),
-      indicatorColor: AppColors.primary.withValues(alpha: 0.2),
-      destinations: const [
-        NavigationDestination(
-          icon: Icon(LucideIcons.calendarDays),
-          label: 'Hari Ini',
-        ),
-        NavigationDestination(
-          icon: Icon(LucideIcons.checkSquare),
-          label: 'Tasks',
-        ),
-        NavigationDestination(
-          icon: Icon(LucideIcons.repeat),
-          label: 'Routines',
-        ),
-        NavigationDestination(
-          icon: Icon(LucideIcons.target),
-          label: 'Goals',
-        ),
-        NavigationDestination(
-          icon: Icon(LucideIcons.timer),
-          label: 'Focus',
-        ),
-        NavigationDestination(
-          icon: Icon(LucideIcons.barChart2),
-          label: 'Analytics',
-        ),
+    // If the index is somehow out of bounds due to hot restart/removing a tab, fallback to max index
+    final safeIndex = currentIndex > 4 ? 4 : currentIndex;
+    
+    return CurvedNavigationBar(
+      index: safeIndex,
+      backgroundColor: AppColors.background,
+      color: const Color(0xFF1A1A2E), // A premium dark surface color
+      buttonBackgroundColor: AppColors.primary,
+      animationDuration: const Duration(milliseconds: 300),
+      onTap: (index) => ref.read(navIndexProvider.notifier).state = index,
+      items: const [
+        Icon(LucideIcons.calendarDays, color: Colors.white, size: 26),
+        Icon(LucideIcons.checkSquare, color: Colors.white, size: 26),
+        Icon(LucideIcons.repeat, color: Colors.white, size: 26),
+        Icon(LucideIcons.target, color: Colors.white, size: 26),
+        Icon(LucideIcons.barChart2, color: Colors.white, size: 26),
       ],
     );
   }

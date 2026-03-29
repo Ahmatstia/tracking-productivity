@@ -175,23 +175,29 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      block.title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: block.isCompleted ? Colors.white38 : Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        decoration: block.isCompleted ? TextDecoration.lineThrough : null,
+                    Flexible(
+                      child: Text(
+                        block.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: block.isCompleted ? Colors.white38 : Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          decoration: block.isCompleted ? TextDecoration.lineThrough : null,
+                        ),
                       ),
                     ),
                     if (height > 44)
-                      Text(
-                        '${block.startTime} - ${block.endTime}',
-                        style: TextStyle(
-                          color: block.isCompleted ? Colors.white24 : color.withValues(alpha: 0.8),
-                          fontSize: 11,
+                      Flexible(
+                        child: Text(
+                          '${block.startTime} - ${block.endTime}',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: block.isCompleted ? Colors.white24 : color.withValues(alpha: 0.8),
+                            fontSize: 11,
+                          ),
                         ),
                       ),
                   ],
