@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/analytics/domain/daily_review_model.dart';
 import 'package:life_os_productivity/features/analytics/presentation/providers/analytics_provider.dart';
@@ -96,7 +96,7 @@ class _DailyReviewPageState extends ConsumerState<DailyReviewPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(LucideIcons.arrowLeft, color: AppColors.textPrimary),
+          icon: Icon(PhosphorIcons.arrowLeft(), color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
@@ -180,7 +180,7 @@ class _DailyReviewPageState extends ConsumerState<DailyReviewPage> {
 
             // ── What Went Well ───────────────────────
             _InputSection(
-              icon: LucideIcons.thumbsUp,
+              icon: PhosphorIcons.thumbsUp(),
               title: 'Apa yang berjalan baik?',
               hint: 'Tulis 1-3 hal positif hari ini...',
               controller: _wentWellCtrl,
@@ -190,11 +190,11 @@ class _DailyReviewPageState extends ConsumerState<DailyReviewPage> {
 
             // ── What to Improve ──────────────────────
             _InputSection(
-              icon: LucideIcons.trendingUp,
+              icon: PhosphorIcons.trendUp(),
               title: 'Apa yang bisa lebih baik?',
               hint: 'Refleksi jujur untuk besok...',
               controller: _improveCtrl,
-              color: Colors.orange,
+              color: AppColors.textSecondary,
             ),
             const SizedBox(height: 32),
 
@@ -253,7 +253,7 @@ class _TodayTaskPreview extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(LucideIcons.clipboardCheck, color: AppColors.primary, size: 18),
+              Icon(PhosphorIcons.checks(), color: AppColors.primary, size: 18),
               const SizedBox(width: 8),
               Text('Progress Hari Ini',
                   style: TextStyle(

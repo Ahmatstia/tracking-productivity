@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/tasks/domain/task_model.dart';
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
@@ -11,9 +11,9 @@ class TaskCard extends ConsumerWidget {
 
   const TaskCard({super.key, required this.task});
 
-  static const _priorityColors = [AppColors.textSecondary, Color(0xFFE67E22), Color(0xFFE17055)];
+  static const _priorityColors = [AppColors.textSecondary, AppColors.primary, AppColors.error];
   static const _priorityLabels = ['', 'Penting', 'Urgent'];
-  static const _priorityIcons = [null, LucideIcons.star, LucideIcons.alertCircle];
+  static final _priorityIcons = [null, PhosphorIcons.star(), PhosphorIcons.warningCircle()];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -126,12 +126,12 @@ class TaskCard extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: 4),
                 child: Row(
                   children: [
-                    const Icon(LucideIcons.clock, size: 11, color: Color(0xFF3B82F6)),
+                    Icon(PhosphorIcons.clock(), size: 11, color: AppColors.primary),
                     const SizedBox(width: 4),
                     Text(
                       '${task.startTime} - ${task.endTime}',
                       style: const TextStyle(
-                        color: Color(0xFF3B82F6),
+                        color: AppColors.primary,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -143,12 +143,12 @@ class TaskCard extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Row(
-                  children: const [
-                    Icon(LucideIcons.arrowUpRight, size: 11, color: Colors.orange),
+                  children: [
+                    Icon(PhosphorIcons.arrowUpRight(), size: 11, color: AppColors.textSecondary),
                     SizedBox(width: 4),
                     Text(
                       'Dibawa dari kemarin',
-                      style: TextStyle(color: Colors.orange, fontSize: 11),
+                      style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                     ),
                   ],
                 ),
@@ -156,7 +156,7 @@ class TaskCard extends ConsumerWidget {
           ],
         ),
         trailing: IconButton(
-          icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 18),
+          icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.6), size: 18),
           onPressed: () => ref.read(taskProvider.notifier).deleteTask(task.id),
         ),
       ),

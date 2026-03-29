@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
@@ -183,7 +183,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                 ),
                 if (isEditing)
                   IconButton(
-                    icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 20),
+                    icon: Icon(PhosphorIcons.trash(), color: AppColors.error, size: 20),
                     onPressed: () {
                       ref.read(timeBlockProvider.notifier).deleteBlock(widget.editBlock!.id);
                       Navigator.pop(context);
@@ -204,7 +204,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
               decoration: InputDecoration(
                 hintText: 'Nama aktivitas...',
                 hintStyle: const TextStyle(color: AppColors.textSecondary),
-                prefixIcon: Icon(LucideIcons.pencil, color: catColor, size: 18),
+                prefixIcon: Icon(PhosphorIcons.pencil(), color: catColor, size: 18),
                 filled: true,
                 fillColor: AppColors.inputFill,
                 border: OutlineInputBorder(
@@ -224,7 +224,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
               children: [
                 Expanded(child: _TimePicker(label: 'Mulai', time: _startTime, onTap: () => _pickTime(true))),
                 const SizedBox(width: 12),
-                const Icon(LucideIcons.arrowRight, color: AppColors.textSecondary, size: 18),
+                Icon(PhosphorIcons.arrowRight(), color: AppColors.textSecondary, size: 18),
                 const SizedBox(width: 12),
                 Expanded(child: _TimePicker(label: 'Selesai', time: _endTime, onTap: () => _pickTime(false))),
               ],
@@ -275,7 +275,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                   child: Row(
                     children: [
                       Icon(
-                        _saveAsHabit ? LucideIcons.repeat2 : LucideIcons.repeat,
+                        _saveAsHabit ? PhosphorIcons.arrowsClockwise() : PhosphorIcons.arrowsClockwise(),
                         color: _saveAsHabit ? AppColors.secondary : AppColors.textSecondary,
                         size: 18,
                       ),
@@ -375,7 +375,7 @@ class _TimePicker extends StatelessWidget {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(LucideIcons.clock, size: 14, color: AppColors.textSecondary),
+                Icon(PhosphorIcons.clock(), size: 14, color: AppColors.textSecondary),
                 const SizedBox(width: 6),
                 Text(
                   time,

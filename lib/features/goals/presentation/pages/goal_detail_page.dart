@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/goals/presentation/providers/goal_provider.dart';
@@ -127,7 +127,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
         actions: [
           IconButton(
-            icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.7)),
+            icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.7)),
             onPressed: _confirmDeleteGoal,
           ),
         ],
@@ -175,7 +175,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                     style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                 IconButton(
                   onPressed: _showAddSubTaskDialog,
-                  icon: const Icon(LucideIcons.plusCircle, color: AppColors.secondary),
+                  icon: Icon(PhosphorIcons.plusCircle(), color: AppColors.secondary),
                 )
               ],
             ),
@@ -223,7 +223,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                               ),
                             ),
                             trailing: IconButton(
-                              icon: Icon(LucideIcons.x, color: AppColors.textSecondary.withValues(alpha: 0.4), size: 20),
+                              icon: Icon(PhosphorIcons.x(), color: AppColors.textSecondary.withValues(alpha: 0.4), size: 20),
                               onPressed: () {
                                 ref.read(goalProvider.notifier).deleteSubTask(widget.goalIndex, index);
                               },

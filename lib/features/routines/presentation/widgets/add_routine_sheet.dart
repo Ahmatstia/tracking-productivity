@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/routines/presentation/providers/routine_provider.dart';
 import 'package:life_os_productivity/features/routines/domain/routine_template_model.dart';
@@ -114,7 +114,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                             decoration: BoxDecoration(color: AppColors.inputFill, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                             child: Row(
                               children: [
-                                const Icon(LucideIcons.clock, color: AppColors.textSecondary, size: 18),
+                                Icon(PhosphorIcons.clock(), color: AppColors.textSecondary, size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   startT != null ? '${startT!.hour.toString().padLeft(2, '0')}:${startT!.minute.toString().padLeft(2, '0')}' : 'Jam Mulai',
@@ -134,7 +134,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                             decoration: BoxDecoration(color: AppColors.inputFill, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                             child: Row(
                               children: [
-                                const Icon(LucideIcons.clock, color: AppColors.textSecondary, size: 18),
+                                Icon(PhosphorIcons.clock(), color: AppColors.textSecondary, size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   endT != null ? '${endT!.hour.toString().padLeft(2, '0')}:${endT!.minute.toString().padLeft(2, '0')}' : 'Jam Selesai',
@@ -292,7 +292,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
               const Text('Daftar Aktivitas:', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
               TextButton.icon(
                 onPressed: () => _showAddBlockDialog(),
-                icon: const Icon(LucideIcons.plus, size: 16),
+                icon: Icon(PhosphorIcons.plus(), size: 16),
                 label: const Text('Tambah'),
               )
             ],
@@ -304,18 +304,18 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                 final b = _blocks[index];
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(LucideIcons.clock, color: AppColors.textSecondary),
+                  leading: Icon(PhosphorIcons.clock(), color: AppColors.textSecondary),
                   title: Text(b.title, style: const TextStyle(color: AppColors.textPrimary)),
                   subtitle: Text('${b.startTime} - ${b.endTime}', style: const TextStyle(color: AppColors.textSecondary)),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: Icon(LucideIcons.edit2, color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
+                        icon: Icon(PhosphorIcons.pencilSimple(), color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
                         onPressed: () => _showAddBlockDialog(index),
                       ),
                       IconButton(
-                        icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 16),
+                        icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.6), size: 16),
                         onPressed: () => setState(() => _blocks.removeAt(index)),
                       ),
                     ],

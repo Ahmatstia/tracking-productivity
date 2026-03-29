@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/dashboard/presentation/providers/nav_provider.dart';
 import 'package:life_os_productivity/features/goals/presentation/providers/goal_provider.dart';
@@ -59,7 +59,7 @@ class MainNavigationPage extends ConsumerWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(LucideIcons.target, size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                            Icon(PhosphorIcons.target(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
                             const SizedBox(height: 16),
                             const Text("Belum ada mimpi.", style: TextStyle(color: AppColors.textSecondary)),
                             const Text("Klik + untuk menambah!", style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
@@ -116,7 +116,7 @@ class MainNavigationPage extends ConsumerWidget {
           builder: (_) => _TaskAddSheet(date: today),
         ),
         backgroundColor: AppColors.secondary,
-        child: const Icon(LucideIcons.plus, color: Colors.white),
+        child: Icon(PhosphorIcons.plus(), color: Colors.white),
       );
     }
     if (index == 2) {
@@ -126,7 +126,7 @@ class MainNavigationPage extends ConsumerWidget {
           MaterialPageRoute(builder: (_) => const EditRoutinePage()),
         ),
         backgroundColor: AppColors.secondary,
-        child: const Icon(LucideIcons.plus, color: Colors.white),
+        child: Icon(PhosphorIcons.plus(), color: Colors.white),
       );
     }
     if (index == 3) {
@@ -138,7 +138,7 @@ class MainNavigationPage extends ConsumerWidget {
           builder: (_) => const AddGoalSheet(),
         ),
         backgroundColor: AppColors.secondary,
-        child: const Icon(LucideIcons.plus, color: Colors.white),
+        child: Icon(PhosphorIcons.plus(), color: Colors.white),
       );
     }
     return null;
@@ -155,11 +155,11 @@ class MainNavigationPage extends ConsumerWidget {
       animationDuration: const Duration(milliseconds: 300),
       onTap: (index) => ref.read(navIndexProvider.notifier).state = index,
       items: [
-        Icon(LucideIcons.calendarDays, color: safeIndex == 0 ? Colors.white : AppColors.textSecondary, size: 26),
-        Icon(LucideIcons.checkSquare, color: safeIndex == 1 ? Colors.white : AppColors.textSecondary, size: 26),
-        Icon(LucideIcons.repeat, color: safeIndex == 2 ? Colors.white : AppColors.textSecondary, size: 26),
-        Icon(LucideIcons.target, color: safeIndex == 3 ? Colors.white : AppColors.textSecondary, size: 26),
-        Icon(LucideIcons.barChart2, color: safeIndex == 4 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(PhosphorIcons.calendarBlank(), color: safeIndex == 0 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(PhosphorIcons.checkSquare(), color: safeIndex == 1 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(PhosphorIcons.arrowsClockwise(), color: safeIndex == 2 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(PhosphorIcons.target(), color: safeIndex == 3 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(PhosphorIcons.chartBar(), color: safeIndex == 4 ? Colors.white : AppColors.textSecondary, size: 26),
       ],
     );
   }
@@ -243,7 +243,7 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
           Row(
             children: [0, 1, 2].map((p) {
               final labels = ['Normal', '⭐ Penting', '🔴 Urgent'];
-              final colors = [AppColors.textSecondary, const Color(0xFFE67E22), const Color(0xFFE17055)];
+              final colors = [AppColors.textSecondary, AppColors.primary, AppColors.error];
               final isSelected = _priority == p;
               return Padding(
                 padding: const EdgeInsets.only(right: 8),

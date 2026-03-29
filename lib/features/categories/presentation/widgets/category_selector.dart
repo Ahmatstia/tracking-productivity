@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/categories/presentation/providers/category_provider.dart';
 import 'package:life_os_productivity/features/categories/presentation/widgets/add_category_sheet.dart';
@@ -93,7 +93,7 @@ class CategorySelector extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(LucideIcons.plus, size: 14, color: AppColors.textSecondary.withValues(alpha: 0.7)),
+                    Icon(PhosphorIcons.plus(), size: 14, color: AppColors.textSecondary.withValues(alpha: 0.7)),
                     const SizedBox(width: 6),
                     Text(
                       'Kategori',

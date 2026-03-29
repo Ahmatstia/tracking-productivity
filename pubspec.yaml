@@ -10,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
-  lucide_icons: ^0.257.0 
+  phosphor_flutter: ^2.0.0
   google_fonts: ^6.1.0
   flutter_riverpod: ^2.4.9
   uuid: ^3.0.7

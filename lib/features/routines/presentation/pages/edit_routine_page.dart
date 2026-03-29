@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/routines/presentation/providers/routine_provider.dart';
 import 'package:life_os_productivity/features/routines/domain/routine_template_model.dart';
@@ -121,7 +121,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                           Text(editIndex == null ? 'Tambah Aktivitas' : 'Edit Aktivitas',
                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                           IconButton(
-                            icon: Icon(LucideIcons.x, color: AppColors.textSecondary, size: 20),
+                            icon: Icon(PhosphorIcons.x(), color: AppColors.textSecondary, size: 20),
                             onPressed: () => Navigator.pop(ctx),
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
@@ -368,7 +368,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         const Text('Daftar Aktivitas:', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 18)),
                         TextButton.icon(
                           onPressed: () => _showAddBlockDialog(),
-                          icon: const Icon(LucideIcons.plus, size: 16),
+                          icon: Icon(PhosphorIcons.plus(), size: 16),
                           label: const Text('Tambah'),
                         )
                       ],
@@ -386,7 +386,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         ),
                         child: Column(
                           children: [
-                            Icon(LucideIcons.listPlus, size: 40, color: AppColors.textSecondary.withValues(alpha: 0.3)),
+                            Icon(PhosphorIcons.listPlus(), size: 40, color: AppColors.textSecondary.withValues(alpha: 0.3)),
                             const SizedBox(height: 12),
                             const Text('Belum ada aktivitas.', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 4),
@@ -406,21 +406,21 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         ),
                         child: ListTile(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-                          leading: Icon(LucideIcons.clock, color: Color(_selectedColor).withValues(alpha: 0.8), size: 16),
+                          leading: Icon(PhosphorIcons.clock(), color: Color(_selectedColor).withValues(alpha: 0.8), size: 16),
                           title: Text(b.title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
                           subtitle: Text('${b.startTime} - ${b.endTime}', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(LucideIcons.edit2, color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
+                                icon: Icon(PhosphorIcons.pencilSimple(), color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
                                 onPressed: () => _showAddBlockDialog(index),
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
                               ),
                               const SizedBox(width: 12),
                               IconButton(
-                                icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 16),
+                                icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.6), size: 16),
                                 onPressed: () => setState(() => _blocks.removeAt(index)),
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
@@ -453,7 +453,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                 height: 56,
                 child: ElevatedButton.icon(
                   onPressed: _save,
-                  icon: const Icon(LucideIcons.save, color: Colors.white, size: 20),
+                  icon: Icon(PhosphorIcons.floppyDisk(), color: Colors.white, size: 20),
                   label: Text(widget.existingRoutine == null ? 'Simpan Rutinitas Baru' : 'Simpan Perubahan', 
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                   style: ElevatedButton.styleFrom(
@@ -495,7 +495,7 @@ class _TimePickerButton extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(LucideIcons.clock, color: AppColors.textSecondary, size: 14),
+                Icon(PhosphorIcons.clock(), color: AppColors.textSecondary, size: 14),
                 const SizedBox(width: 8),
                 Text(
                   time != null ? '${time!.hour.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}' : '--:--',

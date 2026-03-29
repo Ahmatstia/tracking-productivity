@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
 import 'package:hive/hive.dart';
@@ -21,7 +21,7 @@ class SettingsPage extends ConsumerWidget {
           style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 18)
         ),
         leading: IconButton(
-          icon: const Icon(LucideIcons.chevronLeft, color: AppColors.textPrimary),
+          icon: Icon(PhosphorIcons.caretLeft(), color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -30,7 +30,7 @@ class SettingsPage extends ConsumerWidget {
         children: [
           _buildSectionHeader('Preferensi & Notifikasi'),
           _buildSettingsTile(
-            icon: LucideIcons.bell,
+            icon: PhosphorIcons.bell(),
             title: 'Notifikasi Harian',
             subtitle: 'Ingatkan saya untuk aktivitas planner',
             trailing: Switch.adaptive(
@@ -42,7 +42,7 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
           _buildSettingsTile(
-            icon: LucideIcons.clock,
+            icon: PhosphorIcons.clock(),
             title: 'Format Waktu',
             subtitle: 'Format 24 Jam (Standar Indonesia)',
             trailing: Container(
@@ -58,7 +58,7 @@ class SettingsPage extends ConsumerWidget {
           const SizedBox(height: 24),
           _buildSectionHeader('Data & Keamanan'),
           _buildSettingsTile(
-            icon: LucideIcons.shieldCheck,
+            icon: PhosphorIcons.shieldCheck(),
             title: 'Cadangkan Data',
             subtitle: 'Simpan data ke penyimpanan lokal',
             onTap: () {
@@ -68,7 +68,7 @@ class SettingsPage extends ConsumerWidget {
             },
           ),
           _buildSettingsTile(
-            icon: LucideIcons.trash2,
+            icon: PhosphorIcons.trash(),
             title: 'Hapus Seluruh Data',
             subtitle: 'Reset aplikasi ke kondisi awal',
             color: AppColors.error,
@@ -78,12 +78,12 @@ class SettingsPage extends ConsumerWidget {
           const SizedBox(height: 24),
           _buildSectionHeader('Info Aplikasi'),
           _buildSettingsTile(
-            icon: LucideIcons.info,
+            icon: PhosphorIcons.info(),
             title: 'Versi Aplikasi',
             subtitle: '1.0.0 (Beta Maksimal)',
           ),
           _buildSettingsTile(
-            icon: LucideIcons.star,
+            icon: PhosphorIcons.star(),
             title: 'Nilai MyLife OS',
             subtitle: 'Dukung kami berkembang lebih jauh',
             onTap: () {},
@@ -139,7 +139,7 @@ class SettingsPage extends ConsumerWidget {
         ),
         title: Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
         subtitle: Text(subtitle, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
-        trailing: trailing ?? (onTap != null ? Icon(LucideIcons.chevronRight, color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16) : null),
+        trailing: trailing ?? (onTap != null ? Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16) : null),
       ),
     );
   }

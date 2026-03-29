@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
@@ -20,8 +20,8 @@ class _TasksPageState extends ConsumerState<TasksPage> {
 
   static const _priorityFilters = [
     {'label': 'Semua', 'value': -1, 'color': AppColors.textSecondary},
-    {'label': '🔴 Urgent', 'value': 2, 'color': Color(0xFFE17055)},
-    {'label': '⭐ Penting', 'value': 1, 'color': Color(0xFFE67E22)},
+    {'label': '🔴 Urgent', 'value': 2, 'color': AppColors.error},
+    {'label': '⭐ Penting', 'value': 1, 'color': AppColors.primary},
     {'label': 'Normal', 'value': 0, 'color': AppColors.textSecondary},
   ];
 
@@ -120,11 +120,11 @@ class _TasksPageState extends ConsumerState<TasksPage> {
                         if (urgentCount > 0)
                           Row(
                             children: [
-                              const Icon(LucideIcons.alertCircle, size: 12, color: Color(0xFFE17055)),
+                              Icon(PhosphorIcons.warningCircle(), size: 12, color: AppColors.error),
                               const SizedBox(width: 4),
                               Text(
                                 '$urgentCount tugas urgent belum selesai',
-                                style: const TextStyle(color: Color(0xFFE17055), fontSize: 11),
+                                style: const TextStyle(color: AppColors.error, fontSize: 11),
                               ),
                             ],
                           ),
@@ -190,7 +190,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  _showCompleted ? LucideIcons.eye : LucideIcons.eyeOff,
+                                  _showCompleted ? PhosphorIcons.eye() : PhosphorIcons.eyeClosed(),
                                   size: 12,
                                   color: _showCompleted ? AppColors.textSecondary : AppColors.secondary,
                                 ),
@@ -240,7 +240,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (_filterPriority != -1 || !_showCompleted) ...[
-            Icon(LucideIcons.filterX, size: 56, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+            Icon(PhosphorIcons.funnelX(), size: 56, color: AppColors.textSecondary.withValues(alpha: 0.2)),
             const SizedBox(height: 16),
             const Text(
               'Tidak ada tugas yang cocok',
@@ -255,7 +255,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
               child: const Text('Reset Filter', style: TextStyle(color: AppColors.primary)),
             ),
           ] else ...[
-            Icon(LucideIcons.checkCircle2, size: 64, color: AppColors.textSecondary.withValues(alpha: 0.15)),
+            Icon(PhosphorIcons.checkCircle(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.15)),
             const SizedBox(height: 16),
             const Text(
               'Belum ada tugas hari ini',

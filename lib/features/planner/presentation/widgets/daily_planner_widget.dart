@@ -249,15 +249,15 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(
-              color: Color(0xFFEF4444),
+            decoration: BoxDecoration(
+              color: AppColors.error,
               shape: BoxShape.circle,
             ),
           ),
           Expanded(
             child: Container(
               height: 1.5,
-              color: const Color(0xFFEF4444).withValues(alpha: 0.5),
+              color: AppColors.error.withValues(alpha: 0.5),
             ),
           ),
         ],

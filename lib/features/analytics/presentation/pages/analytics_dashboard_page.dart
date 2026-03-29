@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/analytics/presentation/providers/analytics_provider.dart';
 import 'package:life_os_productivity/features/analytics/presentation/pages/daily_review_page.dart';
@@ -65,8 +65,8 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                       ],
                     ),
                     child: Row(
-                      children: const [
-                        Icon(LucideIcons.clipboardList, color: Colors.white, size: 16),
+                      children: [
+                        Icon(PhosphorIcons.clipboardText(), color: Colors.white, size: 16),
                         SizedBox(width: 6),
                         Text('Review Hari Ini',
                             style: TextStyle(
@@ -87,16 +87,16 @@ class AnalyticsDashboardPage extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _StatCard(
-                    icon: LucideIcons.flame,
+                    icon: PhosphorIcons.flame(),
                     value: '${userStats?.currentStreak ?? 0}',
                     label: 'Streak Hari',
-                    color: Colors.orange,
+                    color: AppColors.textSecondary,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
-                    icon: LucideIcons.timer,
+                    icon: PhosphorIcons.timer(),
                     value: '${analytics.totalFocusMinutes}m',
                     label: 'Fokus Minggu',
                     color: AppColors.primary,
@@ -105,7 +105,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
-                    icon: LucideIcons.checkCircle,
+                    icon: PhosphorIcons.checkCircle(),
                     value: '${analytics.tasksCompletedWeek}',
                     label: 'Task Selesai',
                     color: AppColors.secondary,
@@ -237,7 +237,7 @@ class _WeeklyBarChart extends StatelessWidget {
           final color = d.score >= 70
               ? AppColors.primary
               : d.score >= 40
-                  ? Colors.orange
+                  ? AppColors.textSecondary
                   : AppColors.error;
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,

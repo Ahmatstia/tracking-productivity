@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/routines/presentation/providers/routine_provider.dart';
 import 'package:life_os_productivity/features/routines/presentation/pages/edit_routine_page.dart';
@@ -43,7 +43,7 @@ class RoutinesPage extends ConsumerWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(LucideIcons.repeat, size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                          Icon(PhosphorIcons.arrowsClockwise(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
                           const SizedBox(height: 16),
                           const Text(
                             'Belum Ada Template Rutinitas',
@@ -115,14 +115,14 @@ class RoutinesPage extends ConsumerWidget {
                                   Row(
                                     children: [
                                       IconButton(
-                                        icon: Icon(LucideIcons.edit2, color: AppColors.textSecondary.withValues(alpha: 0.5), size: 18),
+                                        icon: Icon(PhosphorIcons.pencilSimple(), color: AppColors.textSecondary.withValues(alpha: 0.5), size: 18),
                                         onPressed: () => Navigator.push(
                                           context,
                                           MaterialPageRoute(builder: (_) => EditRoutinePage(existingRoutine: routine)),
                                         ),
                                       ),
                                       IconButton(
-                                        icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 18),
+                                        icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.6), size: 18),
                                         onPressed: () => ref.read(routineProvider.notifier).deleteRoutine(routine.id),
                                       ),
                                     ],
@@ -148,7 +148,7 @@ class RoutinesPage extends ConsumerWidget {
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Icon(LucideIcons.calendarDays, color: AppColors.textSecondary, size: 12),
+                                          Icon(PhosphorIcons.calendarBlank(), color: AppColors.textSecondary, size: 12),
                                           const SizedBox(width: 4),
                                           Text(
                                             _formatDays(routine.assignedDays),
@@ -174,12 +174,12 @@ class RoutinesPage extends ConsumerWidget {
                                                 ? '${routine.name} diterapkan! ($replacedCount jadwal lama dibersihkan)'
                                                 : '${routine.name} berhasil diterapkan ke Hari Ini!'
                                           ),
-                                          backgroundColor: replacedCount > 0 ? Colors.orangeAccent.withValues(alpha: 0.8) : null,
+                                          backgroundColor: replacedCount > 0 ? AppColors.textSecondaryAccent.withValues(alpha: 0.8) : null,
                                         ),
                                       );
                                     }
                                   },
-                                  icon: Icon(isAlreadyApplied ? LucideIcons.checkCheck : LucideIcons.checkCircle2, 
+                                  icon: Icon(isAlreadyApplied ? PhosphorIcons.checks() : PhosphorIcons.checkCircle(), 
                                       color: isAlreadyApplied ? AppColors.textSecondary : Colors.white, size: 16),
                                   label: Text(isAlreadyApplied ? 'Sudah Terjadwal' : 'Terapkan ke Hari Ini', 
                                       style: TextStyle(color: isAlreadyApplied ? AppColors.textSecondary : Colors.white)),

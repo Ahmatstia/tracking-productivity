@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/focus/presentation/providers/pomodoro_provider.dart';
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
@@ -26,7 +26,7 @@ class FocusPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: AppColors.textPrimary),
+          icon: Icon(PhosphorIcons.arrowLeft(), color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -91,13 +91,13 @@ class FocusPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _ControlButton(
-                  icon: LucideIcons.refreshCcw,
+                  icon: PhosphorIcons.arrowsClockwise(),
                   onPressed: () => notifier.reset(),
                   color: AppColors.textSecondary,
                 ),
                 const SizedBox(width: 30),
                 _ControlButton(
-                  icon: pomodoro.isRunning ? LucideIcons.pause : LucideIcons.play,
+                  icon: pomodoro.isRunning ? PhosphorIcons.pause() : PhosphorIcons.play(),
                   isLarge: true,
                   onPressed: () => pomodoro.isRunning ? notifier.pause() : notifier.start(),
                   backgroundColor: pomodoro.isFocusMode ? AppColors.primary : AppColors.secondary,
@@ -105,7 +105,7 @@ class FocusPage extends ConsumerWidget {
                 ),
                 const SizedBox(width: 30),
                 _ControlButton(
-                  icon: LucideIcons.skipForward,
+                  icon: PhosphorIcons.skipForward(),
                   onPressed: () => notifier.switchMode(),
                   color: AppColors.textSecondary,
                 ),
@@ -159,7 +159,7 @@ class _TaskSelector extends ConsumerWidget {
                   else
                     ...incompleteTasks.map((t) => ListTile(
                       title: Text(t.title, style: const TextStyle(color: AppColors.textPrimary)),
-                      leading: const Icon(LucideIcons.circle, color: AppColors.textSecondary),
+                      leading: Icon(PhosphorIcons.circle(), color: AppColors.textSecondary),
                       onTap: () {
                         ref.read(pomodoroProvider.notifier).selectTask(t.id);
                         Navigator.pop(context);
@@ -167,7 +167,7 @@ class _TaskSelector extends ConsumerWidget {
                     )),
                   ListTile(
                     title: const Text('Tanpa Task Khusus (Fokus Bebas)', style: TextStyle(color: AppColors.textSecondary)),
-                    leading: const Icon(LucideIcons.xCircle, color: AppColors.textSecondary),
+                    leading: Icon(PhosphorIcons.xCircle(), color: AppColors.textSecondary),
                     onTap: () {
                       ref.read(pomodoroProvider.notifier).selectTask(null);
                       Navigator.pop(context);
@@ -191,7 +191,7 @@ class _TaskSelector extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(LucideIcons.target, size: 16, color: selectedTask != null ? AppColors.primary : AppColors.textSecondary),
+            Icon(PhosphorIcons.target(), size: 16, color: selectedTask != null ? AppColors.primary : AppColors.textSecondary),
             const SizedBox(width: 8),
             Flexible(
               child: Text(
@@ -251,7 +251,7 @@ class _FocusHistory extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 children: [
-                  const Icon(LucideIcons.checkCircle2, size: 14, color: AppColors.secondary),
+                  Icon(PhosphorIcons.checkCircle(), size: 14, color: AppColors.secondary),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(taskTitle, style: const TextStyle(color: AppColors.textPrimary)),

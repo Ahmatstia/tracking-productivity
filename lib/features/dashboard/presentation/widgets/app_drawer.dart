@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/gamification/presentation/providers/stats_provider.dart';
 import 'package:life_os_productivity/features/gamification/domain/user_stats_model.dart';
@@ -35,7 +35,7 @@ class AppDrawer extends ConsumerWidget {
               child: Column(
                 children: [
                   _MenuItem(
-                    icon: LucideIcons.timer,
+                    icon: PhosphorIcons.timer(),
                     title: 'Pomodoro Timer',
                     subtitle: 'Mulai sesi fokus tanpa gangguan',
                     color: AppColors.primary,
@@ -49,7 +49,7 @@ class AppDrawer extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   _MenuItem(
-                    icon: LucideIcons.settings,
+                    icon: PhosphorIcons.gear(),
                     title: 'Pengaturan',
                     subtitle: 'Notifikasi & Preferensi',
                     color: AppColors.textSecondary,
@@ -63,10 +63,10 @@ class AppDrawer extends ConsumerWidget {
                   ),
                   const SizedBox(height: 8),
                   _MenuItem(
-                    icon: LucideIcons.crown,
+                    icon: PhosphorIcons.crown(),
                     title: 'MyLife Premium',
                     subtitle: 'Buka fitur profesional mingguan',
-                    color: const Color(0xFFE67E22),
+                    color: AppColors.primary,
                     onTap: () {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -84,7 +84,7 @@ class AppDrawer extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               child: _MenuItem(
-                icon: LucideIcons.logOut,
+                icon: PhosphorIcons.signOut(),
                 title: 'Keluar',
                 subtitle: '',
                 color: AppColors.error,
@@ -102,9 +102,9 @@ class AppDrawer extends ConsumerWidget {
   Widget _buildDrawerHeader(BuildContext context, WidgetRef ref, UserStatsModel userStats, dynamic profile) {
     final List<Color> avatarColors = [
       AppColors.primary,
-      Colors.orangeAccent,
+      AppColors.textSecondaryAccent,
       Colors.purpleAccent,
-      const Color(0xFF10B981),
+      AppColors.primary,
       AppColors.error,
     ];
     final selectedColor = avatarColors[profile.avatarIndex % avatarColors.length];
@@ -149,7 +149,7 @@ class AppDrawer extends ConsumerWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Icon(LucideIcons.user, size: 30, color: selectedColor),
+                  child: Icon(PhosphorIcons.user(), size: 30, color: selectedColor),
                 ),
               ),
             ),
@@ -177,26 +177,26 @@ class AppDrawer extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Icon(LucideIcons.edit3, color: AppColors.textSecondary.withValues(alpha: 0.3), size: 18),
+                Icon(PhosphorIcons.pencilSimple(), color: AppColors.textSecondary.withValues(alpha: 0.3), size: 18),
               ],
             ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: AppColors.textSecondary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                border: Border.all(color: AppColors.textSecondary.withValues(alpha: 0.3)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(LucideIcons.flame, color: Colors.orange, size: 14),
+                  Icon(PhosphorIcons.flame(), color: AppColors.textSecondary, size: 14),
                   const SizedBox(width: 6),
                   Text(
                     '${userStats.currentStreak} Hari Beruntun',
                     style: const TextStyle(
-                      color: Colors.orange,
+                      color: AppColors.textSecondary,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -215,9 +215,9 @@ class AppDrawer extends ConsumerWidget {
     int selectedAvatar = profile.avatarIndex;
     final List<Color> avatarColors = [
       AppColors.primary,
-      Colors.orangeAccent,
+      AppColors.textSecondaryAccent,
       Colors.purpleAccent,
-      const Color(0xFF10B981),
+      AppColors.primary,
       AppColors.error,
     ];
 
@@ -279,7 +279,7 @@ class AppDrawer extends ConsumerWidget {
                             ),
                           ),
                           child: Center(
-                            child: Icon(LucideIcons.user, color: color, size: 18),
+                            child: Icon(PhosphorIcons.user(), color: color, size: 18),
                           ),
                         ),
                       );
@@ -384,7 +384,7 @@ class _MenuItem extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(LucideIcons.chevronRight, color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16),
+            Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16),
           ],
         ),
       ),

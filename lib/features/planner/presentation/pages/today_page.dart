@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
@@ -77,7 +77,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                           Builder(
                             builder: (context) {
                               return IconButton(
-                                icon: const Icon(LucideIcons.menu, color: AppColors.textPrimary, size: 28),
+                                icon: Icon(PhosphorIcons.list(), color: AppColors.textPrimary, size: 28),
                                 padding: EdgeInsets.zero,
                                 alignment: Alignment.centerLeft,
                                 onPressed: () {
@@ -111,7 +111,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                                   ),
                                   if (todayBlocks.isNotEmpty)
                                     IconButton(
-                                      icon: Icon(LucideIcons.trash2, color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
+                                      icon: Icon(PhosphorIcons.trash(), color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
                                       onPressed: () => _confirmClearToday(),
                                       tooltip: 'Bersihkan Jadwal',
                                       padding: const EdgeInsets.only(left: 8),
@@ -175,7 +175,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(LucideIcons.calendarDays, size: 14),
+                              Icon(PhosphorIcons.calendarBlank(), size: 14),
                               const SizedBox(width: 6),
                               Text('Planner (${todayBlocks.length})'),
                             ],
@@ -185,7 +185,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(LucideIcons.checkSquare, size: 14),
+                              Icon(PhosphorIcons.checkSquare(), size: 14),
                               const SizedBox(width: 6),
                               Text('Tugas (${todayTasks.length})'),
                             ],
@@ -230,7 +230,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
           backgroundColor: _tabController.index == 0
               ? AppColors.primary
               : AppColors.secondary,
-          icon: const Icon(LucideIcons.plus, color: Colors.white),
+          icon: Icon(PhosphorIcons.plus(), color: Colors.white),
           label: Text(
             _tabController.index == 0 ? 'Tambah Block' : 'Tambah Tugas',
             style: const TextStyle(
@@ -276,12 +276,12 @@ class _TodayPageState extends ConsumerState<TodayPage>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (carriedOver.isNotEmpty) ...[
-            Row(children: const [
-              Icon(LucideIcons.arrowUpRight, size: 14, color: Colors.orange),
+            Row(children: [
+              Icon(PhosphorIcons.arrowUpRight(), size: 14, color: AppColors.textSecondary),
               SizedBox(width: 6),
               Text(
                 'Dari kemarin',
-                style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w600),
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ]),
             const SizedBox(height: 8),
@@ -356,16 +356,16 @@ class _ScoreRing extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             margin: const EdgeInsets.only(bottom: 6),
             decoration: BoxDecoration(
-              color: Colors.orange.withValues(alpha: 0.12),
+              color: AppColors.textSecondary.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+              border: Border.all(color: AppColors.textSecondary.withValues(alpha: 0.3)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text('🔥', style: TextStyle(fontSize: 12)),
                 const SizedBox(width: 4),
-                Text('$streak', style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
+                Text('$streak', style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 12)),
               ],
             ),
           ),
@@ -428,7 +428,7 @@ class _HabitSuggestionBanner extends StatelessWidget {
               color: AppColors.secondary.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
-            child: const Icon(LucideIcons.repeat2, color: AppColors.secondary, size: 16),
+            child: Icon(PhosphorIcons.arrowsClockwise(), color: AppColors.secondary, size: 16),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -476,7 +476,7 @@ class _EmptyPlannerState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(LucideIcons.calendarDays, size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+          Icon(PhosphorIcons.calendarBlank(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           const Text(
             'Jadwal Hari Ini Kosong',
@@ -506,7 +506,7 @@ class _EmptyTasksState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(LucideIcons.checkCircle2, size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+          Icon(PhosphorIcons.checkCircle(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           const Text(
             'Belum ada tugas hari ini',
@@ -642,7 +642,7 @@ class _QuickAddTaskSheetState extends ConsumerState<_QuickAddTaskSheet> {
           Row(
             children: [0, 1, 2].map((p) {
               final labels = ['Normal', '⭐ Penting', '🔴 Urgent'];
-              final colors = [AppColors.textSecondary, const Color(0xFFE67E22), const Color(0xFFE17055)];
+              final colors = [AppColors.textSecondary, AppColors.primary, AppColors.error];
               final isSelected = _priority == p;
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
@@ -682,7 +682,7 @@ class _QuickAddTaskSheetState extends ConsumerState<_QuickAddTaskSheet> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(LucideIcons.clock, size: 14, color: AppColors.textSecondary),
+                        Icon(PhosphorIcons.clock(), size: 14, color: AppColors.textSecondary),
                         const SizedBox(width: 6),
                         Text(_startTime ?? 'Mulai', style: TextStyle(color: _startTime != null ? AppColors.textPrimary : AppColors.textSecondary, fontSize: 13)),
                       ],
@@ -703,7 +703,7 @@ class _QuickAddTaskSheetState extends ConsumerState<_QuickAddTaskSheet> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(LucideIcons.clock, size: 14, color: AppColors.textSecondary),
+                        Icon(PhosphorIcons.clock(), size: 14, color: AppColors.textSecondary),
                         const SizedBox(width: 6),
                         Text(_endTime ?? 'Selesai', style: TextStyle(color: _endTime != null ? AppColors.textPrimary : AppColors.textSecondary, fontSize: 13)),
                       ],

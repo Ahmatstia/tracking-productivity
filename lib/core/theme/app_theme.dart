@@ -17,7 +17,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
 
-      textTheme: GoogleFonts.outfitTextTheme(
+      textTheme: GoogleFonts.plusJakartaSansTextTheme(
         const TextTheme(
           displayLarge: TextStyle(
             fontSize: 32,
