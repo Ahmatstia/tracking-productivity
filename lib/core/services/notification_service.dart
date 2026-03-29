@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
 
 class NotificationService {
@@ -9,64 +9,69 @@ class NotificationService {
   factory NotificationService() => _instance;
   NotificationService._internal();
 
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
-    // Initialise Timezone
+    // Initialize timezones
     tz.initializeTimeZones();
-    final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
+
+    // flutter_timezone v5 returns TimezoneInfo; .identifier is the IANA TZ string
+    final tzInfo = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(tzInfo.identifier));
 
     _requestPermissions();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
 
+    // v21: initialize() uses named parameter 'settings:'
     await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
+      settings: initializationSettings,
       onDidReceiveNotificationResponse: (NotificationResponse response) {
-        // Handle when notification is tapped
+        // Handle notification tap
       },
     );
   }
 
   void _requestPermissions() {
     flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
   }
 
-  /// Menjadwalkan notifikasi untuk TimeBlock
   Future<void> scheduleTimeBlockNotification(TimeBlockModel block) async {
-    // Parser jam:menit
     final parts = block.startTime.split(':');
     if (parts.length != 2) return;
 
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
 
-    // Waktu hari ini sesuai jam mulai
     final now = DateTime.now();
-    var scheduledDate = DateTime(block.date.year, block.date.month, block.date.day, hour, minute);
-
-    // Pengingat 5 menit sebelum
+    var scheduledDate = DateTime(
+      block.date.year,
+      block.date.month,
+      block.date.day,
+      hour,
+      minute,
+    );
     scheduledDate = scheduledDate.subtract(const Duration(minutes: 5));
 
-    // Jika waktu sudah lewat, jangan dijadwalkan
     if (scheduledDate.isBefore(now)) return;
 
     final tzScheduledDate = tz.TZDateTime.from(scheduledDate, tz.local);
 
+    // v21: zonedSchedule() — NO uiLocalNotificationDateInterpretation param
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      block.id.hashCode, // Unique ID dari string hash
-      '🔔 Persiapan: ${block.title}',
-      'Aktivitasmu akan dimulai dalam 5 menit.',
-      tzScheduledDate,
-      const NotificationDetails(
+      id: block.id.hashCode,
+      title: '🔔 Persiapan: ${block.title}',
+      body: 'Aktivitasmu akan dimulai dalam 5 menit.',
+      scheduledDate: tzScheduledDate,
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'life_os_planner_channel',
           'Planner Reminders',
@@ -76,22 +81,25 @@ class NotificationService {
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time, // Bisa diulang tiap hari jika perlu, tapi kita buat per instance
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 
   Future<void> cancelNotification(String blockId) async {
-    await flutterLocalNotificationsPlugin.cancel(blockId.hashCode);
+    // v21: cancel() uses named 'id:'
+    await flutterLocalNotificationsPlugin.cancel(id: blockId.hashCode);
   }
 
-  Future<void> rescheduleAllTodayNotifications(List<TimeBlockModel> blocks) async {
+  Future<void> rescheduleAllTodayNotifications(
+      List<TimeBlockModel> blocks) async {
     final today = DateTime.now();
-    final todayBlocks = blocks.where((b) =>
-        b.date.year == today.year &&
-        b.date.month == today.month &&
-        b.date.day == today.day &&
-        !b.isCompleted).toList();
+    final todayBlocks = blocks
+        .where((b) =>
+            b.date.year == today.year &&
+            b.date.month == today.month &&
+            b.date.day == today.day &&
+            !b.isCompleted)
+        .toList();
 
     for (final block in todayBlocks) {
       await scheduleTimeBlockNotification(block);
