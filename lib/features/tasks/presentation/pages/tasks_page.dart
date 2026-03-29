@@ -265,7 +265,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Gunakan tab "Hari Ini" untuk menambah\ntugas dengan jadwal waktu',
+              'Klik tombol di bawah untuk menambah\ntugas dan prioritas pengerjaannya',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white24, fontSize: 13),
             ),

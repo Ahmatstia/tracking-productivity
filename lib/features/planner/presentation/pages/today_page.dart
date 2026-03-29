@@ -206,10 +206,16 @@ class _TodayPageState extends ConsumerState<TodayPage>
           backgroundColor: _tabController.index == 0
               ? AppColors.primary
               : AppColors.secondary,
-          icon: const Icon(LucideIcons.plus, color: Colors.white),
+          icon: Icon(
+            LucideIcons.plus,
+            color: _tabController.index == 0 ? Colors.white : Colors.black,
+          ),
           label: Text(
             _tabController.index == 0 ? 'Tambah Block' : 'Tambah Task',
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: _tabController.index == 0 ? Colors.white : Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
@@ -217,13 +223,13 @@ class _TodayPageState extends ConsumerState<TodayPage>
   }
 
   Widget _buildPlannerTab(bool isEmpty) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (isEmpty)
+    if (isEmpty) {
+      return SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             _EmptyPlannerState(onAdd: () {
               showModalBottomSheet(
                 context: context,
@@ -231,12 +237,14 @@ class _TodayPageState extends ConsumerState<TodayPage>
                 backgroundColor: Colors.transparent,
                 builder: (_) => AddTimeBlockSheet(date: _today),
               );
-            })
-          else
-            DailyPlannerWidget(date: _today),
-        ],
-      ),
-    );
+            }),
+          ],
+        ),
+      );
+    }
+    
+    // Return widget directly without nested ScrollView or Column
+    return DailyPlannerWidget(date: _today);
   }
 
   Widget _buildTasksTab(List tasks) {
@@ -246,7 +254,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
       physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (carriedOver.isNotEmpty) ...[
             Row(children: [
@@ -397,6 +405,7 @@ class _EmptyPlannerState extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 320,
+      width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -408,19 +417,9 @@ class _EmptyPlannerState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Tap tombol + untuk mulai\nmenjadwalkan aktivitasmu',
+            'Tap tombol + di bawah untuk mulai\nmenjadwalkan aktivitasmu',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white38, fontSize: 13),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: onAdd,
-            icon: const Icon(LucideIcons.plus, size: 16, color: Colors.white),
-            label: const Text('Buat Jadwal Pertama', style: TextStyle(color: Colors.white)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary.withValues(alpha: 0.8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
           ),
         ],
       ),
@@ -436,6 +435,7 @@ class _EmptyTasksState extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 280,
+      width: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -447,19 +447,9 @@ class _EmptyTasksState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Tambahkan tugas dan atur\nprioritas pengerjaannya',
+            'Klik tombol di bawah untuk menambah\ntugas dan prioritas pengerjaannya',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white38, fontSize: 13),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: onAdd,
-            icon: const Icon(LucideIcons.plus, size: 16, color: Colors.black),
-            label: const Text('Tambah Tugas', style: TextStyle(color: Colors.black)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
           ),
         ],
       ),

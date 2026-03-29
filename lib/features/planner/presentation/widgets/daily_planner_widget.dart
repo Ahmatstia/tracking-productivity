@@ -60,13 +60,13 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
     final totalMinutes = (_endHour - _startHour) * 60;
     final totalHeight = (_endHour - _startHour) * _hourHeight;
 
-    return SizedBox(
-      height: 420,
+    return SizedBox.expand(
       child: SingleChildScrollView(
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
         child: SizedBox(
           height: totalHeight,
+          width: double.infinity,
           child: Stack(
             children: [
               // Hour lines
