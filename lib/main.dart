@@ -10,11 +10,15 @@ import 'package:life_os_productivity/features/focus/domain/focus_session_model.d
 import 'package:life_os_productivity/features/gamification/domain/user_stats_model.dart';
 import 'package:life_os_productivity/features/routines/domain/routine_template_model.dart';
 import 'package:life_os_productivity/features/dashboard/presentation/pages/main_navigation_page.dart';
+import 'package:life_os_productivity/core/services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
+  
+  // Init Notification Service
+  await NotificationService().init();
 
   // Register adapters (ID order matters)
   if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(SubTaskAdapter());

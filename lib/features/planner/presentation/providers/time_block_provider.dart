@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
+import 'package:life_os_productivity/core/services/notification_service.dart';
 
 final timeBlockBoxProvider =
     Provider((ref) => Hive.box<TimeBlockModel>('time_blocks_box'));
@@ -9,7 +10,10 @@ final timeBlockBoxProvider =
 class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
   final Box<TimeBlockModel> _box;
 
-  TimeBlockNotifier(this._box) : super(_box.values.toList());
+  TimeBlockNotifier(this._box) : super(_box.values.toList()) {
+    // Reschedule all today's notification on startup
+    NotificationService().rescheduleAllTodayNotifications(state);
+  }
 
   void _refresh() => state = _box.values.toList();
 
@@ -33,6 +37,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
       note: note,
     );
     _box.put(block.id, block);
+    NotificationService().scheduleTimeBlockNotification(block);
     _refresh();
   }
 
@@ -47,11 +52,13 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
 
   void deleteBlock(String id) {
     _box.delete(id);
+    NotificationService().cancelNotification(id);
     _refresh();
   }
 
   void updateBlock(TimeBlockModel updated) {
     _box.put(updated.id, updated);
+    NotificationService().scheduleTimeBlockNotification(updated);
     _refresh();
   }
 
@@ -59,6 +66,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
   void applyBlocksForDate(List<TimeBlockModel> blocks) {
     for (final block in blocks) {
       _box.put(block.id, block);
+      NotificationService().scheduleTimeBlockNotification(block);
     }
     _refresh();
   }
