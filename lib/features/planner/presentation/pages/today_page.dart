@@ -106,8 +106,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                     _HabitSuggestionBanner(
                       count: unAppliedHabits.length,
                       onApply: () {
-                        final tomorrow = DateTime.now();
-                        final blocks = generateBlocksFromHabits(unAppliedHabits, tomorrow);
+                        final blocks = generateBlocksFromHabits(unAppliedHabits, _today);
                         ref.read(timeBlockProvider.notifier).applyBlocksForDate(blocks);
                         for (final h in unAppliedHabits) {
                           ref.read(habitPatternProvider.notifier).markApplied(h.id);

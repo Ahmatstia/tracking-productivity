@@ -8,7 +8,9 @@ final taskBoxProvider = Provider((ref) => Hive.box<TaskModel>('tasks_box'));
 class TaskNotifier extends StateNotifier<List<TaskModel>> {
   final Box<TaskModel> _box;
 
-  TaskNotifier(this._box) : super(_box.values.toList());
+  TaskNotifier(this._box) : super(_box.values.toList()) {
+    _carryOverPastTasks();
+  }
 
   void _refresh() => state = _box.values.toList();
 
@@ -54,29 +56,28 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     _refresh();
   }
 
-  // Carry over unfinished tasks from yesterday → today
-  void carryOverUnfinishedTasks() {
-    final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    final today = DateTime.now();
-    final unfinished = _box.values.where((t) =>
-        !t.isCompleted &&
-        t.date.year == yesterday.year &&
-        t.date.month == yesterday.month &&
-        t.date.day == yesterday.day);
+  // Automatically carry over all unfinished past tasks to today
+  void _carryOverPastTasks() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    bool changed = false;
 
-    for (final task in unfinished) {
-      final carried = TaskModel(
-        id: const Uuid().v4(),
-        title: task.title,
-        description: task.description,
-        date: today,
-        category: task.category,
-        priority: task.priority,
-        isCarriedOver: true,
-      );
-      _box.put(carried.id, carried);
+    for (final task in _box.values) {
+      if (!task.isCompleted) {
+        final taskDate = DateTime(task.date.year, task.date.month, task.date.day);
+        if (taskDate.isBefore(today)) {
+          task.date = now;
+          task.isCarriedOver = true;
+          task.startTime = null;
+          task.endTime = null;
+          task.save();
+          changed = true;
+        }
+      }
     }
-    _refresh();
+    if (changed) {
+      _refresh();
+    }
   }
 }
 

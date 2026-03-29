@@ -93,6 +93,16 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
       return;
     }
 
+    final startMins = int.parse(_startTime.split(':')[0]) * 60 + int.parse(_startTime.split(':')[1]);
+    final endMins = int.parse(_endTime.split(':')[0]) * 60 + int.parse(_endTime.split(':')[1]);
+    
+    if (endMins <= startMins) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Waktu selesai harus sesudah waktu mulai!')),
+      );
+      return;
+    }
+
     if (widget.editBlock != null) {
       final updated = widget.editBlock!
         ..title = title
@@ -285,24 +295,26 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                         size: 18,
                       ),
                       const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Jadikan Kebiasaan',
-                            style: TextStyle(
-                              color: _saveAsHabit ? AppColors.secondary : Colors.white54,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Jadikan Kebiasaan',
+                              style: TextStyle(
+                                color: _saveAsHabit ? AppColors.secondary : Colors.white54,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Besok akan otomatis ter-generate',
-                            style: TextStyle(color: Colors.white38, fontSize: 11),
-                          ),
-                        ],
+                            const Text(
+                              'Besok akan otomatis ter-generate',
+                              style: TextStyle(color: Colors.white38, fontSize: 11),
+                            ),
+                          ],
+                        ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 8),
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         width: 22,
