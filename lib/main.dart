@@ -12,9 +12,16 @@ import 'package:life_os_productivity/features/routines/domain/routine_template_m
 import 'package:life_os_productivity/features/dashboard/presentation/pages/main_navigation_page.dart';
 import 'package:life_os_productivity/core/services/notification_service.dart';
 import 'package:life_os_productivity/features/analytics/domain/daily_review_model.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Init Indonesian locale
+  await initializeDateFormatting('id_ID', null);
+  Intl.defaultLocale = 'id_ID';
 
   await Hive.initFlutter();
   
@@ -59,6 +66,15 @@ class LifeOSApp extends StatelessWidget {
       title: 'MyLife OS',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
+      locale: const Locale('id', 'ID'),
+      supportedLocales: const [
+        Locale('id', 'ID'),
+      ],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: const MainNavigationPage(),
     );
   }

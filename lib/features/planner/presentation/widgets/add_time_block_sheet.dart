@@ -65,7 +65,16 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
   Future<void> _pickTime(bool isStart) async {
     final parts = (isStart ? _startTime : _endTime).split(':');
     final initial = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-    final picked = await showTimePicker(context: context, initialTime: initial);
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: initial,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
     if (picked != null) {
       final formatted =
           '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
@@ -167,13 +176,29 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
               ),
             ),
 
-            Text(
-              isEditing ? 'Edit Aktivitas' : 'Tambah Aktivitas',
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  isEditing ? 'Edit Aktivitas' : 'Tambah Aktivitas',
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                if (isEditing)
+                  IconButton(
+                    icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 20),
+                    onPressed: () {
+                      ref.read(timeBlockProvider.notifier).deleteBlock(widget.editBlock!.id);
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Jadwal dihapus')),
+                      );
+                    },
+                  ),
+              ],
             ),
             const SizedBox(height: 20),
 

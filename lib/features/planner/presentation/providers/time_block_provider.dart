@@ -70,6 +70,43 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
     }
     _refresh();
   }
+
+  /// Delete existing blocks on a specific date that overlap with the given time range
+  int deleteOverlappingBlocks(DateTime date, int startMin, int endMin) {
+    final overlaps = _box.values.where((b) {
+      final isSameDate = b.date.year == date.year &&
+          b.date.month == date.month &&
+          b.date.day == date.day;
+      if (!isSameDate) return false;
+      
+      // Overlap logic: (start1 < end2 && end1 > start2)
+      return (b.startMinutes < endMin && b.endMinutes > startMin);
+    }).toList();
+
+    for (final block in overlaps) {
+      _box.delete(block.id);
+      NotificationService().cancelNotification(block.id);
+    }
+    
+    if (overlaps.isNotEmpty) _refresh();
+    return overlaps.length;
+  }
+
+  /// Delete all blocks for a specific date
+  void clearBlocksForDate(DateTime date) {
+    final blocks = _box.values.where((b) {
+      return b.date.year == date.year &&
+          b.date.month == date.month &&
+          b.date.day == date.day;
+    }).toList();
+
+    for (final block in blocks) {
+      _box.delete(block.id);
+      NotificationService().cancelNotification(block.id);
+    }
+    
+    if (blocks.isNotEmpty) _refresh();
+  }
 }
 
 final timeBlockProvider =

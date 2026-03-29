@@ -14,6 +14,9 @@ dependencies:
   google_fonts: ^6.1.0
   flutter_riverpod: ^2.4.9
   uuid: ^3.0.7
+  intl: ^0.20.2
+  flutter_localizations:
+    sdk: flutter
   
   # Database Hive (Lebih stabil untuk setup sekarang)
   hive: ^2.2.3

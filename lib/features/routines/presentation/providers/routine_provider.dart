@@ -42,12 +42,25 @@ class RoutineNotifier extends StateNotifier<List<RoutineTemplateModel>> {
   }
 
   /// Applikasikan Routine ini pada hari tertentu (otomatis buat TimeBlock ke planner)
-  void applyRoutineToDate(String routineId, DateTime date) {
+  Future<int> applyRoutineToDate(String routineId, DateTime date) async {
     final routine = _box.get(routineId);
-    if (routine == null) return;
+    if (routine == null) return 0;
+
+    int replacedCount = 0;
+    final notifier = _ref.read(timeBlockProvider.notifier);
 
     for (final block in routine.blocks) {
-      _ref.read(timeBlockProvider.notifier).addBlock(
+      // 1. Calculate the time range in minutes
+      final startParts = block.startTime.split(':');
+      final endParts = block.endTime.split(':');
+      final startMin = int.parse(startParts[0]) * 60 + int.parse(startParts[1]);
+      final endMin = int.parse(endParts[0]) * 60 + int.parse(endParts[1]);
+
+      // 2. Clean up any existing blocks that overlap with this slot
+      replacedCount += notifier.deleteOverlappingBlocks(date, startMin, endMin);
+
+      // 3. Add the new habit block
+      notifier.addBlock(
         title: block.title,
         startTime: block.startTime,
         endTime: block.endTime,
@@ -55,6 +68,7 @@ class RoutineNotifier extends StateNotifier<List<RoutineTemplateModel>> {
         date: date,
       );
     }
+    return replacedCount;
   }
 }
 

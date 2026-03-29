@@ -11,7 +11,7 @@ import 'package:life_os_productivity/features/tasks/presentation/pages/tasks_pag
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/pages/today_page.dart';
 import 'package:life_os_productivity/features/routines/presentation/pages/routines_page.dart';
-import 'package:life_os_productivity/features/routines/presentation/widgets/add_routine_sheet.dart';
+import 'package:life_os_productivity/features/routines/presentation/pages/edit_routine_page.dart';
 import 'package:life_os_productivity/features/analytics/presentation/pages/analytics_dashboard_page.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:life_os_productivity/features/dashboard/presentation/widgets/app_drawer.dart';
@@ -121,11 +121,9 @@ class MainNavigationPage extends ConsumerWidget {
     }
     if (index == 2) {
       return FloatingActionButton(
-        onPressed: () => showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (_) => const AddRoutineSheet(),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const EditRoutinePage()),
         ),
         backgroundColor: AppColors.secondary,
         child: const Icon(LucideIcons.plus, color: Colors.black),

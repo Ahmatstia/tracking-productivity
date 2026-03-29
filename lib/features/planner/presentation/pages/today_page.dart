@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:intl/intl.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/habit_pattern_provider.dart';
@@ -45,12 +46,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
   }
 
   String _formatDate(DateTime date) {
-    const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
-    ];
-    return '${days[date.weekday - 1]}, ${date.day} ${months[date.month - 1]} ${date.year}';
+    return DateFormat.yMMMMEEEEd('id_ID').format(date);
   }
 
   @override
@@ -104,13 +100,25 @@ class _TodayPageState extends ConsumerState<TodayPage>
                                 _greeting(),
                                 style: const TextStyle(color: Colors.white70, fontSize: 13),
                               ),
-                              Text(
-                                _formatDate(_today),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Row(
+                                children: [
+                                  Text(
+                                    _formatDate(_today),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  if (todayBlocks.isNotEmpty)
+                                    IconButton(
+                                      icon: const Icon(LucideIcons.trash2, color: Colors.white24, size: 16),
+                                      onPressed: () => _confirmClearToday(),
+                                      tooltip: 'Bersihkan Jadwal',
+                                      padding: const EdgeInsets.only(left: 8),
+                                      constraints: const BoxConstraints(),
+                                    ),
+                                ],
                               ),
                             ],
                           ),
@@ -278,10 +286,10 @@ class _TodayPageState extends ConsumerState<TodayPage>
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (carriedOver.isNotEmpty) ...[
-            Row(children: [
-              const Icon(LucideIcons.arrowUpRight, size: 14, color: Colors.orange),
-              const SizedBox(width: 6),
-              const Text(
+            const Row(children: [
+              Icon(LucideIcons.arrowUpRight, size: 14, color: Colors.orange),
+              SizedBox(width: 6),
+              Text(
                 'Dari kemarin',
                 style: TextStyle(color: Colors.orange, fontSize: 12, fontWeight: FontWeight.w600),
               ),
@@ -305,6 +313,36 @@ class _TodayPageState extends ConsumerState<TodayPage>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => const _QuickAddTaskSheet(),
+    );
+  }
+
+  void _confirmClearToday() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A2E),
+        title: const Text('Bersihkan Jadwal?', style: TextStyle(color: Colors.white)),
+        content: const Text(
+          'Seluruh isi Planner untuk hari ini akan dihapus. Lanjutkan?',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Batal', style: TextStyle(color: Colors.white38)),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(timeBlockProvider.notifier).clearBlocksForDate(_today);
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Jadwal hari ini dibersihkan')),
+              );
+            },
+            child: const Text('Bersihkan Semua', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -528,13 +566,25 @@ class _QuickAddTaskSheetState extends ConsumerState<_QuickAddTaskSheet> {
 
   Future<void> _pickTime(bool isStart) async {
     final initial = TimeOfDay.now();
-    final picked = await showTimePicker(context: context, initialTime: initial);
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: initial,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
     if (picked != null) {
       final formatted =
           '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
       setState(() {
-        if (isStart) _startTime = formatted;
-        else _endTime = formatted;
+        if (isStart) {
+          _startTime = formatted;
+        } else {
+          _endTime = formatted;
+        }
       });
     }
   }
