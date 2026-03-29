@@ -5,6 +5,8 @@ import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/habit_pattern_provider.dart';
+import 'package:life_os_productivity/features/categories/presentation/providers/category_provider.dart';
+import 'package:life_os_productivity/features/categories/presentation/widgets/category_selector.dart';
 
 class AddTimeBlockSheet extends ConsumerStatefulWidget {
   final DateTime date;
@@ -30,12 +32,6 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
   String _endTime = '09:00';
   bool _saveAsHabit = false;
 
-  static const _categories = [
-    {'key': 'work', 'label': 'Kerja', 'icon': LucideIcons.briefcase, 'color': Color(0xFF3B82F6)},
-    {'key': 'health', 'label': 'Kesehatan', 'icon': LucideIcons.heartPulse, 'color': Color(0xFFEF4444)},
-    {'key': 'learning', 'label': 'Belajar', 'icon': LucideIcons.bookOpen, 'color': Color(0xFFF59E0B)},
-    {'key': 'personal', 'label': 'Personal', 'icon': LucideIcons.smile, 'color': Color(0xFF10B981)},
-  ];
 
   @override
   void initState() {
@@ -88,10 +84,6 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
     }
   }
 
-  Color _categoryColor(String key) {
-    return (_categories.firstWhere((c) => c['key'] == key,
-          orElse: () => _categories.last)['color'] as Color);
-  }
 
   void _save() {
     final title = _titleController.text.trim();
@@ -145,7 +137,8 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.editBlock != null;
-    final catColor = _categoryColor(_selectedCategory);
+    final categories = ref.watch(categoryProvider);
+    final catColor = Color(categories.firstWhere((c) => c.id == _selectedCategory, orElse: () => categories.first).colorCode);
 
     return Container(
       padding: EdgeInsets.only(
@@ -239,44 +232,10 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
             const SizedBox(height: 16),
 
             // Category chips
-            const Text('Kategori', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children: _categories.map((cat) {
-                final isSelected = _selectedCategory == cat['key'];
-                final color = cat['color'] as Color;
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedCategory = cat['key'] as String),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: isSelected ? color.withValues(alpha: 0.12) : AppColors.inputFill,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: isSelected ? color : AppColors.border,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(cat['icon'] as IconData, size: 14, color: isSelected ? color : AppColors.textSecondary),
-                        const SizedBox(width: 6),
-                        Text(
-                          cat['label'] as String,
-                          style: TextStyle(
-                            color: isSelected ? color : AppColors.textSecondary,
-                            fontSize: 13,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+            // Category chips
+            CategorySelector(
+              selectedCategoryId: _selectedCategory,
+              onChanged: (id) => setState(() => _selectedCategory = id),
             ),
             const SizedBox(height: 16),
 

@@ -6,6 +6,8 @@ import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/widgets/add_time_block_sheet.dart';
+import 'package:life_os_productivity/features/categories/presentation/providers/category_provider.dart';
+import 'package:life_os_productivity/features/categories/domain/category_model.dart';
 
 class DailyPlannerWidget extends ConsumerStatefulWidget {
   final DateTime date;
@@ -22,12 +24,6 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
   static const int _endHour = 23;
   static const double _hourHeight = 64.0;
 
-  static const Map<String, Color> _catColors = {
-    'work': Color(0xFF3B82F6),
-    'health': Color(0xFFEF4444),
-    'learning': Color(0xFFF59E0B),
-    'personal': Color(0xFF10B981),
-  };
 
   @override
   void initState() {
@@ -51,6 +47,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
   @override
   Widget build(BuildContext context) {
     final blocks = ref.watch(timeBlocksByDateProvider(widget.date));
+    final categories = ref.watch(categoryProvider);
     final now = DateTime.now();
     final isToday = widget.date.year == now.year &&
         widget.date.month == now.month &&
@@ -133,7 +130,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
               }),
 
               // Time Block cards
-              ...blocks.map((block) => _buildBlockCard(block, totalMinutes)),
+              ...blocks.map((block) => _buildBlockCard(block, totalMinutes, categories)),
 
               // Current time indicator
               if (isToday && now.hour >= _startHour && now.hour < _endHour)
@@ -145,10 +142,11 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
     );
   }
 
-  Widget _buildBlockCard(TimeBlockModel block, int totalMinutes) {
+  Widget _buildBlockCard(TimeBlockModel block, int totalMinutes, List<CategoryModel> categories) {
     final top = (block.startMinutes - _startHour * 60) / 60 * _hourHeight;
     final height = (block.durationMinutes / 60 * _hourHeight).clamp(36.0, double.infinity);
-    final color = _catColors[block.category] ?? const Color(0xFF10B981);
+    final catColorCode = categories.firstWhere((c) => c.id == block.category, orElse: () => categories.first).colorCode;
+    final color = Color(catColorCode);
 
     return Positioned(
       top: top + 2,

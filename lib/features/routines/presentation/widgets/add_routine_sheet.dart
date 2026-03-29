@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/routines/presentation/providers/routine_provider.dart';
 import 'package:life_os_productivity/features/routines/domain/routine_template_model.dart';
+import 'package:life_os_productivity/features/categories/presentation/widgets/category_selector.dart';
 
 class AddRoutineSheet extends ConsumerStatefulWidget {
   const AddRoutineSheet({super.key});
@@ -35,15 +36,18 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
     final titleCtrl = TextEditingController();
     TimeOfDay? startT;
     TimeOfDay? endT;
+    String blockCategory = 'personal';
 
     if (editIndex != null) {
       final b = _blocks[editIndex];
       titleCtrl.text = b.title;
+      blockCategory = b.category;
       final st = b.startTime.split(':');
       final et = b.endTime.split(':');
       startT = TimeOfDay(hour: int.parse(st[0]), minute: int.parse(st[1]));
       endT = TimeOfDay(hour: int.parse(et[0]), minute: int.parse(et[1]));
     }
+
 
     await showModalBottomSheet(
       context: context,
@@ -143,6 +147,13 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 16),
+                  
+                  CategorySelector(
+                    selectedCategoryId: blockCategory,
+                    onChanged: (id) => setState(() => blockCategory = id),
+                  ),
+
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
@@ -171,7 +182,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                             title: titleCtrl.text,
                             startTime: startStr,
                             endTime: endStr,
-                            category: 'personal',
+                            category: blockCategory,
                           );
                           if (editIndex != null) {
                             _blocks[editIndex] = block;

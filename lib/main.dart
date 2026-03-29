@@ -13,6 +13,7 @@ import 'package:life_os_productivity/features/dashboard/presentation/pages/main_
 import 'package:life_os_productivity/core/services/notification_service.dart';
 import 'package:life_os_productivity/features/analytics/domain/daily_review_model.dart';
 import 'package:life_os_productivity/features/profile/domain/user_profile_model.dart';
+import 'package:life_os_productivity/features/categories/domain/category_model.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -49,6 +50,8 @@ void main() async {
     Hive.registerAdapter(DailyReviewModelAdapter());
   if (!Hive.isAdapterRegistered(10))
     Hive.registerAdapter(UserProfileModelAdapter());
+  if (!Hive.isAdapterRegistered(11))
+    Hive.registerAdapter(CategoryModelAdapter());
 
   // Open all Hive boxes
   await Hive.openBox<GoalModel>('goals_box');
@@ -60,6 +63,7 @@ void main() async {
   await Hive.openBox<RoutineTemplateModel>('routine_templates_box');
   await Hive.openBox<DailyReviewModel>('daily_review_box');
   await Hive.openBox<UserProfileModel>('user_profile_box');
+  await Hive.openBox<CategoryModel>('categories_box');
 
   runApp(
     const ProviderScope(
