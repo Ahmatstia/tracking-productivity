@@ -30,16 +30,161 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
     super.dispose();
   }
 
-  void _addBlockDummy() {
-    // Sebagai mock sederhana di bottom sheet
-    setState(() {
-      _blocks.add(RoutineBlockModel(
-        title: 'Aktivitas Baru ${_blocks.length + 1}',
-        startTime: '08:00',
-        endTime: '09:00',
-        category: 'personal',
-      ));
-    });
+  Future<void> _showAddBlockDialog([int? editIndex]) async {
+    final titleCtrl = TextEditingController();
+    TimeOfDay? startT;
+    TimeOfDay? endT;
+
+    if (editIndex != null) {
+      final b = _blocks[editIndex];
+      titleCtrl.text = b.title;
+      final st = b.startTime.split(':');
+      final et = b.endTime.split(':');
+      startT = TimeOfDay(hour: int.parse(st[0]), minute: int.parse(st[1]));
+      endT = TimeOfDay(hour: int.parse(et[0]), minute: int.parse(et[1]));
+    }
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setDialogState) {
+            Future<void> pickTime(bool isStart) async {
+              final picked = await showTimePicker(
+                context: ctx,
+                initialTime: (isStart ? startT : endT) ?? TimeOfDay.now(),
+              );
+              if (picked != null) {
+                setDialogState(() {
+                  if (isStart) startT = picked;
+                  else endT = picked;
+                });
+              }
+            }
+
+            return Container(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+                top: 24, left: 20, right: 20,
+              ),
+              decoration: const BoxDecoration(
+                color: Color(0xFF25254B),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(editIndex == null ? 'Tambah Aktivitas' : 'Edit Aktivitas',
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: titleCtrl,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: 'Nama (mis: Baca Buku, Olahraga)',
+                      hintStyle: const TextStyle(color: Colors.white38),
+                      filled: true,
+                      fillColor: Colors.white.withValues(alpha: 0.1),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => pickTime(true),
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                            child: Row(
+                              children: [
+                                const Icon(LucideIcons.clock, color: Colors.white54, size: 18),
+                                const SizedBox(width: 8),
+                                Text(
+                                  startT != null ? '${startT!.hour.toString().padLeft(2, '0')}:${startT!.minute.toString().padLeft(2, '0')}' : 'Jam Mulai',
+                                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => pickTime(false),
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                            child: Row(
+                              children: [
+                                const Icon(LucideIcons.clock, color: Colors.white54, size: 18),
+                                const SizedBox(width: 8),
+                                Text(
+                                  endT != null ? '${endT!.hour.toString().padLeft(2, '0')}:${endT!.minute.toString().padLeft(2, '0')}' : 'Jam Selesai',
+                                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF00D084),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      onPressed: () {
+                        if (titleCtrl.text.isEmpty || startT == null || endT == null) {
+                          ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Nama dan jam harus diisi lengkap!')));
+                          return;
+                        }
+                        final startStr = '${startT!.hour.toString().padLeft(2, '0')}:${startT!.minute.toString().padLeft(2, '0')}';
+                        final endStr = '${endT!.hour.toString().padLeft(2, '0')}:${endT!.minute.toString().padLeft(2, '0')}';
+                        
+                        // Validasi waktu terbalik
+                        if ((startT!.hour * 60 + startT!.minute) >= (endT!.hour * 60 + endT!.minute)) {
+                           ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Jam selesai harus lebih besar dari jam mulai!')));
+                           return;
+                        }
+
+                        setState(() {
+                          final block = RoutineBlockModel(
+                            title: titleCtrl.text,
+                            startTime: startStr,
+                            endTime: endStr,
+                            category: 'personal',
+                          );
+                          if (editIndex != null) {
+                            _blocks[editIndex] = block;
+                          } else {
+                            _blocks.add(block);
+                          }
+                          // Sort the blocks by start time automatically
+                          _blocks.sort((a, b) => a.startTime.compareTo(b.startTime));
+                        });
+                        Navigator.pop(ctx);
+                      },
+                      child: const Text('Simpan', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void _save() {
@@ -126,7 +271,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
             children: [
               const Text('Daftar Aktivitas:', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
               TextButton.icon(
-                onPressed: _addBlockDummy,
+                onPressed: () => _showAddBlockDialog(),
                 icon: const Icon(LucideIcons.plus, size: 16),
                 label: const Text('Tambah'),
               )
@@ -142,10 +287,20 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                   leading: const Icon(LucideIcons.clock, color: Colors.white54),
                   title: Text(b.title, style: const TextStyle(color: Colors.white)),
                   subtitle: Text('${b.startTime} - ${b.endTime}', style: const TextStyle(color: Colors.white38)),
-                  trailing: IconButton(
-                    icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 16),
-                    onPressed: () => setState(() => _blocks.removeAt(index)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(LucideIcons.edit2, color: Colors.white70, size: 16),
+                        onPressed: () => _showAddBlockDialog(index),
+                      ),
+                      IconButton(
+                        icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 16),
+                        onPressed: () => setState(() => _blocks.removeAt(index)),
+                      ),
+                    ],
                   ),
+                  onTap: () => _showAddBlockDialog(index),
                 );
               },
             ),
