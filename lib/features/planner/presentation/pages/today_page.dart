@@ -7,8 +7,9 @@ import 'package:life_os_productivity/features/planner/presentation/providers/tim
 import 'package:life_os_productivity/features/planner/presentation/providers/habit_pattern_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/widgets/daily_planner_widget.dart';
 import 'package:life_os_productivity/features/planner/presentation/widgets/add_time_block_sheet.dart';
-import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
 import 'package:life_os_productivity/features/tasks/presentation/widgets/task_card.dart';
+import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
+import 'package:life_os_productivity/features/gamification/presentation/providers/stats_provider.dart';
 
 class TodayPage extends ConsumerStatefulWidget {
   const TodayPage({super.key});
@@ -58,11 +59,9 @@ class _TodayPageState extends ConsumerState<TodayPage>
     final todayTasks = ref.watch(todayTasksProvider);
     final unAppliedHabits = ref.watch(unAppliedHabitsProvider(_today));
 
-    final completedBlocks = todayBlocks.where((b) => b.isCompleted).length;
-    final completedTasks = todayTasks.where((t) => t.isCompleted).length;
-    final totalItems = todayBlocks.length + todayTasks.length;
-    final completedItems = completedBlocks + completedTasks;
-    final progress = totalItems == 0 ? 0.0 : completedItems / totalItems;
+    final gamification = ref.watch(gamificationProvider);
+    final score = gamification.todayScore;
+    final streak = gamification.stats.currentStreak;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -95,7 +94,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                         ],
                       ),
                       // Daily Score Ring
-                      _ScoreRing(progress: progress, completed: completedItems, total: totalItems),
+                      _ScoreRing(score: score, streak: streak),
                     ],
                   ).animate().fadeIn(duration: 400.ms),
 
@@ -292,44 +291,64 @@ class _TodayPageState extends ConsumerState<TodayPage>
 // ─────────────────────────────────────────────────────────────
 
 class _ScoreRing extends StatelessWidget {
-  final double progress;
-  final int completed;
-  final int total;
+  final int score;
+  final int streak;
 
-  const _ScoreRing({required this.progress, required this.completed, required this.total});
+  const _ScoreRing({required this.score, required this.streak});
 
   @override
   Widget build(BuildContext context) {
-    final pct = (progress * 100).toInt();
-    return SizedBox(
-      width: 56,
-      height: 56,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          CircularProgressIndicator(
-            value: progress,
-            strokeWidth: 4,
-            backgroundColor: Colors.white12,
-            valueColor: AlwaysStoppedAnimation(
-              pct >= 80 ? AppColors.secondary : AppColors.primary,
+    return Column(
+      children: [
+        if (streak > 0)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            margin: const EdgeInsets.only(bottom: 6),
+            decoration: BoxDecoration(
+              color: Colors.orange.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.orange.withValues(alpha: 0.5)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('🔥', style: TextStyle(fontSize: 12)),
+                const SizedBox(width: 4),
+                Text('$streak', style: const TextStyle(color: Colors.orange, fontWeight: FontWeight.bold, fontSize: 12)),
+              ],
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        SizedBox(
+          width: 56,
+          height: 56,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              Text(
-                '$pct%',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
+              CircularProgressIndicator(
+                value: score / 100.0,
+                strokeWidth: 4,
+                backgroundColor: Colors.white12,
+                valueColor: AlwaysStoppedAnimation(
+                  score >= 80 ? AppColors.secondary : AppColors.primary,
                 ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '$score',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

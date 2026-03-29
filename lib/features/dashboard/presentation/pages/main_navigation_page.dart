@@ -11,6 +11,8 @@ import 'package:life_os_productivity/features/tasks/presentation/pages/tasks_pag
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
 import 'package:life_os_productivity/features/focus/presentation/pages/focus_page.dart';
 import 'package:life_os_productivity/features/planner/presentation/pages/today_page.dart';
+import 'package:life_os_productivity/features/routines/presentation/pages/routines_page.dart';
+import 'package:life_os_productivity/features/routines/presentation/widgets/add_routine_sheet.dart';
 
 
 class MainNavigationPage extends ConsumerWidget {
@@ -29,7 +31,10 @@ class MainNavigationPage extends ConsumerWidget {
       // ── Tab 1: Tasks (full list view) ──
       const TasksPage(),
 
-      // ── Tab 2: Goals ──
+      // ── Tab 2: Routines ──
+      const RoutinesPage(),
+
+      // ── Tab 3: Goals ──
       SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -85,7 +90,7 @@ class MainNavigationPage extends ConsumerWidget {
         ),
       ),
 
-      // ── Tab 3: Focus ──
+      // ── Tab 4: Focus ──
       const FocusPage(),
     ];
 
@@ -117,6 +122,18 @@ class MainNavigationPage extends ConsumerWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
+          builder: (_) => const AddRoutineSheet(),
+        ),
+        backgroundColor: AppColors.secondary,
+        child: const Icon(LucideIcons.plus, color: Colors.black),
+      );
+    }
+    if (index == 3) {
+      return FloatingActionButton(
+        onPressed: () => showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
           builder: (_) => const AddGoalSheet(),
         ),
         backgroundColor: AppColors.secondary,
@@ -140,6 +157,10 @@ class MainNavigationPage extends ConsumerWidget {
         NavigationDestination(
           icon: Icon(LucideIcons.checkSquare),
           label: 'Tasks',
+        ),
+        NavigationDestination(
+          icon: Icon(LucideIcons.repeat),
+          label: 'Routines',
         ),
         NavigationDestination(
           icon: Icon(LucideIcons.target),
