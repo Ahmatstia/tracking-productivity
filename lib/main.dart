@@ -11,6 +11,7 @@ import 'package:life_os_productivity/features/gamification/domain/user_stats_mod
 import 'package:life_os_productivity/features/routines/domain/routine_template_model.dart';
 import 'package:life_os_productivity/features/dashboard/presentation/pages/main_navigation_page.dart';
 import 'package:life_os_productivity/core/services/notification_service.dart';
+import 'package:life_os_productivity/features/analytics/domain/daily_review_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +31,7 @@ void main() async {
   if (!Hive.isAdapterRegistered(6)) Hive.registerAdapter(UserStatsModelAdapter());
   if (!Hive.isAdapterRegistered(7)) Hive.registerAdapter(RoutineTemplateModelAdapter());
   if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(RoutineBlockModelAdapter());
+  if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(DailyReviewModelAdapter());
 
   // Open all Hive boxes
   await Hive.openBox<GoalModel>('goals_box');
@@ -39,6 +41,7 @@ void main() async {
   await Hive.openBox<FocusSessionModel>('focus_session_box');
   await Hive.openBox<UserStatsModel>('user_stats_box');
   await Hive.openBox<RoutineTemplateModel>('routine_templates_box');
+  await Hive.openBox<DailyReviewModel>('daily_review_box');
 
   runApp(
     const ProviderScope(

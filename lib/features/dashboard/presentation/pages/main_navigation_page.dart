@@ -13,6 +13,7 @@ import 'package:life_os_productivity/features/focus/presentation/pages/focus_pag
 import 'package:life_os_productivity/features/planner/presentation/pages/today_page.dart';
 import 'package:life_os_productivity/features/routines/presentation/pages/routines_page.dart';
 import 'package:life_os_productivity/features/routines/presentation/widgets/add_routine_sheet.dart';
+import 'package:life_os_productivity/features/analytics/presentation/pages/analytics_dashboard_page.dart';
 
 
 class MainNavigationPage extends ConsumerWidget {
@@ -92,6 +93,9 @@ class MainNavigationPage extends ConsumerWidget {
 
       // ── Tab 4: Focus ──
       const FocusPage(),
+
+      // ── Tab 5: Analytics ──
+      const AnalyticsDashboardPage(),
     ];
 
     return Scaffold(
@@ -147,7 +151,7 @@ class MainNavigationPage extends ConsumerWidget {
     return NavigationBar(
       selectedIndex: currentIndex,
       onDestinationSelected: (index) => ref.read(navIndexProvider.notifier).state = index,
-      backgroundColor: const Color(0xFF161616),
+      backgroundColor: const Color(0xFF161626),
       indicatorColor: AppColors.primary.withValues(alpha: 0.2),
       destinations: const [
         NavigationDestination(
@@ -169,6 +173,10 @@ class MainNavigationPage extends ConsumerWidget {
         NavigationDestination(
           icon: Icon(LucideIcons.timer),
           label: 'Focus',
+        ),
+        NavigationDestination(
+          icon: Icon(LucideIcons.barChart2),
+          label: 'Analytics',
         ),
       ],
     );
