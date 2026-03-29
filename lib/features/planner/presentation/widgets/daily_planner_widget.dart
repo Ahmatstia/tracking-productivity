@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/widgets/add_time_block_sheet.dart';
@@ -21,19 +22,17 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
   static const int _endHour = 23;
   static const double _hourHeight = 64.0;
 
-  // Category colors
   static const Map<String, Color> _catColors = {
-    'work': Color(0xFF007BFF),
-    'health': Color(0xFFFF6B6B),
-    'learning': Color(0xFFFFD93D),
-    'personal': Color(0xFF00D084),
+    'work': Color(0xFF3B82F6),
+    'health': Color(0xFFEF4444),
+    'learning': Color(0xFFF59E0B),
+    'personal': Color(0xFF10B981),
   };
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Scroll to current time (or 8am default)
       final now = DateTime.now();
       final hour = now.hour < _startHour ? 8 : now.hour;
       final offset = (hour - _startHour) * _hourHeight;
@@ -84,7 +83,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                         child: Text(
                           '${hour.toString().padLeft(2, '0')}:00',
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.3),
+                            color: AppColors.textSecondary.withValues(alpha: 0.5),
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                           ),
@@ -95,7 +94,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                         child: Container(
                           height: 1,
                           margin: const EdgeInsets.only(top: 6),
-                          color: Colors.white.withValues(alpha: 0.06),
+                          color: AppColors.border.withValues(alpha: 0.5),
                         ),
                       ),
                     ],
@@ -103,7 +102,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                 );
               }),
 
-              // Tap zones for empty slots (every hour)
+              // Tap zones for empty slots
               ...List.generate(_endHour - _startHour, (i) {
                 final hour = _startHour + i;
                 final topPos = i * _hourHeight;
@@ -149,7 +148,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
   Widget _buildBlockCard(TimeBlockModel block, int totalMinutes) {
     final top = (block.startMinutes - _startHour * 60) / 60 * _hourHeight;
     final height = (block.durationMinutes / 60 * _hourHeight).clamp(36.0, double.infinity);
-    final color = _catColors[block.category] ?? const Color(0xFF00D084);
+    final color = _catColors[block.category] ?? const Color(0xFF10B981);
 
     return Positioned(
       top: top + 2,
@@ -161,12 +160,19 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: color.withValues(alpha: block.isCompleted ? 0.15 : 0.22),
+            color: block.isCompleted
+                ? color.withValues(alpha: 0.06)
+                : color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: color.withValues(alpha: block.isCompleted ? 0.3 : 0.6),
+              color: block.isCompleted
+                  ? color.withValues(alpha: 0.15)
+                  : color.withValues(alpha: 0.4),
               width: 1.2,
             ),
+            boxShadow: block.isCompleted
+                ? null
+                : [BoxShadow(color: color.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 2))],
           ),
           child: Row(
             children: [
@@ -181,7 +187,9 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: block.isCompleted ? Colors.white38 : Colors.white,
+                          color: block.isCompleted
+                              ? AppColors.textSecondary.withValues(alpha: 0.5)
+                              : AppColors.textPrimary,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           decoration: block.isCompleted ? TextDecoration.lineThrough : null,
@@ -195,7 +203,9 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: block.isCompleted ? Colors.white24 : color.withValues(alpha: 0.8),
+                            color: block.isCompleted
+                                ? AppColors.textSecondary.withValues(alpha: 0.3)
+                                : color.withValues(alpha: 0.8),
                             fontSize: 11,
                           ),
                         ),
@@ -218,7 +228,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                     ),
                   ),
                   child: block.isCompleted
-                      ? const Icon(Icons.check, size: 14, color: Colors.black)
+                      ? const Icon(Icons.check, size: 14, color: Colors.white)
                       : null,
                 ),
               ),
@@ -242,14 +252,14 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
             width: 8,
             height: 8,
             decoration: const BoxDecoration(
-              color: Color(0xFFFF6B6B),
+              color: Color(0xFFEF4444),
               shape: BoxShape.circle,
             ),
           ),
           Expanded(
             child: Container(
               height: 1.5,
-              color: const Color(0xFFFF6B6B).withValues(alpha: 0.7),
+              color: const Color(0xFFEF4444).withValues(alpha: 0.5),
             ),
           ),
         ],

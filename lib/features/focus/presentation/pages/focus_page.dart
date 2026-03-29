@@ -17,17 +17,16 @@ class FocusPage extends ConsumerWidget {
     final minutes = (pomodoro.remainingSeconds / 60).floor().toString().padLeft(2, '0');
     final seconds = (pomodoro.remainingSeconds % 60).toString().padLeft(2, '0');
 
-    // Progress for circular indicator
     final total = pomodoro.totalSeconds;
     final progress = pomodoro.remainingSeconds / total;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D0D19), // Deep focus background
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: Colors.white),
+          icon: const Icon(LucideIcons.arrowLeft, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -39,17 +38,17 @@ class FocusPage extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
             Text(
-              pomodoro.isFocusMode ? "Focus Time" : "Break Time",
+              pomodoro.isFocusMode ? "Waktu Fokus" : "Waktu Istirahat",
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 10),
             Text(
-              pomodoro.isFocusMode ? "Concentrate on your goals" : "Take a short rest",
-              style: const TextStyle(color: Colors.grey, fontSize: 16),
+              pomodoro.isFocusMode ? "Konsentrasi pada tujuan kamu" : "Istirahat sejenak",
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 30),
 
@@ -68,7 +67,7 @@ class FocusPage extends ConsumerWidget {
                   child: CircularProgressIndicator(
                     value: progress,
                     strokeWidth: 8,
-                    backgroundColor: Colors.grey[800],
+                    backgroundColor: AppColors.border,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       pomodoro.isFocusMode ? AppColors.primary : AppColors.secondary,
                     ),
@@ -79,7 +78,7 @@ class FocusPage extends ConsumerWidget {
                   style: const TextStyle(
                     fontSize: 60,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     fontFamily: 'monospace',
                   ),
                 ),
@@ -94,7 +93,7 @@ class FocusPage extends ConsumerWidget {
                 _ControlButton(
                   icon: LucideIcons.refreshCcw,
                   onPressed: () => notifier.reset(),
-                  color: Colors.grey,
+                  color: AppColors.textSecondary,
                 ),
                 const SizedBox(width: 30),
                 _ControlButton(
@@ -102,13 +101,13 @@ class FocusPage extends ConsumerWidget {
                   isLarge: true,
                   onPressed: () => pomodoro.isRunning ? notifier.pause() : notifier.start(),
                   backgroundColor: pomodoro.isFocusMode ? AppColors.primary : AppColors.secondary,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
                 const SizedBox(width: 30),
                 _ControlButton(
                   icon: LucideIcons.skipForward,
                   onPressed: () => notifier.switchMode(),
-                  color: Colors.grey,
+                  color: AppColors.textSecondary,
                 ),
               ],
             ),
@@ -138,10 +137,10 @@ class _TaskSelector extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        if (pomodoro.isRunning) return; // Cant change while running
+        if (pomodoro.isRunning) return;
         showModalBottomSheet(
           context: context,
-          backgroundColor: const Color(0xFF1A1A2E),
+          backgroundColor: AppColors.sheetBackground,
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
           builder: (context) {
             return SafeArea(
@@ -150,25 +149,25 @@ class _TaskSelector extends ConsumerWidget {
                 children: [
                   const Padding(
                     padding: EdgeInsets.all(20),
-                    child: Text('Pilih Task untuk Difokuskan', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                    child: Text('Pilih Task untuk Difokuskan', style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
                   if (incompleteTasks.isEmpty)
                     const Padding(
                       padding: EdgeInsets.all(20),
-                      child: Text('Tidak ada task hari ini yang tersisa!', style: TextStyle(color: Colors.white54)),
+                      child: Text('Tidak ada task hari ini yang tersisa!', style: TextStyle(color: AppColors.textSecondary)),
                     )
                   else
                     ...incompleteTasks.map((t) => ListTile(
-                      title: Text(t.title, style: const TextStyle(color: Colors.white)),
-                      leading: const Icon(LucideIcons.circle, color: Colors.white38),
+                      title: Text(t.title, style: const TextStyle(color: AppColors.textPrimary)),
+                      leading: const Icon(LucideIcons.circle, color: AppColors.textSecondary),
                       onTap: () {
                         ref.read(pomodoroProvider.notifier).selectTask(t.id);
                         Navigator.pop(context);
                       },
                     )),
                   ListTile(
-                    title: const Text('Tanpa Task Khusus (Fokus Bebas)', style: TextStyle(color: Colors.white54)),
-                    leading: const Icon(LucideIcons.xCircle, color: Colors.white38),
+                    title: const Text('Tanpa Task Khusus (Fokus Bebas)', style: TextStyle(color: AppColors.textSecondary)),
+                    leading: const Icon(LucideIcons.xCircle, color: AppColors.textSecondary),
                     onTap: () {
                       ref.read(pomodoroProvider.notifier).selectTask(null);
                       Navigator.pop(context);
@@ -184,15 +183,15 @@ class _TaskSelector extends ConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 40),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
+          color: AppColors.inputFill,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white12),
+          border: Border.all(color: AppColors.border),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(LucideIcons.target, size: 16, color: selectedTask != null ? AppColors.primary : Colors.white54),
+            Icon(LucideIcons.target, size: 16, color: selectedTask != null ? AppColors.primary : AppColors.textSecondary),
             const SizedBox(width: 8),
             Flexible(
               child: Text(
@@ -200,7 +199,7 @@ class _TaskSelector extends ConsumerWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: selectedTask != null ? Colors.white : Colors.white54,
+                  color: selectedTask != null ? AppColors.textPrimary : AppColors.textSecondary,
                   fontWeight: selectedTask != null ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -222,7 +221,7 @@ class _FocusHistory extends ConsumerWidget {
     if (sessions.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(20),
-        child: Text('Belum ada sesi fokus hari ini.', style: TextStyle(color: Colors.white38)),
+        child: Text('Belum ada sesi fokus hari ini.', style: TextStyle(color: AppColors.textSecondary)),
       );
     }
 
@@ -237,7 +236,7 @@ class _FocusHistory extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Hari Ini', style: TextStyle(color: Colors.white54, fontWeight: FontWeight.bold)),
+              const Text('Hari Ini', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
               Text('$totalMinutes menit total', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
             ],
           ),
@@ -255,9 +254,9 @@ class _FocusHistory extends ConsumerWidget {
                   const Icon(LucideIcons.checkCircle2, size: 14, color: AppColors.secondary),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Text(taskTitle, style: const TextStyle(color: Colors.white70)),
+                    child: Text(taskTitle, style: const TextStyle(color: AppColors.textPrimary)),
                   ),
-                  Text('${(s.durationSeconds / 60).round()}m', style: const TextStyle(color: Colors.white54)),
+                  Text('${(s.durationSeconds / 60).round()}m', style: const TextStyle(color: AppColors.textSecondary)),
                 ],
               ),
             );
@@ -290,8 +289,16 @@ class _ControlButton extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(isLarge ? 20 : 12),
         decoration: BoxDecoration(
-          color: backgroundColor ?? Colors.grey[900],
+          color: backgroundColor ?? AppColors.inputFill,
           shape: BoxShape.circle,
+          border: backgroundColor == null ? Border.all(color: AppColors.border) : null,
+          boxShadow: isLarge ? [
+            BoxShadow(
+              color: (backgroundColor ?? AppColors.primary).withValues(alpha: 0.3),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            )
+          ] : null,
         ),
         child: Icon(icon, color: color, size: isLarge ? 32 : 24),
       ),

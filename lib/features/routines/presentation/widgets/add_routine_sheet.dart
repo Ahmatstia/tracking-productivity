@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/routines/presentation/providers/routine_provider.dart';
 import 'package:life_os_productivity/features/routines/domain/routine_template_model.dart';
 
@@ -55,6 +56,12 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
               final picked = await showTimePicker(
                 context: ctx,
                 initialTime: (isStart ? startT : endT) ?? TimeOfDay.now(),
+                builder: (context, child) {
+                  return MediaQuery(
+                    data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                    child: child!,
+                  );
+                },
               );
               if (picked != null) {
                 setDialogState(() {
@@ -69,25 +76,26 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
                 top: 24, left: 20, right: 20,
               ),
-              decoration: const BoxDecoration(
-                color: Color(0xFF25254B),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              decoration: BoxDecoration(
+                color: AppColors.sheetBackground,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(editIndex == null ? 'Tambah Aktivitas' : 'Edit Aktivitas',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                   const SizedBox(height: 16),
                   TextField(
                     controller: titleCtrl,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: AppColors.textPrimary),
                     decoration: InputDecoration(
                       hintText: 'Nama (mis: Baca Buku, Olahraga)',
-                      hintStyle: const TextStyle(color: Colors.white38),
+                      hintStyle: const TextStyle(color: AppColors.textSecondary),
                       filled: true,
-                      fillColor: Colors.white.withValues(alpha: 0.1),
+                      fillColor: AppColors.inputFill,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                     ),
                   ),
@@ -99,14 +107,14 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                           onTap: () => pickTime(true),
                           child: Container(
                             padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                            decoration: BoxDecoration(color: AppColors.inputFill, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                             child: Row(
                               children: [
-                                const Icon(LucideIcons.clock, color: Colors.white54, size: 18),
+                                const Icon(LucideIcons.clock, color: AppColors.textSecondary, size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   startT != null ? '${startT!.hour.toString().padLeft(2, '0')}:${startT!.minute.toString().padLeft(2, '0')}' : 'Jam Mulai',
-                                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                                  style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
                                 )
                               ],
                             ),
@@ -119,14 +127,14 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                           onTap: () => pickTime(false),
                           child: Container(
                             padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
+                            decoration: BoxDecoration(color: AppColors.inputFill, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.border)),
                             child: Row(
                               children: [
-                                const Icon(LucideIcons.clock, color: Colors.white54, size: 18),
+                                const Icon(LucideIcons.clock, color: AppColors.textSecondary, size: 18),
                                 const SizedBox(width: 8),
                                 Text(
                                   endT != null ? '${endT!.hour.toString().padLeft(2, '0')}:${endT!.minute.toString().padLeft(2, '0')}' : 'Jam Selesai',
-                                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                                  style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
                                 )
                               ],
                             ),
@@ -141,7 +149,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                     height: 48,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF00D084),
+                        backgroundColor: AppColors.secondary,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () {
@@ -175,7 +183,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                         });
                         Navigator.pop(ctx);
                       },
-                      child: const Text('Simpan', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                      child: const Text('Simpan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                     ),
                   )
                 ],
@@ -215,9 +223,10 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
         left: 20,
         right: 20,
       ),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: AppColors.sheetBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,22 +236,22 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
               width: 40,
               height: 4,
               margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
             ),
           ),
           const Text(
             'Buat Template Rutinitas',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
           const SizedBox(height: 20),
           TextField(
             controller: _nameController,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
+            style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
             decoration: InputDecoration(
               hintText: 'Nama Rutinitas (mis: Morning Routine)',
-              hintStyle: const TextStyle(color: Colors.white38),
+              hintStyle: const TextStyle(color: AppColors.textSecondary),
               filled: true,
-              fillColor: Colors.white.withValues(alpha: 0.06),
+              fillColor: AppColors.inputFill,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: BorderSide.none),
             ),
           ),
@@ -269,7 +278,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Daftar Aktivitas:', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold)),
+              const Text('Daftar Aktivitas:', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
               TextButton.icon(
                 onPressed: () => _showAddBlockDialog(),
                 icon: const Icon(LucideIcons.plus, size: 16),
@@ -284,18 +293,18 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                 final b = _blocks[index];
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(LucideIcons.clock, color: Colors.white54),
-                  title: Text(b.title, style: const TextStyle(color: Colors.white)),
-                  subtitle: Text('${b.startTime} - ${b.endTime}', style: const TextStyle(color: Colors.white38)),
+                  leading: const Icon(LucideIcons.clock, color: AppColors.textSecondary),
+                  title: Text(b.title, style: const TextStyle(color: AppColors.textPrimary)),
+                  subtitle: Text('${b.startTime} - ${b.endTime}', style: const TextStyle(color: AppColors.textSecondary)),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        icon: const Icon(LucideIcons.edit2, color: Colors.white70, size: 16),
+                        icon: Icon(LucideIcons.edit2, color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
                         onPressed: () => _showAddBlockDialog(index),
                       ),
                       IconButton(
-                        icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 16),
+                        icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 16),
                         onPressed: () => setState(() => _blocks.removeAt(index)),
                       ),
                     ],
@@ -314,7 +323,7 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
                 backgroundColor: Color(_selectedColor),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
               ),
-              child: const Text('Simpan Template', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+              child: const Text('Simpan Template', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ),
         ],

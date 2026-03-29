@@ -18,20 +18,18 @@ class AppDrawer extends ConsumerWidget {
     final profile = ref.watch(profileProvider);
 
     return Drawer(
-      backgroundColor: const Color(0xFF0D0D19), // Deeper premium dark
+      backgroundColor: AppColors.sheetBackground,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.horizontal(right: Radius.circular(24)),
       ),
       child: Column(
           children: [
-            // Header: User Profile Card
             _buildDrawerHeader(context, ref, userStats, profile),
             
             const SizedBox(height: 12),
-            const Divider(color: Colors.white12, thickness: 1, indent: 20, endIndent: 20),
+            Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
             const SizedBox(height: 12),
 
-            // Main Menu Action List
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Column(
@@ -42,7 +40,7 @@ class AppDrawer extends ConsumerWidget {
                     subtitle: 'Mulai sesi fokus tanpa gangguan',
                     color: AppColors.primary,
                     onTap: () {
-                      Navigator.pop(context); // Close drawer
+                      Navigator.pop(context);
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const FocusPage()),
@@ -54,7 +52,7 @@ class AppDrawer extends ConsumerWidget {
                     icon: LucideIcons.settings,
                     title: 'Pengaturan',
                     subtitle: 'Notifikasi & Preferensi',
-                    color: Colors.white70,
+                    color: AppColors.textSecondary,
                     onTap: () {
                       Navigator.pop(context);
                       Navigator.push(
@@ -68,7 +66,7 @@ class AppDrawer extends ConsumerWidget {
                     icon: LucideIcons.crown,
                     title: 'MyLife Premium',
                     subtitle: 'Buka fitur profesional mingguan',
-                    color: const Color(0xFFFFD93D),
+                    color: const Color(0xFFE67E22),
                     onTap: () {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -82,15 +80,14 @@ class AppDrawer extends ConsumerWidget {
 
             const Spacer(),
             
-            // Footer Menu (Help/Log out)
-            const Divider(color: Colors.white12, thickness: 1, indent: 20, endIndent: 20),
+            Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               child: _MenuItem(
                 icon: LucideIcons.logOut,
                 title: 'Keluar',
                 subtitle: '',
-                color: Colors.redAccent,
+                color: AppColors.error,
                 compact: true,
                 onTap: () {
                   Navigator.pop(context);
@@ -107,8 +104,8 @@ class AppDrawer extends ConsumerWidget {
       AppColors.primary,
       Colors.orangeAccent,
       Colors.purpleAccent,
-      Colors.greenAccent,
-      Colors.redAccent,
+      const Color(0xFF10B981),
+      AppColors.error,
     ];
     final selectedColor = avatarColors[profile.avatarIndex % avatarColors.length];
 
@@ -118,28 +115,28 @@ class AppDrawer extends ConsumerWidget {
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(24, MediaQuery.of(context).padding.top + 32, 24, 24),
         decoration: BoxDecoration(
-          color: const Color(0xFF161626),
+          color: AppColors.surface,
           border: Border(
-            bottom: BorderSide(color: Colors.white.withValues(alpha: 0.05), width: 1),
+            bottom: BorderSide(color: AppColors.border, width: 1),
           ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Elegant Avatar Frame
+            // Avatar
             Container(
               width: 72,
               height: 72,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: [selectedColor.withValues(alpha: 0.8), selectedColor],
+                  colors: [selectedColor.withValues(alpha: 0.7), selectedColor],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: selectedColor.withValues(alpha: 0.3),
+                    color: selectedColor.withValues(alpha: 0.2),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   )
@@ -148,7 +145,7 @@ class AppDrawer extends ConsumerWidget {
               child: Container(
                 margin: const EdgeInsets.all(3),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF1A1A2E), // Inner ring
+                  color: AppColors.surface,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -157,7 +154,6 @@ class AppDrawer extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // User Details
             Row(
               children: [
                 Expanded(
@@ -167,7 +163,7 @@ class AppDrawer extends ConsumerWidget {
                       Text(
                         profile.name, 
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.textPrimary,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           letterSpacing: 0.5,
@@ -176,19 +172,19 @@ class AppDrawer extends ConsumerWidget {
                       const SizedBox(height: 4),
                       const Text(
                         'Versi Gratis', 
-                        style: TextStyle(color: Colors.white24, fontSize: 13),
+                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
                       ),
                     ],
                   ),
                 ),
-                const Icon(LucideIcons.edit3, color: Colors.white12, size: 18),
+                Icon(LucideIcons.edit3, color: AppColors.textSecondary.withValues(alpha: 0.3), size: 18),
               ],
             ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.15),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
               ),
@@ -221,8 +217,8 @@ class AppDrawer extends ConsumerWidget {
       AppColors.primary,
       Colors.orangeAccent,
       Colors.purpleAccent,
-      Colors.greenAccent,
-      Colors.redAccent,
+      const Color(0xFF10B981),
+      AppColors.error,
     ];
 
     showModalBottomSheet(
@@ -232,92 +228,88 @@ class AppDrawer extends ConsumerWidget {
       builder: (_) {
         return StatefulBuilder(
           builder: (ctx, setDialogState) {
-            return ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-              child: BackdropFilter(
-                filter: ColorFilter.mode(Colors.black.withValues(alpha: 0.2), BlendMode.darken),
-                child: Container(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
-                    top: 24, left: 24, right: 24,
+            return Container(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+                top: 24, left: 24, right: 24,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.sheetBackground,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                border: Border.all(color: AppColors.border),
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Personalisasi Profil',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  const SizedBox(height: 24),
+                  const Text('Nama Kamu:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                  TextField(
+                    controller: nameController,
+                    style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
+                    decoration: InputDecoration(
+                      hintText: 'Masukkan nama...',
+                      hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
+                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+                      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1A1A2E).withValues(alpha: 0.95),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-                    border: Border.all(color: Colors.white10),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Personalisasi Profil',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                      const SizedBox(height: 24),
-                      const Text('Nama Kamu:', style: TextStyle(color: Colors.white54, fontSize: 13)),
-                      TextField(
-                        controller: nameController,
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
-                        decoration: InputDecoration(
-                          hintText: 'Masukkan nama...',
-                          hintStyle: const TextStyle(color: Colors.white24),
-                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-                          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      const Text('Warna Tema Profil:', style: TextStyle(color: Colors.white54, fontSize: 13)),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: avatarColors.asMap().entries.map((entry) {
-                          final idx = entry.key;
-                          final color = entry.value;
-                          return InkWell(
-                            onTap: () => setDialogState(() => selectedAvatar = idx),
-                            child: Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: color.withValues(alpha: 0.2),
-                                border: Border.all(
-                                  color: selectedAvatar == idx ? color : Colors.transparent,
-                                  width: 2,
-                                ),
-                              ),
-                              child: Center(
-                                child: Icon(LucideIcons.user, color: color, size: 18),
-                              ),
+                  const SizedBox(height: 24),
+                  const Text('Warna Tema Profil:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: avatarColors.asMap().entries.map((entry) {
+                      final idx = entry.key;
+                      final color = entry.value;
+                      return InkWell(
+                        onTap: () => setDialogState(() => selectedAvatar = idx),
+                        child: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: color.withValues(alpha: 0.15),
+                            border: Border.all(
+                              color: selectedAvatar == idx ? color : Colors.transparent,
+                              width: 2,
                             ),
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 32),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 52,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: avatarColors[selectedAvatar],
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
-                          onPressed: () {
-                            if (nameController.text.trim().isNotEmpty) {
-                              ref.read(profileProvider.notifier).updateName(nameController.text.trim());
-                              ref.read(profileProvider.notifier).updateAvatar(selectedAvatar);
-                              Navigator.pop(ctx);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Profil diperbarui!'))
-                              );
-                            }
-                          },
-                          child: const Text('Simpan Perubahan', 
-                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                          child: Center(
+                            child: Icon(LucideIcons.user, color: color, size: 18),
+                          ),
                         ),
-                      )
-                    ],
+                      );
+                    }).toList(),
                   ),
-                ),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: avatarColors[selectedAvatar],
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        if (nameController.text.trim().isNotEmpty) {
+                          ref.read(profileProvider.notifier).updateName(nameController.text.trim());
+                          ref.read(profileProvider.notifier).updateAvatar(selectedAvatar);
+                          Navigator.pop(ctx);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Profil diperbarui!'))
+                          );
+                        }
+                      },
+                      child: const Text('Simpan Perubahan', 
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    ),
+                  )
+                ],
               ),
             );
           },
@@ -349,13 +341,12 @@ class _MenuItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
-      splashColor: color.withValues(alpha: 0.1),
-      highlightColor: color.withValues(alpha: 0.05),
+      splashColor: color.withValues(alpha: 0.08),
+      highlightColor: color.withValues(alpha: 0.04),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: compact ? 12 : 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.transparent),
         ),
         child: Row(
           children: [
@@ -375,7 +366,7 @@ class _MenuItem extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                       fontSize: compact ? 14 : 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -385,7 +376,7 @@ class _MenuItem extends StatelessWidget {
                     Text(
                       subtitle,
                       style: const TextStyle(
-                        color: Colors.white54,
+                        color: AppColors.textSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -393,7 +384,7 @@ class _MenuItem extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(LucideIcons.chevronRight, color: Colors.white24, size: 16),
+            Icon(LucideIcons.chevronRight, color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16),
           ],
         ),
       ),

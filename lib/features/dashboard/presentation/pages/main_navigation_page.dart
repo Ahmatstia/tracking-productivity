@@ -45,12 +45,12 @@ class MainNavigationPage extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
               const Text(
-                "My Big Dreams",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                "Impian Besar Saya",
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               const Text(
                 "Pantau mimpi & target hidupmu",
-                style: TextStyle(color: Colors.grey, fontSize: 12),
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 12),
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -59,10 +59,10 @@ class MainNavigationPage extends ConsumerWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(LucideIcons.target, size: 64, color: Colors.white.withValues(alpha: 0.1)),
+                            Icon(LucideIcons.target, size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
                             const SizedBox(height: 16),
-                            const Text("Belum ada mimpi.", style: TextStyle(color: Colors.white54)),
-                            const Text("Klik + untuk menambah!", style: TextStyle(color: Colors.white38, fontSize: 13)),
+                            const Text("Belum ada mimpi.", style: TextStyle(color: AppColors.textSecondary)),
+                            const Text("Klik + untuk menambah!", style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
                           ],
                         ),
                       )
@@ -97,6 +97,7 @@ class MainNavigationPage extends ConsumerWidget {
     ];
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       drawer: const AppDrawer(),
       body: pages[currentIndex],
       floatingActionButton: _buildFAB(context, ref, currentIndex, today),
@@ -105,7 +106,6 @@ class MainNavigationPage extends ConsumerWidget {
   }
 
   Widget? _buildFAB(BuildContext context, WidgetRef ref, int index, DateTime today) {
-    // TodayPage manages its own FAB, so hide global FAB for tab 0
     if (index == 0) return null;
     if (index == 1) {
       return FloatingActionButton(
@@ -116,7 +116,7 @@ class MainNavigationPage extends ConsumerWidget {
           builder: (_) => _TaskAddSheet(date: today),
         ),
         backgroundColor: AppColors.secondary,
-        child: const Icon(LucideIcons.plus, color: Colors.black),
+        child: const Icon(LucideIcons.plus, color: Colors.white),
       );
     }
     if (index == 2) {
@@ -126,7 +126,7 @@ class MainNavigationPage extends ConsumerWidget {
           MaterialPageRoute(builder: (_) => const EditRoutinePage()),
         ),
         backgroundColor: AppColors.secondary,
-        child: const Icon(LucideIcons.plus, color: Colors.black),
+        child: const Icon(LucideIcons.plus, color: Colors.white),
       );
     }
     if (index == 3) {
@@ -138,29 +138,28 @@ class MainNavigationPage extends ConsumerWidget {
           builder: (_) => const AddGoalSheet(),
         ),
         backgroundColor: AppColors.secondary,
-        child: const Icon(LucideIcons.plus, color: Colors.black),
+        child: const Icon(LucideIcons.plus, color: Colors.white),
       );
     }
     return null;
   }
 
   Widget _buildNavBar(WidgetRef ref, int currentIndex) {
-    // If the index is somehow out of bounds due to hot restart/removing a tab, fallback to max index
     final safeIndex = currentIndex > 4 ? 4 : currentIndex;
     
     return CurvedNavigationBar(
       index: safeIndex,
       backgroundColor: AppColors.background,
-      color: const Color(0xFF1A1A2E), // A premium dark surface color
+      color: AppColors.navBar,
       buttonBackgroundColor: AppColors.primary,
       animationDuration: const Duration(milliseconds: 300),
       onTap: (index) => ref.read(navIndexProvider.notifier).state = index,
-      items: const [
-        Icon(LucideIcons.calendarDays, color: Colors.white, size: 26),
-        Icon(LucideIcons.checkSquare, color: Colors.white, size: 26),
-        Icon(LucideIcons.repeat, color: Colors.white, size: 26),
-        Icon(LucideIcons.target, color: Colors.white, size: 26),
-        Icon(LucideIcons.barChart2, color: Colors.white, size: 26),
+      items: [
+        Icon(LucideIcons.calendarDays, color: safeIndex == 0 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(LucideIcons.checkSquare, color: safeIndex == 1 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(LucideIcons.repeat, color: safeIndex == 2 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(LucideIcons.target, color: safeIndex == 3 ? Colors.white : AppColors.textSecondary, size: 26),
+        Icon(LucideIcons.barChart2, color: safeIndex == 4 ? Colors.white : AppColors.textSecondary, size: 26),
       ],
     );
   }
@@ -196,9 +195,10 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
         left: 20,
         right: 20,
       ),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: AppColors.sheetBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -208,21 +208,21 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
             child: Container(
               width: 40, height: 4,
               margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
             ),
           ),
           const Text('Tambah Tugas Baru',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white)),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
           const SizedBox(height: 16),
           TextField(
             controller: _titleController,
             autofocus: true,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
               hintText: 'Apa yang ingin dikerjakan?',
-              hintStyle: const TextStyle(color: Colors.white38),
+              hintStyle: const TextStyle(color: AppColors.textSecondary),
               filled: true,
-              fillColor: Colors.white.withValues(alpha: 0.06),
+              fillColor: AppColors.inputFill,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
             ),
           ),
@@ -230,12 +230,12 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
           TextField(
             controller: _descController,
             maxLines: 2,
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
             decoration: InputDecoration(
               hintText: 'Deskripsi (opsional)',
-              hintStyle: const TextStyle(color: Colors.white24),
+              hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
               filled: true,
-              fillColor: Colors.white.withValues(alpha: 0.04),
+              fillColor: AppColors.inputFill,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
             ),
           ),
@@ -243,7 +243,7 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
           Row(
             children: [0, 1, 2].map((p) {
               final labels = ['Normal', '⭐ Penting', '🔴 Urgent'];
-              final colors = [Colors.white38, const Color(0xFFFFD93D), const Color(0xFFFF6B6B)];
+              final colors = [AppColors.textSecondary, const Color(0xFFE67E22), const Color(0xFFE17055)];
               final isSelected = _priority == p;
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
@@ -253,13 +253,13 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected ? colors[p].withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
+                      color: isSelected ? colors[p].withValues(alpha: 0.12) : AppColors.inputFill,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: isSelected ? colors[p] : Colors.white12),
+                      border: Border.all(color: isSelected ? colors[p] : AppColors.border),
                     ),
                     child: Text(labels[p],
                         style: TextStyle(
-                            color: isSelected ? colors[p] : Colors.white38,
+                            color: isSelected ? colors[p] : AppColors.textSecondary,
                             fontSize: 12,
                             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
                   ),
@@ -284,11 +284,12 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secondary,
+                backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                elevation: 0,
               ),
               child: const Text('Simpan Tugas',
-                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ),
         ],

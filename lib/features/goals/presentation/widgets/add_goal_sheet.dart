@@ -27,22 +27,16 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
     final desc = _descController.text.trim();
 
     if (title.isNotEmpty) {
-      // 1. Buat objek Goal baru
       final newGoal = GoalModel(
         title: title,
         description: desc,
-        progress: 0.0, // Mimpi baru mulai dari 0%
-        targetDate: DateTime.now()
-            .add(const Duration(days: 30)), // Default 30 hari ke depan
+        progress: 0.0,
+        targetDate: DateTime.now().add(const Duration(days: 30)),
       );
 
-      // 2. Simpan ke database melalui Provider
       ref.read(goalProvider.notifier).addGoal(newGoal);
-
-      // 3. Tutup Bottom Sheet
       Navigator.pop(context);
 
-      // Optional: Tampilkan SnackBar sukses
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Mimpi '$title' berhasil disimpan!"),
@@ -50,7 +44,6 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
         ),
       );
     } else {
-      // Validasi jika judul kosong
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Judul mimpi tidak boleh kosong!")),
       );
@@ -66,32 +59,40 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
         left: 20,
         right: 20,
       ),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      decoration: BoxDecoration(
+        color: AppColors.sheetBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+            child: Container(
+              width: 40, height: 4,
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
           const Text(
             "Tulis Mimpi Baru",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColors.textPrimary,
             ),
           ),
           const SizedBox(height: 20),
           TextField(
             controller: _titleController,
             autofocus: true,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
               hintText: "Apa mimpi besarmu?",
-              hintStyle: const TextStyle(color: Colors.grey),
+              hintStyle: const TextStyle(color: AppColors.textSecondary),
               filled: true,
-              fillColor: Colors.black26,
+              fillColor: AppColors.inputFill,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -102,12 +103,12 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
           TextField(
             controller: _descController,
             maxLines: 2,
-            style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: AppColors.textSecondary),
             decoration: InputDecoration(
               hintText: "Mengapa ini penting untukmu?",
-              hintStyle: const TextStyle(color: Colors.grey),
+              hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
               filled: true,
-              fillColor: Colors.black26,
+              fillColor: AppColors.inputFill,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -117,20 +118,22 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
-            height: 50,
+            height: 52,
             child: ElevatedButton(
               onPressed: _saveGoal,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.secondary,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                 ),
+                elevation: 0,
               ),
               child: const Text(
                 "Simpan Mimpi",
                 style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
             ),

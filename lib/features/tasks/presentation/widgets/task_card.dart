@@ -11,7 +11,7 @@ class TaskCard extends ConsumerWidget {
 
   const TaskCard({super.key, required this.task});
 
-  static const _priorityColors = [Colors.white24, Color(0xFFFFD93D), Color(0xFFFF6B6B)];
+  static const _priorityColors = [AppColors.textSecondary, Color(0xFFE67E22), Color(0xFFE17055)];
   static const _priorityLabels = ['', 'Penting', 'Urgent'];
   static const _priorityIcons = [null, LucideIcons.star, LucideIcons.alertCircle];
 
@@ -26,12 +26,19 @@ class TaskCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: task.isCompleted
-              ? Colors.white12
+              ? AppColors.border
               : task.priority > 0
-                  ? priorityColor.withValues(alpha: 0.5)
-                  : Colors.transparent,
-          width: 1.2,
+                  ? priorityColor.withValues(alpha: 0.3)
+                  : AppColors.border,
+          width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.cardShadow.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -44,13 +51,13 @@ class TaskCard extends ConsumerWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: task.isCompleted ? AppColors.secondary : Colors.white38,
+                color: task.isCompleted ? AppColors.secondary : AppColors.textSecondary.withValues(alpha: 0.4),
                 width: 2,
               ),
               color: task.isCompleted ? AppColors.secondary : Colors.transparent,
             ),
             child: task.isCompleted
-                ? const Icon(Icons.check, size: 14, color: Colors.black)
+                ? const Icon(Icons.check, size: 14, color: Colors.white)
                 : null,
           ),
         ),
@@ -61,11 +68,11 @@ class TaskCard extends ConsumerWidget {
               child: Text(
                 task.title,
                 style: TextStyle(
-                  color: task.isCompleted ? Colors.white38 : Colors.white,
+                  color: task.isCompleted ? AppColors.textSecondary.withValues(alpha: 0.5) : AppColors.textPrimary,
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                   decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-                  decorationColor: Colors.white38,
+                  decorationColor: AppColors.textSecondary,
                 ),
               ),
             ),
@@ -74,9 +81,9 @@ class TaskCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: priorityColor.withValues(alpha: 0.15),
+                  color: priorityColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: priorityColor.withValues(alpha: 0.4)),
+                  border: Border.all(color: priorityColor.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -109,7 +116,7 @@ class TaskCard extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: task.isCompleted ? Colors.white24 : Colors.white54,
+                    color: task.isCompleted ? AppColors.textSecondary.withValues(alpha: 0.3) : AppColors.textSecondary,
                     fontSize: 12,
                   ),
                 ),
@@ -119,12 +126,12 @@ class TaskCard extends ConsumerWidget {
                 padding: const EdgeInsets.only(top: 4),
                 child: Row(
                   children: [
-                    const Icon(LucideIcons.clock, size: 11, color: Color(0xFF007BFF)),
+                    const Icon(LucideIcons.clock, size: 11, color: Color(0xFF3B82F6)),
                     const SizedBox(width: 4),
                     Text(
                       '${task.startTime} - ${task.endTime}',
                       style: const TextStyle(
-                        color: Color(0xFF007BFF),
+                        color: Color(0xFF3B82F6),
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -136,10 +143,10 @@ class TaskCard extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Row(
-                  children: [
-                    const Icon(LucideIcons.arrowUpRight, size: 11, color: Colors.orange),
-                    const SizedBox(width: 4),
-                    const Text(
+                  children: const [
+                    Icon(LucideIcons.arrowUpRight, size: 11, color: Colors.orange),
+                    SizedBox(width: 4),
+                    Text(
                       'Dibawa dari kemarin',
                       style: TextStyle(color: Colors.orange, fontSize: 11),
                     ),
@@ -149,7 +156,7 @@ class TaskCard extends ConsumerWidget {
           ],
         ),
         trailing: IconButton(
-          icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 18),
+          icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 18),
           onPressed: () => ref.read(taskProvider.notifier).deleteTask(task.id),
         ),
       ),

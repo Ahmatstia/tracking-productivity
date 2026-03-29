@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/routines/presentation/providers/routine_provider.dart';
 import 'package:life_os_productivity/features/routines/presentation/pages/edit_routine_page.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
@@ -13,167 +14,193 @@ class RoutinesPage extends ConsumerWidget {
     final routines = ref.watch(routineProvider);
     final todayBlocks = ref.watch(todayTimeBlocksProvider);
     
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverAppBar(
-          expandedHeight: 120,
-          backgroundColor: Colors.transparent,
-          flexibleSpace: FlexibleSpaceBar(
-            titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-            title: const Text(
-              'Habits & Routines',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 100,
+            backgroundColor: AppColors.background,
+            automaticallyImplyLeading: false,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+              title: const Text(
+                'Kebiasaan & Rutinitas',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
               ),
             ),
           ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
-          sliver: routines.isEmpty
-              ? SliverFillRemaining(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(LucideIcons.repeat, size: 64, color: Colors.white.withValues(alpha: 0.1)),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Belum Ada Template Rutinitas',
-                          style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Klik + di bawah untuk membuat rutinitas baru\ndan terapkan ke jadwal harianmu.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white38, fontSize: 13),
-                        ),
-                      ],
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
+            sliver: routines.isEmpty
+                ? SliverFillRemaining(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(LucideIcons.repeat, size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Belum Ada Template Rutinitas',
+                            style: TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Klik + di bawah untuk membuat rutinitas baru\ndan terapkan ke jadwal harianmu.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              : SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final routine = routines[index];
-                      // Periksa apakah semua aktivitas dari rutinitas ini sudah ada di planner hari ini
-                      final bool isAlreadyApplied = routine.blocks.isNotEmpty && 
-                          routine.blocks.every((rb) => todayBlocks.any((tb) => tb.title == rb.title && tb.startTime == rb.startTime));
+                  )
+                : SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final routine = routines[index];
+                        final bool isAlreadyApplied = routine.blocks.isNotEmpty && 
+                            routine.blocks.every((rb) => todayBlocks.any((tb) => tb.title == rb.title && tb.startTime == rb.startTime));
 
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Color(routine.colorCode).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Color(routine.colorCode).withValues(alpha: 0.3)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    routine.name,
-                                    style: TextStyle(
-                                      color: Color(routine.colorCode),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(LucideIcons.edit2, color: Colors.white70, size: 18),
-                                      onPressed: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (_) => EditRoutinePage(existingRoutine: routine)),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 18),
-                                      onPressed: () => ref.read(routineProvider.notifier).deleteRoutine(routine.id),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${routine.blocks.length} Aktivitas',
-                                  style: const TextStyle(color: Colors.white70, fontSize: 13, fontWeight: FontWeight.bold),
-                                ),
-                                if (routine.assignedDays.isNotEmpty)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(color: Colors.white24),
-                                    ),
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Color(routine.colorCode).withValues(alpha: 0.3)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.cardShadow.withValues(alpha: 0.05),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
                                     child: Row(
-                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(LucideIcons.calendarDays, color: Colors.white70, size: 12),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          _formatDays(routine.assignedDays),
-                                          style: const TextStyle(color: Colors.white70, fontSize: 11),
+                                        Container(
+                                          width: 4,
+                                          height: 24,
+                                          decoration: BoxDecoration(
+                                            color: Color(routine.colorCode),
+                                            borderRadius: BorderRadius.circular(2),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text(
+                                            routine.name,
+                                            style: TextStyle(
+                                              color: AppColors.textPrimary,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton.icon(
-                                onPressed: isAlreadyApplied ? null : () async {
-                                  final replacedCount = await ref.read(routineProvider.notifier).applyRoutineToDate(routine.id, DateTime.now());
-                                  
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          replacedCount > 0 
-                                              ? '${routine.name} diterapkan! ($replacedCount jadwal lama dibersihkan)'
-                                              : '${routine.name} berhasil diterapkan ke Hari Ini!'
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        icon: Icon(LucideIcons.edit2, color: AppColors.textSecondary.withValues(alpha: 0.5), size: 18),
+                                        onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (_) => EditRoutinePage(existingRoutine: routine)),
                                         ),
-                                        backgroundColor: replacedCount > 0 ? Colors.orangeAccent.withValues(alpha: 0.8) : null,
                                       ),
-                                    );
-                                  }
-                                },
-                                icon: Icon(isAlreadyApplied ? LucideIcons.checkCheck : LucideIcons.checkCircle2, 
-                                    color: isAlreadyApplied ? Colors.white54 : Colors.white, size: 16),
-                                label: Text(isAlreadyApplied ? 'Sudah Terjadwal' : 'Terapkan ke Hari Ini', 
-                                    style: TextStyle(color: isAlreadyApplied ? Colors.white54 : Colors.white)),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isAlreadyApplied ? Colors.white.withValues(alpha: 0.1) : Color(routine.colorCode).withValues(alpha: 0.5),
-                                  disabledBackgroundColor: Colors.white.withValues(alpha: 0.05),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                ),
+                                      IconButton(
+                                        icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 18),
+                                        onPressed: () => ref.read(routineProvider.notifier).deleteRoutine(routine.id),
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: routines.length,
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${routine.blocks.length} Aktivitas',
+                                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 13, fontWeight: FontWeight.bold),
+                                  ),
+                                  if (routine.assignedDays.isNotEmpty)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.inputFill,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(color: AppColors.border),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(LucideIcons.calendarDays, color: AppColors.textSecondary, size: 12),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            _formatDays(routine.assignedDays),
+                                            style: const TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: isAlreadyApplied ? null : () async {
+                                    final replacedCount = await ref.read(routineProvider.notifier).applyRoutineToDate(routine.id, DateTime.now());
+                                    
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            replacedCount > 0 
+                                                ? '${routine.name} diterapkan! ($replacedCount jadwal lama dibersihkan)'
+                                                : '${routine.name} berhasil diterapkan ke Hari Ini!'
+                                          ),
+                                          backgroundColor: replacedCount > 0 ? Colors.orangeAccent.withValues(alpha: 0.8) : null,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(isAlreadyApplied ? LucideIcons.checkCheck : LucideIcons.checkCircle2, 
+                                      color: isAlreadyApplied ? AppColors.textSecondary : Colors.white, size: 16),
+                                  label: Text(isAlreadyApplied ? 'Sudah Terjadwal' : 'Terapkan ke Hari Ini', 
+                                      style: TextStyle(color: isAlreadyApplied ? AppColors.textSecondary : Colors.white)),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: isAlreadyApplied ? AppColors.inputFill : Color(routine.colorCode),
+                                    disabledBackgroundColor: AppColors.inputFill,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    elevation: 0,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                      childCount: routines.length,
+                    ),
                   ),
-                ),
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -184,7 +211,6 @@ class RoutinesPage extends ConsumerWidget {
     final dayNames = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
     final sortedDays = List<int>.from(days)..sort();
     
-    // Khusus Weekdays vs Weekend
     if (days.length == 5 && 
         days.contains(1) && days.contains(2) && days.contains(3) && days.contains(4) && days.contains(5)) {
       return 'Senin - Jumat';

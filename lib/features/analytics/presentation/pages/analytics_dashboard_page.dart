@@ -30,8 +30,8 @@ class AnalyticsDashboardPage extends ConsumerWidget {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Life Analytics',
+                  children: const [
+                    Text('Analitik Hidup',
                         style: TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 26,
@@ -52,17 +52,24 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [AppColors.primary, AppColors.accent],
                       ),
                       borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(LucideIcons.clipboardList, color: Colors.white, size: 16),
-                        const SizedBox(width: 6),
+                        SizedBox(width: 6),
                         Text('Review Hari Ini',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -101,7 +108,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                     icon: LucideIcons.checkCircle,
                     value: '${analytics.tasksCompletedWeek}',
                     label: 'Task Selesai',
-                    color: Colors.green,
+                    color: AppColors.secondary,
                   ),
                 ),
               ],
@@ -109,7 +116,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
             const SizedBox(height: 24),
 
             // ── Productivity Score Chart ─────────────
-            _SectionTitle('📊 Produktivitas Mingguan'),
+            const _SectionTitle('📊 Produktivitas Mingguan'),
             const SizedBox(height: 12),
             _WeeklyBarChart(days: analytics.days),
             const SizedBox(height: 8),
@@ -117,7 +124,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
               alignment: Alignment.centerRight,
               child: Text(
                 '⚡ Paling produktif hari ${analytics.peakProductivityDay}',
-                style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
+                style: const TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: 24),
@@ -127,19 +134,19 @@ class AnalyticsDashboardPage extends ConsumerWidget {
             const SizedBox(height: 24),
 
             // ── Heatmap ──────────────────────────────
-            _SectionTitle('🔥 Heatmap Aktivitas'),
+            const _SectionTitle('🔥 Heatmap Aktivitas'),
             const SizedBox(height: 12),
             _ActivityHeatmap(dailyScores: analytics.dailyScores),
             const SizedBox(height: 24),
 
             // ── Task Completion Rate ─────────────────
-            _SectionTitle('✅ Tingkat Penyelesaian Task'),
+            const _SectionTitle('✅ Tingkat Penyelesaian Task'),
             const SizedBox(height: 12),
             ...(analytics.days.map((d) => _DayCompletionRow(day: d))),
             const SizedBox(height: 24),
 
             // ── Focus Distribution ───────────────────
-            _SectionTitle('⏱️ Distribusi Fokus Mingguan'),
+            const _SectionTitle('⏱️ Distribusi Fokus Mingguan'),
             const SizedBox(height: 12),
             _FocusDistributionChart(days: analytics.days),
           ],
@@ -157,7 +164,7 @@ class _SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(title,
-        style: TextStyle(
+        style: const TextStyle(
           color: AppColors.textPrimary,
           fontSize: 16,
           fontWeight: FontWeight.w700,
@@ -177,16 +184,23 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.cardShadow.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
           Icon(icon, color: color, size: 22),
           const SizedBox(height: 6),
           Text(value,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -194,7 +208,7 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(label,
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
         ],
       ),
     );
@@ -211,8 +225,9 @@ class _WeeklyBarChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -223,12 +238,12 @@ class _WeeklyBarChart extends StatelessWidget {
               ? AppColors.primary
               : d.score >= 40
                   ? Colors.orange
-                  : Colors.red.shade400;
+                  : AppColors.error;
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text('${d.score}',
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
               const SizedBox(height: 4),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 600),
@@ -238,14 +253,14 @@ class _WeeklyBarChart extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
-                    colors: [color.withOpacity(0.4), color],
+                    colors: [color.withValues(alpha: 0.3), color],
                   ),
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
               const SizedBox(height: 6),
               Text(dayLabels[d.date.weekday - 1],
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
             ],
           );
         }).toList(),
@@ -272,10 +287,10 @@ class _AvgScoreBanner extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors.primary.withOpacity(0.3), AppColors.accent.withOpacity(0.2)],
+          colors: [AppColors.primary.withValues(alpha: 0.1), AppColors.accent.withValues(alpha: 0.08)],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary.withOpacity(0.4)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
@@ -285,16 +300,16 @@ class _AvgScoreBanner extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Rata-rata Score Minggu Ini',
+                const Text('Rata-rata Score Minggu Ini',
                     style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                 Text('$rounded / 100',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
                     )),
                 Text(msg,
-                    style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
+                    style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -311,14 +326,13 @@ class _ActivityHeatmap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    // Show last 10 weeks (70 days)
     final cells = <Widget>[];
     for (int i = 69; i >= 0; i--) {
       final day = now.subtract(Duration(days: i));
       final key =
           '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
       final score = dailyScores[key] ?? 0;
-      final opacity = score == 0 ? 0.08 : (score / 100).clamp(0.2, 1.0);
+      final opacity = score == 0 ? 0.06 : (score / 100).clamp(0.15, 1.0);
       cells.add(
         Tooltip(
           message: '$key: $score pts',
@@ -327,7 +341,7 @@ class _ActivityHeatmap extends StatelessWidget {
             height: 14,
             margin: const EdgeInsets.all(1.5),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(opacity),
+              color: AppColors.primary.withValues(alpha: opacity),
               borderRadius: BorderRadius.circular(3),
             ),
           ),
@@ -337,8 +351,9 @@ class _ActivityHeatmap extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,18 +363,18 @@ class _ActivityHeatmap extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('Lebih sedikit', style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+              const Text('Lebih sedikit', style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
               const SizedBox(width: 6),
               ...List.generate(5, (i) => Container(
                     width: 12, height: 12,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity((i + 1) * 0.2),
+                      color: AppColors.primary.withValues(alpha: (i + 1) * 0.2),
                       borderRadius: BorderRadius.circular(2),
                     ),
                   )),
               const SizedBox(width: 6),
-              Text('Lebih banyak', style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+              const Text('Lebih banyak', style: TextStyle(color: AppColors.textSecondary, fontSize: 10)),
             ],
           ),
         ],
@@ -384,7 +399,7 @@ class _DayCompletionRow extends StatelessWidget {
           SizedBox(
             width: 36,
             child: Text(label,
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
           ),
           Expanded(
             child: Stack(
@@ -392,7 +407,7 @@ class _DayCompletionRow extends StatelessWidget {
                 Container(
                   height: 10,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: AppColors.border.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
@@ -401,7 +416,7 @@ class _DayCompletionRow extends StatelessWidget {
                   child: Container(
                     height: 10,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [AppColors.primary, AppColors.accent],
                       ),
                       borderRadius: BorderRadius.circular(5),
@@ -413,7 +428,7 @@ class _DayCompletionRow extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text('${day.tasksCompleted}/${day.totalTasks}',
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
         ],
       ),
     );
@@ -431,8 +446,9 @@ class _FocusDistributionChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         children: days.map((d) {
@@ -444,14 +460,14 @@ class _FocusDistributionChart extends StatelessWidget {
                 SizedBox(
                   width: 36,
                   child: Text(dayLabels[d.date.weekday - 1],
-                      style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                      style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                 ),
                 Expanded(
                   child: Stack(children: [
                     Container(
                       height: 10,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.08),
+                        color: AppColors.border.withValues(alpha: 0.5),
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
@@ -460,7 +476,7 @@ class _FocusDistributionChart extends StatelessWidget {
                       child: Container(
                         height: 10,
                         decoration: BoxDecoration(
-                          color: Colors.purple.shade400,
+                          color: AppColors.primary.withValues(alpha: 0.7),
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
@@ -469,7 +485,7 @@ class _FocusDistributionChart extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text('${d.focusMinutes}m',
-                    style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
               ],
             ),
           );

@@ -31,10 +31,10 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
   bool _saveAsHabit = false;
 
   static const _categories = [
-    {'key': 'work', 'label': 'Kerja', 'icon': LucideIcons.briefcase, 'color': Color(0xFF007BFF)},
-    {'key': 'health', 'label': 'Kesehatan', 'icon': LucideIcons.heartPulse, 'color': Color(0xFFFF6B6B)},
-    {'key': 'learning', 'label': 'Belajar', 'icon': LucideIcons.bookOpen, 'color': Color(0xFFFFD93D)},
-    {'key': 'personal', 'label': 'Personal', 'icon': LucideIcons.smile, 'color': Color(0xFF00D084)},
+    {'key': 'work', 'label': 'Kerja', 'icon': LucideIcons.briefcase, 'color': Color(0xFF3B82F6)},
+    {'key': 'health', 'label': 'Kesehatan', 'icon': LucideIcons.heartPulse, 'color': Color(0xFFEF4444)},
+    {'key': 'learning', 'label': 'Belajar', 'icon': LucideIcons.bookOpen, 'color': Color(0xFFF59E0B)},
+    {'key': 'personal', 'label': 'Personal', 'icon': LucideIcons.smile, 'color': Color(0xFF10B981)},
   ];
 
   @override
@@ -154,9 +154,10 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
         left: 20,
         right: 20,
       ),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: AppColors.sheetBackground,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -170,7 +171,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: Colors.white24,
+                  color: AppColors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -184,7 +185,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 if (isEditing)
@@ -206,13 +207,13 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
             TextField(
               controller: _titleController,
               autofocus: !isEditing,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
               decoration: InputDecoration(
                 hintText: 'Nama aktivitas...',
-                hintStyle: const TextStyle(color: Colors.white38),
+                hintStyle: const TextStyle(color: AppColors.textSecondary),
                 prefixIcon: Icon(LucideIcons.pencil, color: catColor, size: 18),
                 filled: true,
-                fillColor: Colors.white.withValues(alpha: 0.06),
+                fillColor: AppColors.inputFill,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
                   borderSide: BorderSide.none,
@@ -230,7 +231,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
               children: [
                 Expanded(child: _TimePicker(label: 'Mulai', time: _startTime, onTap: () => _pickTime(true))),
                 const SizedBox(width: 12),
-                const Icon(LucideIcons.arrowRight, color: Colors.white38, size: 18),
+                const Icon(LucideIcons.arrowRight, color: AppColors.textSecondary, size: 18),
                 const SizedBox(width: 12),
                 Expanded(child: _TimePicker(label: 'Selesai', time: _endTime, onTap: () => _pickTime(false))),
               ],
@@ -238,7 +239,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
             const SizedBox(height: 16),
 
             // Category chips
-            const Text('Kategori', style: TextStyle(color: Colors.white60, fontSize: 13)),
+            const Text('Kategori', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,
@@ -251,22 +252,22 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected ? color.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
+                      color: isSelected ? color.withValues(alpha: 0.12) : AppColors.inputFill,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: isSelected ? color : Colors.white12,
+                        color: isSelected ? color : AppColors.border,
                         width: 1.5,
                       ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(cat['icon'] as IconData, size: 14, color: isSelected ? color : Colors.white38),
+                        Icon(cat['icon'] as IconData, size: 14, color: isSelected ? color : AppColors.textSecondary),
                         const SizedBox(width: 6),
                         Text(
                           cat['label'] as String,
                           style: TextStyle(
-                            color: isSelected ? color : Colors.white54,
+                            color: isSelected ? color : AppColors.textSecondary,
                             fontSize: 13,
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                           ),
@@ -283,12 +284,12 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
             TextField(
               controller: _noteController,
               maxLines: 2,
-              style: const TextStyle(color: Colors.white70, fontSize: 14),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
               decoration: InputDecoration(
                 hintText: 'Catatan (opsional)...',
-                hintStyle: const TextStyle(color: Colors.white24),
+                hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
                 filled: true,
-                fillColor: Colors.white.withValues(alpha: 0.04),
+                fillColor: AppColors.inputFill,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -305,18 +306,18 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: _saveAsHabit
-                        ? AppColors.secondary.withValues(alpha: 0.15)
-                        : Colors.white.withValues(alpha: 0.04),
+                        ? AppColors.secondary.withValues(alpha: 0.1)
+                        : AppColors.inputFill,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: _saveAsHabit ? AppColors.secondary.withValues(alpha: 0.5) : Colors.white12,
+                      color: _saveAsHabit ? AppColors.secondary.withValues(alpha: 0.5) : AppColors.border,
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         _saveAsHabit ? LucideIcons.repeat2 : LucideIcons.repeat,
-                        color: _saveAsHabit ? AppColors.secondary : Colors.white38,
+                        color: _saveAsHabit ? AppColors.secondary : AppColors.textSecondary,
                         size: 18,
                       ),
                       const SizedBox(width: 12),
@@ -327,14 +328,14 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                             Text(
                               'Jadikan Kebiasaan',
                               style: TextStyle(
-                                color: _saveAsHabit ? AppColors.secondary : Colors.white54,
+                                color: _saveAsHabit ? AppColors.secondary : AppColors.textSecondary,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                               ),
                             ),
-                            const Text(
+                            Text(
                               'Besok akan otomatis ter-generate',
-                              style: TextStyle(color: Colors.white38, fontSize: 11),
+                              style: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.6), fontSize: 11),
                             ),
                           ],
                         ),
@@ -348,7 +349,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                           shape: BoxShape.circle,
                           color: _saveAsHabit ? AppColors.secondary : Colors.transparent,
                           border: Border.all(
-                            color: _saveAsHabit ? AppColors.secondary : Colors.white24,
+                            color: _saveAsHabit ? AppColors.secondary : AppColors.border,
                             width: 2,
                           ),
                         ),
@@ -376,7 +377,7 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
                 child: Text(
                   isEditing ? 'Simpan Perubahan' : 'Tambah ke Jadwal',
                   style: const TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
@@ -404,22 +405,23 @@ class _TimePicker extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.06),
+          color: AppColors.inputFill,
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(color: Colors.white38, fontSize: 11)),
+            Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(LucideIcons.clock, size: 14, color: Colors.white54),
+                const Icon(LucideIcons.clock, size: 14, color: AppColors.textSecondary),
                 const SizedBox(width: 6),
                 Text(
                   time,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),

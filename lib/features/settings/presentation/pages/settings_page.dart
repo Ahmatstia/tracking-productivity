@@ -18,10 +18,10 @@ class SettingsPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text('Pengaturan', 
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)
+          style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 18)
         ),
         leading: IconButton(
-          icon: const Icon(LucideIcons.chevronLeft, color: Colors.white),
+          icon: const Icon(LucideIcons.chevronLeft, color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -45,7 +45,14 @@ class SettingsPage extends ConsumerWidget {
             icon: LucideIcons.clock,
             title: 'Format Waktu',
             subtitle: 'Format 24 Jam (Standar Indonesia)',
-            trailing: const Text('Aktif', style: TextStyle(color: Colors.white38, fontSize: 12)),
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.secondary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Text('Aktif', style: TextStyle(color: AppColors.secondary, fontSize: 11, fontWeight: FontWeight.bold)),
+            ),
           ),
           
           const SizedBox(height: 24),
@@ -64,7 +71,7 @@ class SettingsPage extends ConsumerWidget {
             icon: LucideIcons.trash2,
             title: 'Hapus Seluruh Data',
             subtitle: 'Reset aplikasi ke kondisi awal',
-            color: Colors.redAccent,
+            color: AppColors.error,
             onTap: () => _confirmReset(context),
           ),
           
@@ -92,7 +99,7 @@ class SettingsPage extends ConsumerWidget {
       child: Text(
         title.toUpperCase(),
         style: const TextStyle(
-          color: Colors.white38,
+          color: AppColors.textSecondary,
           fontSize: 11,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.0,
@@ -106,15 +113,18 @@ class SettingsPage extends ConsumerWidget {
     required String title,
     required String subtitle,
     Widget? trailing,
-    Color color = Colors.white70,
+    Color color = AppColors.textSecondary,
     VoidCallback? onTap,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.03),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(color: AppColors.cardShadow.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
+        ],
       ),
       child: ListTile(
         onTap: onTap,
@@ -127,9 +137,9 @@ class SettingsPage extends ConsumerWidget {
           ),
           child: Icon(icon, color: color, size: 18),
         ),
-        title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
-        subtitle: Text(subtitle, style: const TextStyle(color: Colors.white38, fontSize: 11)),
-        trailing: trailing ?? (onTap != null ? const Icon(LucideIcons.chevronRight, color: Colors.white12, size: 16) : null),
+        title: Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+        subtitle: Text(subtitle, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+        trailing: trailing ?? (onTap != null ? Icon(LucideIcons.chevronRight, color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16) : null),
       ),
     );
   }
@@ -138,27 +148,26 @@ class SettingsPage extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A2E),
-        title: const Text('Hapus Semua Data?', style: TextStyle(color: Colors.white)),
+        backgroundColor: AppColors.surface,
+        title: const Text('Hapus Semua Data?', style: TextStyle(color: AppColors.textPrimary)),
         content: const Text(
           'Tindakan ini akan menghapus seluruh isi Planner, Habits, dan Profil Anda secara permanen. Lanjutkan?',
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: AppColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal', style: TextStyle(color: Colors.white38)),
+            child: const Text('Batal', style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () async {
               await Hive.deleteFromDisk();
               Navigator.pop(ctx);
-              // Restart logic app usually here (or tell user to restart)
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Data Dihapus. Mohon muat ulang aplikasi.'))
               );
             },
-            child: const Text('Reset Sekarang', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+            child: const Text('Reset Sekarang', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

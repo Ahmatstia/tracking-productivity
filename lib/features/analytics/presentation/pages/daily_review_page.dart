@@ -100,7 +100,7 @@ class _DailyReviewPageState extends ConsumerState<DailyReviewPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          _isMorning ? 'Morning Briefing ☀️' : 'Night Review 🌙',
+          _isMorning ? 'Briefing Pagi ☀️' : 'Review Malam 🌙',
           style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.w700),
         ),
       ),
@@ -151,7 +151,7 @@ class _DailyReviewPageState extends ConsumerState<DailyReviewPage> {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: selected
-                          ? AppColors.primary.withOpacity(0.2)
+                          ? AppColors.primary.withValues(alpha: 0.15)
                           : AppColors.cardBackground,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
@@ -246,7 +246,7 @@ class _TodayTaskPreview extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary.withOpacity(0.3)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +271,7 @@ class _TodayTaskPreview extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: pct,
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: AppColors.border,
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
               minHeight: 8,
             ),
@@ -335,7 +335,7 @@ class _InputSection extends StatelessWidget {
             fillColor: AppColors.cardBackground,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: color.withOpacity(0.3)),
+              borderSide: BorderSide(color: color.withValues(alpha: 0.3)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -343,7 +343,7 @@ class _InputSection extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: color.withOpacity(0.2)),
+              borderSide: BorderSide(color: color.withValues(alpha: 0.2)),
             ),
           ),
         ),

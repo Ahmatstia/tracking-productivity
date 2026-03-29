@@ -22,6 +22,14 @@ class GoalCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.cardShadow.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +41,7 @@ class GoalCard extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white)),
+                      color: AppColors.textPrimary)),
               Text(timeLeft,
                   style: const TextStyle(
                       color: AppColors.secondary, fontSize: 12)),
@@ -45,14 +53,14 @@ class GoalCard extends StatelessWidget {
             percent: progress,
             padding: EdgeInsets.zero,
             barRadius: const Radius.circular(10),
-            backgroundColor: Colors.grey[800],
+            backgroundColor: AppColors.border,
             progressColor: AppColors.secondary,
             animation: true,
             animationDuration: 1000,
           ),
           const SizedBox(height: 8),
           Text("${(progress * 100).toInt()}% Selesai",
-              style: const TextStyle(color: Colors.grey, fontSize: 12)),
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
         ],
       ),
     );

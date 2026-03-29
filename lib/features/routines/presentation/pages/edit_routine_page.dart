@@ -103,9 +103,10 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                     top: 24, left: 24, right: 24,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1A1A2E).withValues(alpha: 0.95),
+                    color: AppColors.sheetBackground,
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-                    border: Border.all(color: Colors.white10),
+                    border: Border.all(color: AppColors.border),
+                    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -115,9 +116,9 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(editIndex == null ? 'Tambah Aktivitas' : 'Edit Aktivitas',
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                           IconButton(
-                            icon: const Icon(LucideIcons.x, color: Colors.white38, size: 20),
+                            icon: Icon(LucideIcons.x, color: AppColors.textSecondary, size: 20),
                             onPressed: () => Navigator.pop(ctx),
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
@@ -128,12 +129,12 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                       TextField(
                         controller: titleCtrl,
                         autofocus: true,
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
                         decoration: InputDecoration(
                           hintText: 'Nama Aktivitas',
-                          hintStyle: const TextStyle(color: Colors.white24),
-                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
-                          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                          hintStyle: const TextStyle(color: AppColors.textSecondary),
+                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+                          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
                           contentPadding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
@@ -197,7 +198,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                             });
                             Navigator.pop(ctx);
                           },
-                          child: const Text('Simpan', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                          child: const Text('Simpan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                         ),
                       )
                     ],
@@ -261,10 +262,10 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(widget.existingRoutine == null ? 'Buat Rutinitas Baru' : 'Edit Rutinitas', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text(widget.existingRoutine == null ? 'Buat Rutinitas Baru' : 'Edit Rutinitas', style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       body: SafeArea(
         child: Column(
@@ -279,20 +280,20 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                     // Detail Rutinitas
                     TextField(
                       controller: _nameController,
-                      style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),
                       decoration: InputDecoration(
                         hintText: 'Nama Rutinitas (mis: Morning Routine)',
-                        hintStyle: const TextStyle(color: Colors.white24, fontSize: 18),
+                        hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 18),
                         filled: false,
-                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2))),
-                        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+                        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
                         contentPadding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
                     const SizedBox(height: 20),
                     
                     // Warna
-                    const Text('Warna Tema', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 14)),
+                    const Text('Warna Tema', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 14)),
                     const SizedBox(height: 12),
                     Row(
                       children: _colors.map((color) => GestureDetector(
@@ -306,7 +307,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                             color: Color(color),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: _selectedColor == color ? Colors.white : Colors.transparent,
+                              color: _selectedColor == color ? AppColors.textPrimary : Colors.transparent,
                               width: 2,
                             ),
                             boxShadow: _selectedColor == color 
@@ -319,7 +320,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                     const SizedBox(height: 28),
 
                     // Penjadwalan Hari
-                    const Text('Jadwal Hari Otomatis (Opsional)', style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 14)),
+                    const Text('Jadwal Hari Otomatis (Opsional)', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 14)),
                     const SizedBox(height: 12),
                     Wrap(
                       spacing: 8,
@@ -336,12 +337,12 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                             decoration: BoxDecoration(
                               color: isSelected ? AppColors.primary : Colors.transparent,
                               shape: BoxShape.circle,
-                              border: Border.all(color: isSelected ? AppColors.primary : Colors.white12),
+                              border: Border.all(color: isSelected ? AppColors.primary : AppColors.border),
                             ),
                             child: Text(
                               _days[index],
                               style: TextStyle(
-                                color: isSelected ? Colors.black : Colors.white70,
+                                color: isSelected ? Colors.white : AppColors.textSecondary,
                                 fontSize: 12,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                               ),
@@ -356,7 +357,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Daftar Aktivitas:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                        const Text('Daftar Aktivitas:', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 18)),
                         TextButton.icon(
                           onPressed: () => _showAddBlockDialog(),
                           icon: const Icon(LucideIcons.plus, size: 16),
@@ -371,17 +372,17 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 40),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.02),
+                          color: AppColors.inputFill,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.05), width: 2, style: BorderStyle.solid),
+                          border: Border.all(color: AppColors.border, width: 2, style: BorderStyle.solid),
                         ),
                         child: Column(
                           children: [
-                            const Icon(LucideIcons.listPlus, size: 40, color: Colors.white24),
+                            Icon(LucideIcons.listPlus, size: 40, color: AppColors.textSecondary.withValues(alpha: 0.3)),
                             const SizedBox(height: 12),
-                            const Text('Belum ada aktivitas.', style: TextStyle(color: Colors.white54, fontWeight: FontWeight.w600)),
+                            const Text('Belum ada aktivitas.', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 4),
-                            const Text('Buat rangkaian kebiasaanmu dari awal.', style: TextStyle(color: Colors.white38, fontSize: 12)),
+                            const Text('Buat rangkaian kebiasaanmu dari awal.', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                           ],
                         ),
                       ),
@@ -393,25 +394,25 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         margin: const EdgeInsets.only(bottom: 8),
                         decoration: BoxDecoration(
                           color: Colors.transparent,
-                          border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
+                          border: Border(bottom: BorderSide(color: AppColors.border)),
                         ),
                         child: ListTile(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
                           leading: Icon(LucideIcons.clock, color: Color(_selectedColor).withValues(alpha: 0.8), size: 16),
-                          title: Text(b.title, style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
-                          subtitle: Text('${b.startTime} - ${b.endTime}', style: const TextStyle(color: Colors.white38, fontSize: 11)),
+                          title: Text(b.title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                          subtitle: Text('${b.startTime} - ${b.endTime}', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(LucideIcons.edit2, color: Colors.white54, size: 16),
+                                icon: Icon(LucideIcons.edit2, color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
                                 onPressed: () => _showAddBlockDialog(index),
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
                               ),
                               const SizedBox(width: 12),
                               IconButton(
-                                icon: const Icon(LucideIcons.trash2, color: Colors.redAccent, size: 16),
+                                icon: Icon(LucideIcons.trash2, color: AppColors.error.withValues(alpha: 0.6), size: 16),
                                 onPressed: () => setState(() => _blocks.removeAt(index)),
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
@@ -436,17 +437,17 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                 right: 20,
               ),
               decoration: BoxDecoration(
-                color: const Color(0xFF161626),
-                border: Border(top: BorderSide(color: Colors.white.withValues(alpha: 0.05))),
+                color: AppColors.surface,
+                border: Border(top: BorderSide(color: AppColors.border)),
               ),
               child: SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton.icon(
                   onPressed: _save,
-                  icon: const Icon(LucideIcons.save, color: Colors.black, size: 20),
+                  icon: const Icon(LucideIcons.save, color: Colors.white, size: 20),
                   label: Text(widget.existingRoutine == null ? 'Simpan Rutinitas Baru' : 'Simpan Perubahan', 
-                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(_selectedColor), // uses selected routine color
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -477,20 +478,20 @@ class _TimePickerButton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.white38, fontSize: 11, fontWeight: FontWeight.w600)),
+          Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1))),
+              border: Border(bottom: BorderSide(color: AppColors.border)),
             ),
             child: Row(
               children: [
-                Icon(LucideIcons.clock, color: Colors.white24, size: 14),
+                Icon(LucideIcons.clock, color: AppColors.textSecondary, size: 14),
                 const SizedBox(width: 8),
                 Text(
                   time != null ? '${time!.hour.toString().padLeft(2, '0')}:${time!.minute.toString().padLeft(2, '0')}' : '--:--',
-                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+                  style: const TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w500),
                 )
               ],
             ),
