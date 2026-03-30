@@ -6,17 +6,27 @@ import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/goals/domain/goal_model.dart';
 import 'package:life_os_productivity/features/goals/presentation/providers/goal_provider.dart';
 
-class AddGoalSheet extends ConsumerStatefulWidget {
-  const AddGoalSheet({super.key});
+class EditGoalSheet extends ConsumerStatefulWidget {
+  final GoalModel goal;
+  final int index;
+  const EditGoalSheet({super.key, required this.goal, required this.index});
 
   @override
-  ConsumerState<AddGoalSheet> createState() => _AddGoalSheetState();
+  ConsumerState<EditGoalSheet> createState() => _EditGoalSheetState();
 }
 
-class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
-  final _titleController = TextEditingController();
-  final _descController = TextEditingController();
+class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
+  late TextEditingController _titleController;
+  late TextEditingController _descController;
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.goal.title);
+    _descController = TextEditingController(text: widget.goal.description);
+    _selectedDate = widget.goal.targetDate;
+  }
 
   @override
   void dispose() {
@@ -28,9 +38,9 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 30)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 3650 * 5)), // 50 years
+      initialDate: _selectedDate ?? DateTime.now().add(const Duration(days: 30)),
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 3650 * 5)),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -50,24 +60,17 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
     }
   }
 
-  void _saveGoal() {
+  void _updateGoal() {
     final title = _titleController.text.trim();
     final desc = _descController.text.trim();
 
     if (title.isNotEmpty) {
-      final newGoal = GoalModel(
-        title: title,
-        description: desc,
-        progress: 0.0,
-        targetDate: _selectedDate,
-      );
-
-      ref.read(goalProvider.notifier).addGoal(newGoal);
+      ref.read(goalProvider.notifier).updateGoal(widget.index, title, desc, _selectedDate);
       Navigator.pop(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Mimpi '$title' berhasil disimpan!"),
+          content: Text("Mimpi '$title' berhasil diperbarui!"),
           backgroundColor: AppColors.secondary,
         ),
       );
@@ -90,7 +93,6 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
       decoration: BoxDecoration(
         color: AppColors.sheetBackground,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -104,26 +106,15 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
             ),
           ),
           const Text(
-            "Tulis Mimpi Baru",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            "Visualisasikan pencapaian terbesarmu di sini.",
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            "Ubah Mimpi",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
           const SizedBox(height: 24),
           TextField(
             controller: _titleController,
-            autofocus: true,
             style: const TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
-              hintText: "Apa mimpi besarmu?",
-              hintStyle: const TextStyle(color: AppColors.textSecondary),
+              hintText: "Mimpi besarmu?",
               filled: true,
               fillColor: AppColors.inputFill,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -135,8 +126,7 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
             maxLines: 2,
             style: const TextStyle(color: AppColors.textSecondary),
             decoration: InputDecoration(
-              hintText: "Mengapa ini penting untukmu? (Opsional)",
-              hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
+              hintText: "Mengapa ini penting? (Opsional)",
               filled: true,
               fillColor: AppColors.inputFill,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -144,7 +134,6 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
           ),
           const SizedBox(height: 16),
           
-          // Date Picker Button
           InkWell(
             onTap: _pickDate,
             borderRadius: BorderRadius.circular(12),
@@ -157,30 +146,16 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    PhosphorIcons.calendar(),
-                    color: _selectedDate != null ? AppColors.secondary : AppColors.textSecondary,
-                    size: 20,
-                  ),
+                  Icon(PhosphorIcons.calendar(), color: _selectedDate != null ? AppColors.secondary : AppColors.textSecondary, size: 20),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text("Tanggal Target Pencapaian", style: TextStyle(color: _selectedDate != null ? AppColors.secondary : AppColors.textSecondary, fontSize: 11)),
                         Text(
-                          _selectedDate == null ? "Kapan ingin dicapai?" : "Target Tanggal Pencapaian",
-                          style: TextStyle(
-                            color: _selectedDate != null ? AppColors.secondary : AppColors.textSecondary,
-                            fontSize: 11,
-                          ),
-                        ),
-                        Text(
-                          _selectedDate == null ? "Tanpa Target (Opsional)" : DateFormat('dd MMMM yyyy', 'id_ID').format(_selectedDate!),
-                          style: TextStyle(
-                            color: _selectedDate != null ? AppColors.textPrimary : AppColors.textSecondary.withValues(alpha: 0.5),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
+                          _selectedDate == null ? "Tanpa Target (Bebas Seleluasa Mungkin)" : DateFormat('dd MMMM yyyy', 'id_ID').format(_selectedDate!),
+                          style: TextStyle(color: _selectedDate != null ? AppColors.textPrimary : AppColors.textSecondary.withValues(alpha: 0.5), fontWeight: FontWeight.bold, fontSize: 14),
                         ),
                       ],
                     ),
@@ -202,16 +177,13 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
             width: double.infinity,
             height: 52,
             child: ElevatedButton(
-              onPressed: _saveGoal,
+              onPressed: _updateGoal,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),
-              child: const Text(
-                "Simpan Mimpi",
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-              ),
+              child: const Text("Simpan Perubahan", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ),
         ],

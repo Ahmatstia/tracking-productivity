@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/dashboard/presentation/providers/nav_provider.dart';
@@ -76,8 +77,9 @@ class MainNavigationPage extends ConsumerWidget {
                             child: GoalCard(
                               title: goal.title,
                               progress: goal.progress,
-                              timeLeft:
-                                  "Target: ${goal.targetDate.day}/${goal.targetDate.month}/${goal.targetDate.year}",
+                              timeLeft: goal.targetDate == null
+                                  ? "Mimpi Tanpa Batas Waktu"
+                                  : "Target: ${DateFormat('dd/MM/yyyy').format(goal.targetDate!)}",
                             ),
                           );
                         },
@@ -152,7 +154,7 @@ class MainNavigationPage extends ConsumerWidget {
               icon: PhosphorIcons.clock(),
               title: 'Jadwal Aktivitas Planner',
               subtitle: 'Blok waktu di kalender Hari Ini',
-              color: const Color(0xFF00B894), // Green
+              color: AppColors.secondary, // Charcoal
               onTap: () {
                 Navigator.pop(ctx);
                 showModalBottomSheet(
@@ -167,7 +169,7 @@ class MainNavigationPage extends ConsumerWidget {
               icon: PhosphorIcons.arrowsClockwise(),
               title: 'Template Rutinitas',
               subtitle: 'Buat paket aktivitas yang berulang',
-              color: const Color(0xFFE67E22), // Orange
+              color: AppColors.textSecondary, // Medium Grey
               onTap: () {
                 Navigator.pop(ctx);
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const EditRoutinePage()));
@@ -177,7 +179,7 @@ class MainNavigationPage extends ConsumerWidget {
               icon: PhosphorIcons.target(),
               title: 'Mimpi / Target',
               subtitle: 'Buat capaian jangka panjang',
-              color: AppColors.error, // Red
+              color: AppColors.primaryAccent, // Dark Grey Accent
               onTap: () {
                 Navigator.pop(ctx);
                 showModalBottomSheet(

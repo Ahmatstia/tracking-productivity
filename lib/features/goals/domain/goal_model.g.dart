@@ -57,7 +57,7 @@ class GoalModelAdapter extends TypeAdapter<GoalModel> {
       title: fields[0] as String,
       description: fields[1] as String,
       progress: fields[2] as double,
-      targetDate: fields[3] as DateTime,
+      targetDate: fields[3] as DateTime?,
       isCompleted: fields[4] as bool,
       subTasks: (fields[5] as List?)?.cast<SubTask>(),
     );

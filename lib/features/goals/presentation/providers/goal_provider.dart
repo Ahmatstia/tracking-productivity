@@ -16,6 +16,17 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     state = [..._box.values];
   }
 
+  void updateGoal(int index, String title, String description, DateTime? targetDate) {
+    final goal = _box.getAt(index);
+    if (goal != null) {
+      goal.title = title;
+      goal.description = description;
+      goal.targetDate = targetDate;
+      goal.save();
+      state = [..._box.values];
+    }
+  }
+
   void deleteGoal(int index) {
     _box.deleteAt(index);
     state = [..._box.values];
@@ -46,6 +57,19 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     if (goal != null) {
       goal.subTasks.removeAt(subTaskIndex);
       _recalculateProgress(goal);
+      goal.save();
+      state = [..._box.values];
+    }
+  }
+
+  void reorderSubTask(int goalIndex, int oldIndex, int newIndex) {
+    final goal = _box.getAt(goalIndex);
+    if (goal != null) {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final item = goal.subTasks.removeAt(oldIndex);
+      goal.subTasks.insert(newIndex, item);
       goal.save();
       state = [..._box.values];
     }

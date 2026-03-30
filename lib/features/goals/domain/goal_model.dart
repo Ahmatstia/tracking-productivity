@@ -29,7 +29,7 @@ class GoalModel extends HiveObject {
   double progress; // 0.0 sampai 1.0 (0% - 100%)
 
   @HiveField(3)
-  DateTime targetDate; // Kapan mimpi ini ingin dicapai
+  DateTime? targetDate; // Kapan mimpi ini ingin dicapai (opsional)
 
   @HiveField(4)
   bool isCompleted;
@@ -41,7 +41,7 @@ class GoalModel extends HiveObject {
     required this.title,
     required this.description,
     this.progress = 0.0,
-    required this.targetDate,
+    this.targetDate,
     this.isCompleted = false,
     List<SubTask>? subTasks,
   }) : subTasks = subTasks ?? [];
