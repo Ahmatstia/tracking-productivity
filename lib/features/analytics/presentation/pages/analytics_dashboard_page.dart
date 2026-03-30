@@ -33,7 +33,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                   children: const [
                     Text('Analitik Hidup',
                         style: TextStyle(
-                          color: AppColors.textPrimary,
+                          color: AppColors.primary,
                           fontSize: 26,
                           fontWeight: FontWeight.w800,
                         )),
@@ -90,7 +90,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                     icon: PhosphorIcons.flame(),
                     value: '${userStats?.currentStreak ?? 0}',
                     label: 'Streak Hari',
-                    color: AppColors.textSecondary,
+                    color: AppColors.error,
                   ),
                 ),
                 const SizedBox(width: 12),

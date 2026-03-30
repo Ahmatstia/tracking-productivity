@@ -104,9 +104,9 @@ class _TodayPageState extends ConsumerState<TodayPage>
                                   Text(
                                     _formatDate(_today),
                                     style: const TextStyle(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primary,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w800,
                                     ),
                                   ),
                                   if (todayBlocks.isNotEmpty)

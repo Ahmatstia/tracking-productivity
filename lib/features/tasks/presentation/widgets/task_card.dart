@@ -23,7 +23,7 @@ class TaskCard extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: task.isCompleted
               ? AppColors.border
@@ -34,9 +34,10 @@ class TaskCard extends ConsumerWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.cardShadow.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: AppColors.cardShadow,
+            blurRadius: 24,
+            spreadRadius: 2,
+            offset: const Offset(0, 12),
           ),
         ],
       ),

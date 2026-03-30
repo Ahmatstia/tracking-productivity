@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // ── Aesthetic Minimalist & Soft Graphite Theme ──
-  static const Color primary = Color(0xFF5E5CE6);       // Soft Indigo
-  static const Color accent = Color(0xFF5E5CE6);         // Soft Indigo
-  static const Color secondary = Color(0xFF5E5CE6);      // Soft Indigo
-  static const Color background = Color(0xFFF9F8F6);     // White Sand
-  static const Color surface = Color(0xFFFFFFFF);         // Pure White
-  static const Color cardBackground = Color(0xFFFFFFFF);  // Pure White
-  static const Color textPrimary = Color(0xFF1D1D1F);     // Dark Graphite
-  static const Color textSecondary = Color(0xFF86868B);   // Cool Gray
-  static const Color textSecondaryAccent = Color(0xFFD1D1D6); // Light Gray Accent
-  static const Color error = Color(0xFFFF3B30);           // Soft Red
-  static const Color primaryAccent = Color(0xFF8E8E93);   // Middle Gray
+  // ── Deep Indigo & Crimson Red Aesthetic ──
+  static const Color primary = Color(0xFF1A237E);       // Deep Indigo
+  static const Color accent = Color(0xFF1A237E);        // Deep Indigo Accent
+  static const Color secondary = Color(0xFF283593);     // Subtle Lighter Indigo
+  static const Color background = Color(0xFFF8F9FA);    // Off-White Background
+  static const Color surface = Color(0xFFFFFFFF);       // Pure White (Floating base)
+  static const Color cardBackground = Color(0xFFFFFFFF);// Pure White
+  static const Color textPrimary = Color(0xFF212121);   // Sharp Dark Grey
+  static const Color textSecondary = Color(0xFF757575); // Lighter Grey hierarchy
+  static const Color textSecondaryAccent = Color(0xFFBDBDBD); // Light Gray Accent
+  static const Color error = Color(0xFFD32F2F);         // Crimson Red Status
+  static const Color primaryAccent = Color(0xFF3949AB); // Bright Indigo Accent
 
-  // ── Extended palette ──
-  static const Color border = Color(0xFFE5E5EA);          // Soft Border
-  static const Color shimmer = Color(0xFFF2F2F7);         // Ultra soft fill
-  static const Color navBar = Color(0xFFFFFFFF);           // NavBar Putih
-  static const Color cardShadow = Color(0x0A000000);       // Shadow Sangat Halus 4%
-  static const Color inputFill = Color(0xFFF2F2F7);        // Input background
-  static const Color sheetBackground = Color(0xFFFFFFFF);  // Bottom sheet
+  // ── Floating Shadows & Strokes ──
+  static const Color border = Color(0xFFEEEEEE);        // Very Soft Border
+  static const Color shimmer = Color(0xFFF5F5F5);       // Shimmer fill
+  static const Color navBar = Color(0xFFFFFFFF);        // White NavBar
+  static const Color inputFill = Color(0xFFF5F5F5);     // Input field bg
+  static const Color sheetBackground = Color(0xFFFFFFFF); // Bottom sheet bg
+  
+  // Enhanced floating shadow (e.g. 10% black) to complement the off-white bg
+  static const Color cardShadow = Color(0x14000000);    // 8% Black Shadow
 }

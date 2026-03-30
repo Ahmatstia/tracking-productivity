@@ -115,7 +115,7 @@ class MainNavigationPage extends ConsumerWidget {
           backgroundColor: Colors.transparent,
           builder: (_) => _TaskAddSheet(date: today),
         ),
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppColors.primary,
         child: Icon(PhosphorIcons.plus(), color: Colors.white),
       );
     }
@@ -125,7 +125,7 @@ class MainNavigationPage extends ConsumerWidget {
           context,
           MaterialPageRoute(builder: (_) => const EditRoutinePage()),
         ),
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppColors.primary,
         child: Icon(PhosphorIcons.plus(), color: Colors.white),
       );
     }
@@ -137,7 +137,7 @@ class MainNavigationPage extends ConsumerWidget {
           backgroundColor: Colors.transparent,
           builder: (_) => const AddGoalSheet(),
         ),
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppColors.primary,
         child: Icon(PhosphorIcons.plus(), color: Colors.white),
       );
     }
