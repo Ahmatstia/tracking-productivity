@@ -7,7 +7,6 @@ import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/habit_pattern_provider.dart';
 import 'package:life_os_productivity/features/planner/presentation/widgets/daily_planner_widget.dart';
-import 'package:life_os_productivity/features/planner/presentation/widgets/add_time_block_sheet.dart';
 import 'package:life_os_productivity/features/tasks/presentation/widgets/task_card.dart';
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
 import 'package:life_os_productivity/features/gamification/presentation/providers/stats_provider.dart';
@@ -19,8 +18,7 @@ class TodayPage extends ConsumerStatefulWidget {
   ConsumerState<TodayPage> createState() => _TodayPageState();
 }
 
-class _TodayPageState extends ConsumerState<TodayPage>
-    with SingleTickerProviderStateMixin {
+class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _today = DateTime.now();
 
@@ -66,7 +64,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
           children: [
             // ── Header ──
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
               child: Column(
                 children: [
                   Row(
@@ -111,7 +109,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                                   ),
                                   if (todayBlocks.isNotEmpty)
                                     IconButton(
-                                      icon: Icon(PhosphorIcons.trash(), color: AppColors.textSecondary.withValues(alpha: 0.5), size: 16),
+                                      icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.7), size: 16),
                                       onPressed: () => _confirmClearToday(),
                                       tooltip: 'Bersihkan Jadwal',
                                       padding: const EdgeInsets.only(left: 8),
@@ -127,7 +125,7 @@ class _TodayPageState extends ConsumerState<TodayPage>
                     ],
                   ).animate().fadeIn(duration: 400.ms),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
 
                   // Habit Auto-Complete Banner
                   if (unAppliedHabits.isNotEmpty)
@@ -148,9 +146,8 @@ class _TodayPageState extends ConsumerState<TodayPage>
                       },
                     ).animate().fadeIn(delay: 200.ms).slideY(begin: -0.1, end: 0),
 
+                  // TabBar Container
                   const SizedBox(height: 12),
-
-                  // Tab bar
                   Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
@@ -175,9 +172,9 @@ class _TodayPageState extends ConsumerState<TodayPage>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(PhosphorIcons.calendarBlank(), size: 14),
+                              Icon(PhosphorIcons.clock(), size: 14),
                               const SizedBox(width: 6),
-                              Text('Planner (${todayBlocks.length})'),
+                              Text('Jadwal (${todayBlocks.length})'),
                             ],
                           ),
                         ),
@@ -185,9 +182,9 @@ class _TodayPageState extends ConsumerState<TodayPage>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(PhosphorIcons.checkSquare(), size: 14),
+                              Icon(PhosphorIcons.tray(), size: 14),
                               const SizedBox(width: 6),
-                              Text('Tugas (${todayTasks.length})'),
+                              Text('Kotak Masuk (${todayTasks.length})'),
                             ],
                           ),
                         ),
@@ -198,10 +195,11 @@ class _TodayPageState extends ConsumerState<TodayPage>
               ),
             ),
 
-            // ── Tab content ──
+            // ── Tab View (Planner vs Inbox Tasks) ──
             Expanded(
               child: TabBarView(
                 controller: _tabController,
+                physics: const BouncingScrollPhysics(),
                 children: [
                   _buildPlannerTab(todayBlocks.isEmpty),
                   _buildTasksTab(todayTasks),
@@ -209,35 +207,6 @@ class _TodayPageState extends ConsumerState<TodayPage>
               ),
             ),
           ],
-        ),
-      ),
-
-      floatingActionButton: AnimatedBuilder(
-        animation: _tabController,
-        builder: (_, __) => FloatingActionButton.extended(
-          onPressed: () {
-            if (_tabController.index == 0) {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (_) => AddTimeBlockSheet(date: _today),
-              );
-            } else {
-              _showAddTaskSheet();
-            }
-          },
-          backgroundColor: _tabController.index == 0
-              ? AppColors.primary
-              : AppColors.secondary,
-          icon: Icon(PhosphorIcons.plus(), color: Colors.white),
-          label: Text(
-            _tabController.index == 0 ? 'Tambah Block' : 'Tambah Tugas',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
         ),
       ),
     );
@@ -250,15 +219,8 @@ class _TodayPageState extends ConsumerState<TodayPage>
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _EmptyPlannerState(onAdd: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                builder: (_) => AddTimeBlockSheet(date: _today),
-              );
-            }),
+          children: const [
+            _EmptyPlannerState(),
           ],
         ),
       );
@@ -278,9 +240,9 @@ class _TodayPageState extends ConsumerState<TodayPage>
           if (carriedOver.isNotEmpty) ...[
             Row(children: [
               Icon(PhosphorIcons.arrowUpRight(), size: 14, color: AppColors.textSecondary),
-              SizedBox(width: 6),
-              Text(
-                'Dari kemarin',
+              const SizedBox(width: 6),
+              const Text(
+                'Tugas Terlewat (Dari kemarin)',
                 style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ]),
@@ -289,20 +251,11 @@ class _TodayPageState extends ConsumerState<TodayPage>
             const SizedBox(height: 16),
           ],
           if (tasks.isEmpty)
-            _EmptyTasksState(onAdd: _showAddTaskSheet)
+            const _EmptyTasksState()
           else
             ...tasks.map((t) => TaskCard(task: t)),
         ],
       ),
-    );
-  }
-
-  void _showAddTaskSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const _QuickAddTaskSheet(),
     );
   }
 
@@ -465,8 +418,7 @@ class _HabitSuggestionBanner extends StatelessWidget {
 }
 
 class _EmptyPlannerState extends StatelessWidget {
-  final VoidCallback onAdd;
-  const _EmptyPlannerState({required this.onAdd});
+  const _EmptyPlannerState();
 
   @override
   Widget build(BuildContext context) {
@@ -484,7 +436,7 @@ class _EmptyPlannerState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Tap tombol + di bawah untuk mulai\nmenjadwalkan aktivitasmu',
+            'Klik tombol + di tengah bawah untuk\nmerencanakan pekerjaan hari ini.',
             textAlign: TextAlign.center,
             style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
           ),
@@ -495,8 +447,7 @@ class _EmptyPlannerState extends StatelessWidget {
 }
 
 class _EmptyTasksState extends StatelessWidget {
-  final VoidCallback onAdd;
-  const _EmptyTasksState({required this.onAdd});
+  const _EmptyTasksState();
 
   @override
   Widget build(BuildContext context) {
@@ -509,224 +460,14 @@ class _EmptyTasksState extends StatelessWidget {
           Icon(PhosphorIcons.checkCircle(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
           const SizedBox(height: 16),
           const Text(
-            'Belum ada tugas hari ini',
+            'Kotak Masuk Kosong',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
           const Text(
-            'Klik tombol di bawah untuk menambah\ntugas dan prioritas pengerjaannya',
+            'Tidak ada tugas lepas.\nSemua kegiatan sudah terjadwal rapi.',
             textAlign: TextAlign.center,
             style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Quick Add Task sheet embedded in Today Page
-class _QuickAddTaskSheet extends ConsumerStatefulWidget {
-  const _QuickAddTaskSheet();
-
-  @override
-  ConsumerState<_QuickAddTaskSheet> createState() => _QuickAddTaskSheetState();
-}
-
-class _QuickAddTaskSheetState extends ConsumerState<_QuickAddTaskSheet> {
-  final _titleController = TextEditingController();
-  final _descController = TextEditingController();
-  int _priority = 0;
-  String? _startTime;
-  String? _endTime;
-
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _descController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickTime(bool isStart) async {
-    final initial = TimeOfDay.now();
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: initial,
-      builder: (context, child) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null) {
-      final formatted =
-          '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-      setState(() {
-        if (isStart) {
-          _startTime = formatted;
-        } else {
-          _endTime = formatted;
-        }
-      });
-    }
-  }
-
-  void _save() {
-    final title = _titleController.text.trim();
-    if (title.isEmpty) return;
-
-    ref.read(taskProvider.notifier).addTask(
-      title: title,
-      description: _descController.text.trim(),
-      date: DateTime.now(),
-      priority: _priority,
-      startTime: _startTime,
-      endTime: _endTime,
-    );
-    Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-        top: 24, left: 20, right: 20,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.sheetBackground,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 40, height: 4,
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
-            ),
-          ),
-          const Text('Tambah Tugas Baru',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _titleController,
-            autofocus: true,
-            style: const TextStyle(color: AppColors.textPrimary),
-            decoration: InputDecoration(
-              hintText: 'Apa yang ingin dikerjakan?',
-              hintStyle: const TextStyle(color: AppColors.textSecondary),
-              filled: true,
-              fillColor: AppColors.inputFill,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _descController,
-            maxLines: 2,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
-            decoration: InputDecoration(
-              hintText: 'Deskripsi (opsional)',
-              hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
-              filled: true,
-              fillColor: AppColors.inputFill,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [0, 1, 2].map((p) {
-              final labels = ['Normal', '⭐ Penting', '🔴 Urgent'];
-              final colors = [AppColors.textSecondary, AppColors.primary, AppColors.error];
-              final isSelected = _priority == p;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: GestureDetector(
-                  onTap: () => setState(() => _priority = p),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: isSelected ? colors[p].withValues(alpha: 0.12) : AppColors.inputFill,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: isSelected ? colors[p] : AppColors.border),
-                    ),
-                    child: Text(labels[p],
-                        style: TextStyle(
-                            color: isSelected ? colors[p] : AppColors.textSecondary,
-                            fontSize: 12,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 12),
-          // Time picker row
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _pickTime(true),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.inputFill,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(PhosphorIcons.clock(), size: 14, color: AppColors.textSecondary),
-                        const SizedBox(width: 6),
-                        Text(_startTime ?? 'Mulai', style: TextStyle(color: _startTime != null ? AppColors.textPrimary : AppColors.textSecondary, fontSize: 13)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _pickTime(false),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.inputFill,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.border),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(PhosphorIcons.clock(), size: 14, color: AppColors.textSecondary),
-                        const SizedBox(width: 6),
-                        Text(_endTime ?? 'Selesai', style: TextStyle(color: _endTime != null ? AppColors.textPrimary : AppColors.textSecondary, fontSize: 13)),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              onPressed: _save,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                elevation: 0,
-              ),
-              child: const Text('Simpan Tugas',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-            ),
           ),
         ],
       ),

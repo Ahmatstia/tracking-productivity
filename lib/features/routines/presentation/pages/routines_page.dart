@@ -5,6 +5,7 @@ import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/routines/presentation/providers/routine_provider.dart';
 import 'package:life_os_productivity/features/routines/presentation/pages/edit_routine_page.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
+import 'package:life_os_productivity/features/routines/presentation/widgets/manage_habits_sheet.dart';
 
 class RoutinesPage extends ConsumerWidget {
   const RoutinesPage({super.key});
@@ -23,6 +24,23 @@ class RoutinesPage extends ConsumerWidget {
             expandedHeight: 100,
             backgroundColor: AppColors.background,
             automaticallyImplyLeading: false,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: IconButton(
+                  icon: Icon(PhosphorIcons.faders(), color: AppColors.textPrimary),
+                  tooltip: 'Kelola Saran Kebiasaan',
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (ctx) => const ManageHabitsSheet(),
+                    );
+                  },
+                ),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
               title: const Text(
