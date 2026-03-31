@@ -14,7 +14,7 @@ final profileProvider = StateNotifierProvider<ProfileNotifier, UserProfileModel>
 class ProfileNotifier extends StateNotifier<UserProfileModel> {
   final Box<UserProfileModel> _box;
 
-  ProfileNotifier(this._box) : super(_box.getAt(0)!);
+  ProfileNotifier(this._box) : super(_box.get(0) ?? UserProfileModel());
 
   /// Saves to Hive directly and notifies listeners.
   /// Uses _box.putAt(0, state) instead of state.save() to avoid
