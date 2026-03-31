@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/categories/domain/category_model.dart';
 
 final categoryProvider = StateNotifierProvider<CategoryNotifier, List<CategoryModel>>((ref) {

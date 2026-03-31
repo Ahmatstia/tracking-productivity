@@ -90,9 +90,9 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
         left: 20,
         right: 20,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: AppColors.sheetBackground,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -102,7 +102,7 @@ class _EditGoalSheetState extends ConsumerState<EditGoalSheet> {
             child: Container(
               width: 40, height: 4,
               margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
+              decoration: const BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.all(Radius.circular(2))),
             ),
           ),
           const Text(

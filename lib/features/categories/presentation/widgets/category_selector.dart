@@ -72,9 +72,9 @@ class CategorySelector extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Text('Kategori', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
             Text('(Tahan untuk menghapus)', style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontStyle: FontStyle.italic)),
           ],

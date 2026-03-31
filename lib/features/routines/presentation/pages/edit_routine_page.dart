@@ -90,8 +90,11 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
               );
               if (picked != null) {
                 setDialogState(() {
-                  if (isStart) startT = picked;
-                  else endT = picked;
+                  if (isStart) {
+                    startT = picked;
+                  } else {
+                    endT = picked;
+                  }
                 });
               }
             }
@@ -133,12 +136,12 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         controller: titleCtrl,
                         autofocus: true,
                         style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Nama Aktivitas',
-                          hintStyle: const TextStyle(color: AppColors.textSecondary),
+                          hintStyle: TextStyle(color: AppColors.textSecondary),
                           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-                          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                          contentPadding: EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -239,7 +242,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
         ..assignedDays = _assignedDays;
         
       ref.read(routineProvider.notifier).updateRoutine(widget.existingRoutine!);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Rutinitas diperbarui.')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Rutinitas diperbarui.')));
     } else {
       // Create mode
       ref.read(routineProvider.notifier).addRoutine(
@@ -248,7 +251,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
         assignedDays: _assignedDays,
         colorCode: _selectedColor,
       );
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Rutinitas baru dibuat.')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Rutinitas baru dibuat.')));
     }
     Navigator.pop(context);
   }
@@ -289,13 +292,13 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                     TextField(
                       controller: _nameController,
                       style: const TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Nama Rutinitas (mis: Morning Routine)',
-                        hintStyle: const TextStyle(color: AppColors.textSecondary, fontSize: 18),
+                        hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 18),
                         filled: false,
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-                        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                        contentPadding: EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -400,7 +403,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                       final RoutineBlockModel b = entry.value;
                       return Container(
                         margin: const EdgeInsets.only(bottom: 8),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.transparent,
                           border: Border(bottom: BorderSide(color: AppColors.border)),
                         ),
@@ -444,7 +447,7 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                 left: 20,
                 right: 20,
               ),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.surface,
                 border: Border(top: BorderSide(color: AppColors.border)),
               ),
@@ -490,7 +493,7 @@ class _TimePickerButton extends StatelessWidget {
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: AppColors.border)),
             ),
             child: Row(

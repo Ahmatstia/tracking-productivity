@@ -69,8 +69,11 @@ class _AddRoutineSheetState extends ConsumerState<AddRoutineSheet> {
               );
               if (picked != null) {
                 setDialogState(() {
-                  if (isStart) startT = picked;
-                  else endT = picked;
+                  if (isStart) {
+                    startT = picked;
+                  } else {
+                    endT = picked;
+                  }
                 });
               }
             }

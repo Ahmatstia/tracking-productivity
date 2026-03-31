@@ -32,12 +32,12 @@ class TaskCard extends ConsumerWidget {
                   : AppColors.border,
           width: 1,
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.cardShadow,
             blurRadius: 24,
             spreadRadius: 2,
-            offset: const Offset(0, 12),
+            offset: Offset(0, 12),
           ),
         ],
       ),
@@ -146,8 +146,8 @@ class TaskCard extends ConsumerWidget {
                 child: Row(
                   children: [
                     Icon(PhosphorIcons.arrowUpRight(), size: 11, color: AppColors.textSecondary),
-                    SizedBox(width: 4),
-                    Text(
+                    const SizedBox(width: 4),
+                    const Text(
                       'Dibawa dari kemarin',
                       style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                     ),

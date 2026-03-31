@@ -31,27 +31,42 @@ void main() async {
   await NotificationService().init();
 
   // Register adapters (ID order matters)
-  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(SubTaskAdapter());
-  if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(GoalModelAdapter());
-  if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(TaskModelAdapter());
-  if (!Hive.isAdapterRegistered(3))
+  if (!Hive.isAdapterRegistered(1)) {
+    Hive.registerAdapter(SubTaskAdapter());
+  }
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(GoalModelAdapter());
+  }
+  if (!Hive.isAdapterRegistered(2)) {
+    Hive.registerAdapter(TaskModelAdapter());
+  }
+  if (!Hive.isAdapterRegistered(3)) {
     Hive.registerAdapter(TimeBlockModelAdapter());
-  if (!Hive.isAdapterRegistered(4))
+  }
+  if (!Hive.isAdapterRegistered(4)) {
     Hive.registerAdapter(HabitPatternModelAdapter());
-  if (!Hive.isAdapterRegistered(5))
+  }
+  if (!Hive.isAdapterRegistered(5)) {
     Hive.registerAdapter(FocusSessionModelAdapter());
-  if (!Hive.isAdapterRegistered(6))
+  }
+  if (!Hive.isAdapterRegistered(6)) {
     Hive.registerAdapter(UserStatsModelAdapter());
-  if (!Hive.isAdapterRegistered(7))
+  }
+  if (!Hive.isAdapterRegistered(7)) {
     Hive.registerAdapter(RoutineTemplateModelAdapter());
-  if (!Hive.isAdapterRegistered(8))
+  }
+  if (!Hive.isAdapterRegistered(8)) {
     Hive.registerAdapter(RoutineBlockModelAdapter());
-  if (!Hive.isAdapterRegistered(9))
+  }
+  if (!Hive.isAdapterRegistered(9)) {
     Hive.registerAdapter(DailyReviewModelAdapter());
-  if (!Hive.isAdapterRegistered(10))
+  }
+  if (!Hive.isAdapterRegistered(10)) {
     Hive.registerAdapter(UserProfileModelAdapter());
-  if (!Hive.isAdapterRegistered(11))
+  }
+  if (!Hive.isAdapterRegistered(11)) {
     Hive.registerAdapter(CategoryModelAdapter());
+  }
 
   // Open all Hive boxes
   await Hive.openBox<GoalModel>('goals_box');

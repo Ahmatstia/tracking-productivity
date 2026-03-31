@@ -35,7 +35,8 @@ class SettingsPage extends ConsumerWidget {
             subtitle: 'Ingatkan saya untuk aktivitas planner',
             trailing: Switch.adaptive(
               value: profile.notificationsEnabled,
-              activeColor: AppColors.primary,
+              activeTrackColor: AppColors.primary.withValues(alpha: 0.5),
+              activeThumbColor: AppColors.primary,
               onChanged: (val) {
                 ref.read(profileProvider.notifier).updateNotifications(val);
               },
@@ -161,9 +162,11 @@ class SettingsPage extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () async {
+              final navigator = Navigator.of(ctx);
+              final messenger = ScaffoldMessenger.of(context);
               await Hive.deleteFromDisk();
-              Navigator.pop(ctx);
-              ScaffoldMessenger.of(context).showSnackBar(
+              navigator.pop();
+              messenger.showSnackBar(
                 const SnackBar(content: Text('Data Dihapus. Mohon muat ulang aplikasi.'))
               );
             },

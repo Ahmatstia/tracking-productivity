@@ -133,7 +133,7 @@ class ManageHabitsSheet extends ConsumerWidget {
                           children: [
                             Switch(
                               value: habit.isActive,
-                              activeColor: AppColors.primary,
+                              activeThumbColor: AppColors.primary,
                               onChanged: (val) {
                                 ref.read(habitPatternProvider.notifier).togglePattern(habit.id);
                               },

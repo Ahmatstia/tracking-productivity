@@ -41,9 +41,9 @@ class RoutinesPage extends ConsumerWidget {
                 ),
               ),
             ],
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-              title: const Text(
+            flexibleSpace: const FlexibleSpaceBar(
+              titlePadding: EdgeInsets.only(left: 20, bottom: 16),
+              title: Text(
                 'Kebiasaan & Rutinitas',
                 style: TextStyle(
                   color: AppColors.textPrimary,
@@ -120,7 +120,7 @@ class RoutinesPage extends ConsumerWidget {
                                         Expanded(
                                           child: Text(
                                             routine.name,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: AppColors.textPrimary,
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,

@@ -27,7 +27,7 @@ class AppDrawer extends ConsumerWidget {
             _buildDrawerHeader(context, ref, userStats, profile),
             
             const SizedBox(height: 12),
-            Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
+            const Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
             const SizedBox(height: 12),
 
             Padding(
@@ -80,7 +80,7 @@ class AppDrawer extends ConsumerWidget {
 
             const Spacer(),
             
-            Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
+            const Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               child: _MenuItem(
@@ -114,7 +114,7 @@ class AppDrawer extends ConsumerWidget {
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.fromLTRB(24, MediaQuery.of(context).padding.top + 32, 24, 24),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.surface,
           border: Border(
             bottom: BorderSide(color: AppColors.border, width: 1),
@@ -253,7 +253,7 @@ class AppDrawer extends ConsumerWidget {
                     decoration: InputDecoration(
                       hintText: 'Masukkan nama...',
                       hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
-                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+                      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
                       focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
                     ),
                   ),

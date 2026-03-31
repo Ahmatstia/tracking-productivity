@@ -52,7 +52,7 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
         widget.date.month == now.month &&
         widget.date.day == now.day;
 
-    final totalHeight = (_endHour - _startHour) * _hourHeight;
+    const totalHeight = (_endHour - _startHour) * _hourHeight;
 
     return Container(
       color: AppColors.background,
@@ -80,8 +80,8 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                         alignment: Alignment.topCenter,
                         child: Text(
                           '${hour.toString().padLeft(2, '0')}:00',
-                          style: TextStyle(
-                            color: AppColors.textSecondary.withValues(alpha: 0.4),
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
                             letterSpacing: -0.2,

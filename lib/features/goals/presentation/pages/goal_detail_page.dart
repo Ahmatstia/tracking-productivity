@@ -117,9 +117,9 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
     final goals = ref.watch(goalProvider);
 
     if (widget.goalIndex >= goals.length) {
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: AppColors.background,
-        body: const Center(child: Text("Mimpi tidak ditemukan", style: TextStyle(color: AppColors.textSecondary))),
+        body: Center(child: Text("Mimpi tidak ditemukan", style: TextStyle(color: AppColors.textSecondary))),
       );
     }
 
