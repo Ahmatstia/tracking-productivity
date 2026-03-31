@@ -88,9 +88,9 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                         ),
                       ),
                       Expanded(
-                        child: Container(
-                          height: 1,
-                          color: AppColors.border.withValues(alpha: 0.15),
+                        child: Opacity(
+                          opacity: 0.2,
+                          child: const _DashedLine(),
                         ),
                       ),
                     ],
@@ -238,6 +238,33 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => AddTimeBlockSheet(date: widget.date, editBlock: block),
+    );
+  }
+}
+
+class _DashedLine extends StatelessWidget {
+  const _DashedLine();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const dashWidth = 4.0;
+        const dashSpace = 4.0;
+        final dashCount = (constraints.maxWidth / (dashWidth + dashSpace)).floor();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(dashCount, (_) {
+            return const SizedBox(
+              width: dashWidth,
+              height: 1,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: AppColors.textSecondary),
+              ),
+            );
+          }),
+        );
+      },
     );
   }
 }
