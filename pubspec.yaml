@@ -45,12 +45,24 @@ dev_dependencies:
   hive_generator: ^2.0.1
   build_runner: ^2.4.8
   flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon/app_icon.png"
   min_sdk_android: 21
+
+flutter_native_splash:
+  color: "#4f46e5" # Indigo to match MyLife OS brand
+  image: "assets/icon/app_icon.png"
+  android_12:
+    image: "assets/icon/app_icon.png"
+    icon_background_color: "#ffffff" # Optional: White glow behind logo for Android 12+
+    color: "#4f46e5"
+  android: true
+  ios: true
+  fullscreen: true
 
 flutter:
   uses-material-design: true
