@@ -41,7 +41,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     final task = _box.get(id);
     if (task != null) {
       task.isCompleted = !task.isCompleted;
-      task.save();
+      _box.put(id, task); // Fix: use box.put instead of task.save()
       _refresh();
     }
   }
@@ -62,7 +62,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
     final today = DateTime(now.year, now.month, now.day);
     bool changed = false;
 
-    for (final task in _box.values) {
+    for (final task in _box.values.toList()) {
       if (!task.isCompleted) {
         final taskDate = DateTime(task.date.year, task.date.month, task.date.day);
         if (taskDate.isBefore(today)) {
@@ -70,7 +70,7 @@ class TaskNotifier extends StateNotifier<List<TaskModel>> {
           task.isCarriedOver = true;
           task.startTime = null;
           task.endTime = null;
-          task.save();
+          _box.put(task.id, task); // Fix: use box.put instead of task.save()
           changed = true;
         }
       }
@@ -107,7 +107,9 @@ final tasksByDateProvider =
 
 // Today's tasks
 final todayTasksProvider = Provider<List<TaskModel>>((ref) {
-  return ref.watch(tasksByDateProvider(DateTime.now()));
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  return ref.watch(tasksByDateProvider(today));
 });
 
 // Unscheduled tasks for today (no time assigned)

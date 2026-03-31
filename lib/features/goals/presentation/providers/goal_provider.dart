@@ -10,13 +10,14 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
   final Box<GoalModel> _box;
   final Ref _ref;
 
-  // Mengambil data awal dari Hive saat aplikasi dibuka
   GoalNotifier(this._box, this._ref) : super(_box.values.toList());
+
+  void _refresh() => state = [..._box.values];
 
   void addGoal(GoalModel goal) {
     _box.add(goal);
     _scheduleReminder(goal);
-    state = [..._box.values];
+    _refresh();
   }
 
   void updateGoal(int index, String title, String description, DateTime? targetDate) {
@@ -25,19 +26,20 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
       goal.title = title;
       goal.description = description;
       goal.targetDate = targetDate;
-      goal.save();
+      _box.putAt(index, goal); // Fix: use box.putAt instead of goal.save()
       _scheduleReminder(goal);
-      state = [..._box.values];
+      _refresh();
     }
   }
 
   void deleteGoal(int index) {
     final goal = _box.getAt(index);
     if (goal != null) {
-      NotificationService().cancelNotification(goal.key.toString());
+      // Use stable string ID for notification cancellation
+      NotificationService().cancelNotification('goal_${goal.key}');
       _box.deleteAt(index);
     }
-    state = [..._box.values];
+    _refresh();
   }
 
   void addSubTask(int goalIndex, String subTaskTitle) {
@@ -45,8 +47,8 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     if (goal != null) {
       goal.subTasks.add(SubTask(title: subTaskTitle));
       _recalculateProgress(goal);
-      goal.save();
-      state = [..._box.values];
+      _box.putAt(goalIndex, goal); // Fix: use box.putAt instead of goal.save()
+      _refresh();
     }
   }
 
@@ -55,8 +57,8 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     if (goal != null) {
       goal.subTasks[subTaskIndex].isCompleted = isCompleted;
       _recalculateProgress(goal);
-      goal.save();
-      state = [..._box.values];
+      _box.putAt(goalIndex, goal); // Fix: use box.putAt instead of goal.save()
+      _refresh();
     }
   }
 
@@ -65,8 +67,8 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     if (goal != null) {
       goal.subTasks.removeAt(subTaskIndex);
       _recalculateProgress(goal);
-      goal.save();
-      state = [..._box.values];
+      _box.putAt(goalIndex, goal); // Fix: use box.putAt instead of goal.save()
+      _refresh();
     }
   }
 
@@ -78,22 +80,24 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
       }
       final item = goal.subTasks.removeAt(oldIndex);
       goal.subTasks.insert(newIndex, item);
-      goal.save();
-      state = [..._box.values];
+      _box.putAt(goalIndex, goal); // Fix: use box.putAt instead of goal.save()
+      _refresh();
     }
   }
 
   void _scheduleReminder(GoalModel goal) {
     final settings = _ref.read(profileProvider);
+    // Use a stable string key that won't collide with other goals
+    final notifId = 'goal_${goal.key}';
     if (goal.targetDate != null && !goal.isCompleted) {
       NotificationService().scheduleGoalReminder(
-        goalId: goal.key.toString(),
+        goalId: notifId,
         title: goal.title,
         deadline: goal.targetDate!,
         settings: settings,
       );
     } else {
-      NotificationService().cancelNotification(goal.key.toString());
+      NotificationService().cancelNotification(notifId);
     }
   }
 
@@ -103,7 +107,7 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
       goal.isCompleted = false;
       return;
     }
-    
+
     int completedCount = goal.subTasks.where((st) => st.isCompleted).length;
     goal.progress = completedCount / goal.subTasks.length;
     final wasCompleted = goal.isCompleted;

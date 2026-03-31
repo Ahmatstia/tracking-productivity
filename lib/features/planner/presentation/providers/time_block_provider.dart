@@ -58,7 +58,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
     final block = _box.get(id);
     if (block != null) {
       block.isCompleted = !block.isCompleted;
-      block.save();
+      _box.put(id, block); // Fix: use box.put instead of block.save()
       _refresh();
     }
   }
@@ -71,7 +71,6 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
 
   void updateBlock(TimeBlockModel updated) {
     // ── Exclusive Scheduling: Overwrite overlaps when updating ──
-    // Exclude the ID being updated to prevent self-deletion
     deleteOverlappingBlocks(updated.date, updated.startMinutes, updated.endMinutes, excludeId: updated.id);
 
     _box.put(updated.id, updated);
@@ -110,8 +109,6 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
       NotificationService().cancelNotification(block.id);
     }
     
-    // No direct refresh here if part of a bigger transaction, 
-    // but the final caller will call _refresh()
     return overlaps.length;
   }
 
@@ -136,7 +133,8 @@ final timeBlockProvider =
     StateNotifierProvider<TimeBlockNotifier, List<TimeBlockModel>>((ref) {
   final box = ref.watch(timeBlockBoxProvider);
   final habits = ref.watch(habitPatternProvider);
-  final profile = ref.watch(profileProvider);
+  // Fix: use ref.read (not ref.watch) so provider is NOT recreated every time profile changes
+  final profile = ref.read(profileProvider);
   return TimeBlockNotifier(box, habits, profile);
 });
 
@@ -155,6 +153,7 @@ final timeBlocksByDateProvider =
 
 // Today's blocks in sorted order
 final todayTimeBlocksProvider = Provider<List<TimeBlockModel>>((ref) {
-  final today = DateTime.now();
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
   return ref.watch(timeBlocksByDateProvider(today));
 });

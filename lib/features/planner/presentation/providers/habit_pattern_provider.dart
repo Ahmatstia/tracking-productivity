@@ -32,15 +32,13 @@ class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
         p.startTime == startTime);
 
     if (existing.isNotEmpty) {
-      // Increment occurrence count of existing pattern
       final pattern = existing.first;
       pattern.occurrenceCount++;
-      // Add current day to its days list if not already included
       final today = DateTime.now().weekday;
       if (!pattern.daysOfWeek.contains(today)) {
         pattern.daysOfWeek = [...pattern.daysOfWeek, today];
       }
-      pattern.save();
+      _box.put(pattern.id, pattern); // Fix: use box.put instead of pattern.save()
     } else {
       final pattern = HabitPatternModel(
         id: const Uuid().v4(),
@@ -62,7 +60,7 @@ class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
     final p = _box.get(id);
     if (p != null) {
       p.isActive = !p.isActive;
-      p.save();
+      _box.put(id, p); // Fix: use box.put instead of p.save()
       if (p.isActive) {
         NotificationService().scheduleHabitReminder(p, settings: _settings);
       } else {
@@ -83,7 +81,7 @@ class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
     final p = _box.get(id);
     if (p != null) {
       p.lastAppliedDate = DateTime.now();
-      p.save();
+      _box.put(id, p); // Fix: use box.put instead of p.save()
       _refresh();
     }
   }
@@ -92,7 +90,8 @@ class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
 final habitPatternProvider =
     StateNotifierProvider<HabitPatternNotifier, List<HabitPatternModel>>((ref) {
   final box = ref.watch(habitPatternBoxProvider);
-  final profile = ref.watch(profileProvider);
+  // Fix: use ref.read (not ref.watch) so provider is NOT recreated when profile changes
+  final profile = ref.read(profileProvider);
   return HabitPatternNotifier(box, profile);
 });
 

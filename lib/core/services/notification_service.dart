@@ -108,24 +108,28 @@ class NotificationService {
     final tzScheduledDate = tz.TZDateTime.from(scheduledDate, tz.local);
 
     // v21: zonedSchedule() — NO uiLocalNotificationDateInterpretation param
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id: block.id.hashCode,
-      title: '🔔 Persiapan: ${block.title}',
-      body: 'Aktivitasmu akan dimulai dalam 5 menit.',
-      scheduledDate: tzScheduledDate,
-      notificationDetails: NotificationDetails(
-        android: _getAndroidDetails(
-          channelIdBase: 'planner',
-          channelName: 'Pengingat Planner',
-          channelDesc: 'Notifikasi untuk aktivitas jadwal harian Anda',
-          categorySound: settings?.plannerSoundPath,
-          globalSound: settings?.globalSoundPath,
-          soundsEnabled: settings?.soundsEnabled ?? true,
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id: block.id.hashCode,
+        title: '🔔 Persiapan: ${block.title}',
+        body: 'Aktivitasmu akan dimulai dalam 5 menit.',
+        scheduledDate: tzScheduledDate,
+        notificationDetails: NotificationDetails(
+          android: _getAndroidDetails(
+            channelIdBase: 'planner',
+            channelName: 'Pengingat Planner',
+            channelDesc: 'Notifikasi untuk aktivitas jadwal harian Anda',
+            categorySound: settings?.plannerSoundPath,
+            globalSound: settings?.globalSoundPath,
+            soundsEnabled: settings?.soundsEnabled ?? true,
+          ),
         ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    } catch (_) {
+      // PlatformException: exact_alarms_not_permitted — silently ignored
+    }
   }
 
   Future<void> scheduleHabitReminder(HabitPatternModel habit, {UserProfileModel? settings}) async {
@@ -159,24 +163,28 @@ class NotificationService {
 
     final tzScheduledDate = tz.TZDateTime.from(scheduledDate, tz.local);
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id: habit.id.hashCode,
-      title: '✨ Waktunya: ${habit.title}',
-      body: 'Jangan lupa selesaikan kebiasaan harianmu sekarang.',
-      scheduledDate: tzScheduledDate,
-      notificationDetails: NotificationDetails(
-        android: _getAndroidDetails(
-          channelIdBase: 'habits',
-          channelName: 'Saran Kebiasaan',
-          channelDesc: 'Pengingat untuk pola hidup dan kebiasaan harian',
-          categorySound: settings?.habitSoundPath,
-          globalSound: settings?.globalSoundPath,
-          soundsEnabled: settings?.soundsEnabled ?? true,
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id: habit.id.hashCode,
+        title: '✨ Waktunya: ${habit.title}',
+        body: 'Jangan lupa selesaikan kebiasaan harianmu sekarang.',
+        scheduledDate: tzScheduledDate,
+        notificationDetails: NotificationDetails(
+          android: _getAndroidDetails(
+            channelIdBase: 'habits',
+            channelName: 'Saran Kebiasaan',
+            channelDesc: 'Pengingat untuk pola hidup dan kebiasaan harian',
+            categorySound: settings?.habitSoundPath,
+            globalSound: settings?.globalSoundPath,
+            soundsEnabled: settings?.soundsEnabled ?? true,
+          ),
         ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-    );
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      );
+    } catch (_) {
+      // PlatformException: exact_alarms_not_permitted — silently ignored
+    }
   }
 
   Future<void> scheduleMorningBriefing({UserProfileModel? settings}) async {
@@ -192,24 +200,28 @@ class NotificationService {
 
     final tzScheduledDate = tz.TZDateTime.from(scheduledDate, tz.local);
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id: 700, // Static ID for Morning Briefing
-      title: '☕ MyLife OS: Selamat Pagi!',
-      body: 'Jadwal hari ini sudah siap. Mari buat hari ini produktif!',
-      scheduledDate: tzScheduledDate,
-      notificationDetails: NotificationDetails(
-        android: _getAndroidDetails(
-          channelIdBase: 'briefing',
-          channelName: 'Ringkasan Pagi',
-          channelDesc: 'Sapaan dan ringkasan jadwal setiap pukul 07:00',
-          categorySound: settings?.globalSoundPath,
-          globalSound: settings?.globalSoundPath,
-          soundsEnabled: settings?.soundsEnabled ?? true,
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id: 700, // Static ID for Morning Briefing
+        title: '☕ MyLife OS: Selamat Pagi!',
+        body: 'Jadwal hari ini sudah siap. Mari buat hari ini produktif!',
+        scheduledDate: tzScheduledDate,
+        notificationDetails: NotificationDetails(
+          android: _getAndroidDetails(
+            channelIdBase: 'briefing',
+            channelName: 'Ringkasan Pagi',
+            channelDesc: 'Sapaan dan ringkasan jadwal setiap pukul 07:00',
+            categorySound: settings?.globalSoundPath,
+            globalSound: settings?.globalSoundPath,
+            soundsEnabled: settings?.soundsEnabled ?? true,
+          ),
         ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    } catch (_) {
+      // PlatformException: exact_alarms_not_permitted — silently ignored
+    }
   }
 
   Future<void> showImmediateNotification({
@@ -257,23 +269,27 @@ class NotificationService {
 
     final tzScheduledDate = tz.TZDateTime.from(reminderDate, tz.local);
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      id: goalId.hashCode,
-      title: '🎯 Deadline Mendekati: $title',
-      body: 'Target Anda memiliki deadline dalam 24 jam. Tetap semangat!',
-      scheduledDate: tzScheduledDate,
-      notificationDetails: NotificationDetails(
-        android: _getAndroidDetails(
-          channelIdBase: 'goals',
-          channelName: 'Tenggat Waktu Goal',
-          channelDesc: 'Pengingat saat target atau mimpi mendekati deadline',
-          categorySound: settings?.focusSoundPath, // We use focus category for goals too or we can add a goalSoundPath
-          globalSound: settings?.globalSoundPath,
-          soundsEnabled: settings?.soundsEnabled ?? true,
+    try {
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id: goalId.hashCode,
+        title: '🎯 Deadline Mendekati: $title',
+        body: 'Target Anda memiliki deadline dalam 24 jam. Tetap semangat!',
+        scheduledDate: tzScheduledDate,
+        notificationDetails: NotificationDetails(
+          android: _getAndroidDetails(
+            channelIdBase: 'goals',
+            channelName: 'Tenggat Waktu Goal',
+            channelDesc: 'Pengingat saat target atau mimpi mendekati deadline',
+            categorySound: settings?.focusSoundPath,
+            globalSound: settings?.globalSoundPath,
+            soundsEnabled: settings?.soundsEnabled ?? true,
+          ),
         ),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+    } catch (_) {
+      // PlatformException: exact_alarms_not_permitted — silently ignored
+    }
   }
 
   Future<void> cancelNotification(String blockId) async {

@@ -29,7 +29,7 @@ class StatsNotifier extends Notifier<GamificationState> {
     } else {
       // Periksa apakah hari berganti untuk logic streak
       stats.checkAndUpdateStreak(today);
-      stats.save();
+      box.put('currentUser', stats); // Fix: use box.put instead of stats.save()
     }
 
     // Kalkulasi Skor Hari Ini secara dinamis
@@ -38,10 +38,10 @@ class StatsNotifier extends Notifier<GamificationState> {
     // Save score of today to history map continuously
     final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
     
-    // Only update if it's potentially different to avoid infinite loops if not careful
+    // Only update if it's potentially different to avoid infinite loops
     if (stats.dailyScores[dateKey] != score) {
       stats.dailyScores[dateKey] = score;
-      stats.save();
+      box.put('currentUser', stats); // Fix: use box.put instead of stats.save()
     }
 
     return GamificationState(stats, score);
@@ -52,14 +52,12 @@ class StatsNotifier extends Notifier<GamificationState> {
     // Every day starts at 0. You only get points by completing what you planned.
 
     // 1. Task Score (40%)
-    final tasks = ref.watch(tasksByDateProvider(today));
+    final normalizedToday = DateTime(today.year, today.month, today.day);
+    final tasks = ref.watch(tasksByDateProvider(normalizedToday));
     double taskScore = 0;
     if (tasks.isNotEmpty) {
       final completed = tasks.where((t) => t.isCompleted).length;
       taskScore = (completed / tasks.length) * 40;
-    } else {
-      // MODIFIED: If no tasks, score is 0, not 40.
-      taskScore = 0; 
     }
 
     // 2. Planner Blocks Score (40%)
@@ -68,15 +66,10 @@ class StatsNotifier extends Notifier<GamificationState> {
     if (blocks.isNotEmpty) {
       final completed = blocks.where((b) => b.isCompleted).length;
       blockScore = (completed / blocks.length) * 40;
-    } else {
-      // MODIFIED: If no blocks, score is 0, not 40.
-      blockScore = 0;
     }
 
     // 3. Focus Session (20%)
     final focusSessions = ref.watch(focusSessionsByDateProvider(today));
-    // Reward for active focus: setidaknya 1 sesi fokus memberikan 20 poin.
-    // Bisa ditingkatkan misal 20 poin per 1 jam fokus.
     double focusScore = focusSessions.isNotEmpty ? 20.0 : 0.0;
 
     final totalScore = (taskScore + blockScore + focusScore).clamp(0, 100).toInt();
