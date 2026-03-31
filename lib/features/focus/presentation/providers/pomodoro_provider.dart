@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:life_os_productivity/core/services/notification_service.dart';
 import 'package:life_os_productivity/features/focus/presentation/providers/focus_session_provider.dart';
+import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
 
 class PomodoroState {
   final int remainingSeconds;
@@ -75,6 +77,21 @@ class PomodoroNotifier extends StateNotifier<PomodoroState> {
 
   void _completeSession() {
     pause();
+    
+    // Trigger notification
+    final settings = _ref.read(profileProvider);
+    final title = state.isFocusMode ? 'Sesi Fokus Selesai!' : 'Waktu Istirahat Habis!';
+    final body = state.isFocusMode ? 'Luar biasa! Saatnya ambil jeda sejenak.' : 'Segar kembali? Mari lanjut fokus lagi.';
+    
+    NotificationService().showImmediateNotification(
+      id: 999, // Static ID for focus alerts
+      title: title,
+      body: body,
+      categorySound: settings.focusSoundPath,
+      globalSound: settings.globalSoundPath,
+      soundsEnabled: settings.soundsEnabled && settings.notificationsEnabled && settings.focusAlerts,
+    );
+
     // Record to database
     if (state.isFocusMode) {
       _ref.read(focusSessionProvider.notifier).logSession(

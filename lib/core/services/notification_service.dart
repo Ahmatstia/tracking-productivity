@@ -179,6 +179,103 @@ class NotificationService {
     );
   }
 
+  Future<void> scheduleMorningBriefing({UserProfileModel? settings}) async {
+    // Check if enabled
+    if (settings != null && !settings.notificationsEnabled) return;
+
+    final now = DateTime.now();
+    var scheduledDate = DateTime(now.year, now.month, now.day, 7, 0); // 07:00 AM
+    
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    final tzScheduledDate = tz.TZDateTime.from(scheduledDate, tz.local);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id: 700, // Static ID for Morning Briefing
+      title: '☕ MyLife OS: Selamat Pagi!',
+      body: 'Jadwal hari ini sudah siap. Mari buat hari ini produktif!',
+      scheduledDate: tzScheduledDate,
+      notificationDetails: NotificationDetails(
+        android: _getAndroidDetails(
+          channelIdBase: 'briefing',
+          channelName: 'Ringkasan Pagi',
+          channelDesc: 'Sapaan dan ringkasan jadwal setiap pukul 07:00',
+          categorySound: settings?.globalSoundPath,
+          globalSound: settings?.globalSoundPath,
+          soundsEnabled: settings?.soundsEnabled ?? true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future<void> showImmediateNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? categorySound,
+    String? globalSound,
+    bool soundsEnabled = true,
+  }) async {
+    await flutterLocalNotificationsPlugin.show(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: NotificationDetails(
+        android: _getAndroidDetails(
+          channelIdBase: 'focus',
+          channelName: 'Sesi Fokus',
+          channelDesc: 'Notifikasi saat sesi Pomodoro atau Fokus berakhir',
+          categorySound: categorySound,
+          globalSound: globalSound,
+          soundsEnabled: soundsEnabled,
+        ),
+      ),
+    );
+  }
+
+  Future<void> scheduleGoalReminder({
+    required String goalId,
+    required String title,
+    required DateTime deadline,
+    UserProfileModel? settings,
+  }) async {
+    // Check if enabled
+    if (settings != null) {
+      if (!settings.notificationsEnabled || !settings.goalReminders) {
+        await cancelNotification(goalId);
+        return;
+      }
+    }
+
+    // Schedule 24 hours before deadline
+    final reminderDate = deadline.subtract(const Duration(hours: 24));
+    if (reminderDate.isBefore(DateTime.now())) return;
+
+    final tzScheduledDate = tz.TZDateTime.from(reminderDate, tz.local);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id: goalId.hashCode,
+      title: '🎯 Deadline Mendekati: $title',
+      body: 'Target Anda memiliki deadline dalam 24 jam. Tetap semangat!',
+      scheduledDate: tzScheduledDate,
+      notificationDetails: NotificationDetails(
+        android: _getAndroidDetails(
+          channelIdBase: 'goals',
+          channelName: 'Tenggat Waktu Goal',
+          channelDesc: 'Pengingat saat target atau mimpi mendekati deadline',
+          categorySound: settings?.focusSoundPath, // We use focus category for goals too or we can add a goalSoundPath
+          globalSound: settings?.globalSoundPath,
+          soundsEnabled: settings?.soundsEnabled ?? true,
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  }
+
   Future<void> cancelNotification(String blockId) async {
     // v21: cancel() uses named 'id:'
     await flutterLocalNotificationsPlugin.cancel(id: blockId.hashCode);
@@ -218,6 +315,9 @@ class NotificationService {
         }
       }
     }
+
+    // 4. Schedule Morning Briefing
+    await scheduleMorningBriefing(settings: settings);
   }
 
   Future<void> cancelAll() async {

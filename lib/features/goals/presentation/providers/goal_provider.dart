@@ -1,18 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
+import 'package:life_os_productivity/core/services/notification_service.dart';
+import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
 import '../../domain/goal_model.dart';
 
 final goalBoxProvider = Provider((ref) => Hive.box<GoalModel>('goals_box'));
 
 class GoalNotifier extends StateNotifier<List<GoalModel>> {
   final Box<GoalModel> _box;
+  final Ref _ref;
 
   // Mengambil data awal dari Hive saat aplikasi dibuka
-  GoalNotifier(this._box) : super(_box.values.toList());
+  GoalNotifier(this._box, this._ref) : super(_box.values.toList());
 
   void addGoal(GoalModel goal) {
     _box.add(goal);
-    // SANGAT PENTING: Kita harus membuat List baru agar Riverpod tahu ada perubahan
+    _scheduleReminder(goal);
     state = [..._box.values];
   }
 
@@ -23,12 +26,17 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
       goal.description = description;
       goal.targetDate = targetDate;
       goal.save();
+      _scheduleReminder(goal);
       state = [..._box.values];
     }
   }
 
   void deleteGoal(int index) {
-    _box.deleteAt(index);
+    final goal = _box.getAt(index);
+    if (goal != null) {
+      NotificationService().cancelNotification(goal.key.toString());
+      _box.deleteAt(index);
+    }
     state = [..._box.values];
   }
 
@@ -75,6 +83,20 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     }
   }
 
+  void _scheduleReminder(GoalModel goal) {
+    final settings = _ref.read(profileProvider);
+    if (goal.targetDate != null && !goal.isCompleted) {
+      NotificationService().scheduleGoalReminder(
+        goalId: goal.key.toString(),
+        title: goal.title,
+        deadline: goal.targetDate!,
+        settings: settings,
+      );
+    } else {
+      NotificationService().cancelNotification(goal.key.toString());
+    }
+  }
+
   void _recalculateProgress(GoalModel goal) {
     if (goal.subTasks.isEmpty) {
       goal.progress = 0.0;
@@ -84,12 +106,18 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     
     int completedCount = goal.subTasks.where((st) => st.isCompleted).length;
     goal.progress = completedCount / goal.subTasks.length;
+    final wasCompleted = goal.isCompleted;
     goal.isCompleted = completedCount == goal.subTasks.length;
+
+    // Reschedule/Cancel reminder based on completion change
+    if (wasCompleted != goal.isCompleted) {
+      _scheduleReminder(goal);
+    }
   }
 }
 
 final goalProvider =
     StateNotifierProvider<GoalNotifier, List<GoalModel>>((ref) {
   final box = ref.watch(goalBoxProvider);
-  return GoalNotifier(box);
+  return GoalNotifier(box, ref);
 });
