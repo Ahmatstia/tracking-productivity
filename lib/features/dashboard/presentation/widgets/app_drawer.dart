@@ -40,7 +40,7 @@ class AppDrawer extends ConsumerWidget {
                   icon: PhosphorIcons.timer(),
                   title: 'Pomodoro Timer',
                   subtitle: 'Mulai sesi fokus tanpa gangguan',
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
@@ -68,7 +68,7 @@ class AppDrawer extends ConsumerWidget {
                   icon: PhosphorIcons.crown(),
                   title: 'MyLife Premium',
                   subtitle: 'Buka fitur profesional mingguan',
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   onTap: () {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -181,48 +181,8 @@ class AppDrawer extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // Avatar dengan border putih bersih (Premium Look)
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      )
-                    ],
-                    gradient: LinearGradient(
-                      colors: [
-                        selectedColor.withValues(alpha: 0.8),
-                        selectedColor
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                  ),
-                  child: ClipOval(
-                    child: profile.avatarPath != null
-                        ? Image.file(
-                            File(profile.avatarPath!),
-                            width: 64,
-                            height: 64,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Center(
-                              child: Icon(PhosphorIcons.user(),
-                                  size: 28, color: Colors.white),
-                            ),
-                          )
-                        : Center(
-                            child: Icon(PhosphorIcons.user(),
-                                size: 28, color: Colors.white),
-                          ),
-                  ),
-                ),
+                // Avatar dengan Pulsing Lamp Effect (Breathing Light)
+                _PulsingAvatar(profile: profile, selectedColor: selectedColor),
                 const SizedBox(height: 12),
                 Row(
                   children: [
@@ -264,10 +224,10 @@ class AppDrawer extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: selectedColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
                     border:
-                        Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                        Border.all(color: selectedColor.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -365,8 +325,8 @@ class AppDrawer extends ConsumerWidget {
                                 AppColors.textSecondary.withValues(alpha: 0.5)),
                         enabledBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(color: AppColors.border)),
-                        focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.primary)),
+                        focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Theme.of(context).colorScheme.primary)),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -582,6 +542,103 @@ class AppDrawer extends ConsumerWidget {
               ),
             );
           },
+        );
+      },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Pulsing Lamp Effect (Breathing Light)
+// ─────────────────────────────────────────────────────────────
+
+class _PulsingAvatar extends StatefulWidget {
+  final dynamic profile;
+  final Color selectedColor;
+
+  const _PulsingAvatar({required this.profile, required this.selectedColor});
+
+  @override
+  State<_PulsingAvatar> createState() => _PulsingAvatarState();
+}
+
+class _PulsingAvatarState extends State<_PulsingAvatar> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _glowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    )..repeat(reverse: true);
+
+    _glowAnimation = Tween<double>(begin: 4.0, end: 25.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutSine),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _glowAnimation,
+      builder: (context, child) {
+        return Container(
+          width: 78,
+          height: 78,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: widget.selectedColor.withValues(alpha: 0.6 * (_glowAnimation.value / 25.0)),
+                blurRadius: _glowAnimation.value + 15,
+                spreadRadius: _glowAnimation.value / 2,
+              ),
+              BoxShadow(
+                color: widget.selectedColor.withValues(alpha: 0.3),
+                blurRadius: 8,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  width: 2,
+                ),
+              ),
+              child: ClipOval(
+                child: widget.profile.avatarPath != null
+                    ? Image.file(
+                        File(widget.profile.avatarPath!),
+                        width: 64,
+                        height: 64,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Center(
+                          child: Icon(PhosphorIcons.user(), size: 28, color: Colors.white),
+                        ),
+                      )
+                    : Container(
+                        color: widget.selectedColor,
+                        child: Center(
+                          child: Icon(PhosphorIcons.user(), size: 28, color: Colors.white),
+                        ),
+                      ),
+              ),
+            ),
+          ),
         );
       },
     );
