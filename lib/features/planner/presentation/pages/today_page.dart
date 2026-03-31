@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -93,22 +92,20 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                           children: [
                             Text(
                               _greeting(),
-                              style: GoogleFonts.spaceGrotesk(
+                              style: const TextStyle(
                                 color: AppColors.textSecondary,
                                 fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 0.3,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               _formatDate(_today),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.syne(
+                              style: const TextStyle(
                                 color: AppColors.primary,
-                                fontSize: 24, // Bigger for Syne aesthetic
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -1.2,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -157,15 +154,13 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                           dividerColor: AppColors.border.withValues(alpha: 0.1),
                           labelColor: AppColors.textPrimary,
                           unselectedLabelColor: AppColors.textSecondary,
-                          labelStyle: GoogleFonts.syne(
-                            fontWeight: FontWeight.w900,
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
                             fontSize: 13,
-                            letterSpacing: -0.5,
                           ),
-                          unselectedLabelStyle: GoogleFonts.syne(
-                            fontWeight: FontWeight.w700,
+                          unselectedLabelStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
                             fontSize: 13,
-                            letterSpacing: -0.5,
                           ),
                           tabs: [
                             Tab(

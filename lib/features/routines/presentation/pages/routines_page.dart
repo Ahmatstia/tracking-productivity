@@ -24,23 +24,7 @@ class RoutinesPage extends ConsumerWidget {
             expandedHeight: 100,
             backgroundColor: AppColors.background,
             automaticallyImplyLeading: false,
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: IconButton(
-                  icon: Icon(PhosphorIcons.faders(), color: AppColors.textPrimary),
-                  tooltip: 'Kelola Saran Kebiasaan',
-                  onPressed: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (ctx) => const ManageHabitsSheet(),
-                    );
-                  },
-                ),
-              ),
-            ],
+            actions: const [],
             flexibleSpace: const FlexibleSpaceBar(
               titlePadding: EdgeInsets.only(left: 20, bottom: 16),
               title: Text(
@@ -50,6 +34,44 @@ class RoutinesPage extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
                 ),
+              ),
+            ),
+          ),
+          // Action Header
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Daftar Rutinitas',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (ctx) => const ManageHabitsSheet(),
+                      );
+                    },
+                    icon: Icon(PhosphorIcons.faders(), size: 14),
+                    label: const Text('Kelola Kebiasaan', style: TextStyle(fontSize: 11)),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.textPrimary,
+                      side: BorderSide(color: AppColors.border.withValues(alpha: 0.5)),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -90,7 +112,7 @@ class RoutinesPage extends ConsumerWidget {
                           decoration: BoxDecoration(
                             color: AppColors.surface,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Color(routine.colorCode).withValues(alpha: 0.3)),
+                            border: Border.all(color: AppColors.border.withValues(alpha: 0.8)),
                             boxShadow: [
                               BoxShadow(
                                 color: AppColors.cardShadow.withValues(alpha: 0.05),
@@ -112,7 +134,7 @@ class RoutinesPage extends ConsumerWidget {
                                           width: 4,
                                           height: 24,
                                           decoration: BoxDecoration(
-                                            color: Color(routine.colorCode),
+                                            color: AppColors.textPrimary,
                                             borderRadius: BorderRadius.circular(2),
                                           ),
                                         ),
@@ -202,7 +224,8 @@ class RoutinesPage extends ConsumerWidget {
                                   label: Text(isAlreadyApplied ? 'Sudah Terjadwal' : 'Terapkan ke Hari Ini', 
                                       style: TextStyle(color: isAlreadyApplied ? AppColors.textSecondary : Colors.white)),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: isAlreadyApplied ? AppColors.inputFill : Color(routine.colorCode),
+                                    backgroundColor: isAlreadyApplied ? AppColors.inputFill : AppColors.textPrimary,
+                                    foregroundColor: isAlreadyApplied ? AppColors.textSecondary : (Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white),
                                     disabledBackgroundColor: AppColors.inputFill,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                     elevation: 0,

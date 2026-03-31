@@ -50,7 +50,7 @@ class ManageHabitsSheet extends ConsumerWidget {
               style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.primary),
+                  color: AppColors.textPrimary),
             ),
           ),
           const SizedBox(height: 8),
@@ -133,7 +133,8 @@ class ManageHabitsSheet extends ConsumerWidget {
                           children: [
                             Switch(
                               value: habit.isActive,
-                              activeThumbColor: AppColors.primary,
+                              activeThumbColor: AppColors.textPrimary,
+                              activeTrackColor: AppColors.textPrimary.withValues(alpha: 0.3),
                               onChanged: (val) {
                                 ref.read(habitPatternProvider.notifier).togglePattern(habit.id);
                               },

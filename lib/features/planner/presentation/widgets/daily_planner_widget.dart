@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
@@ -81,11 +80,10 @@ class _DailyPlannerWidgetState extends ConsumerState<DailyPlannerWidget> {
                         alignment: Alignment.topCenter,
                         child: Text(
                           '${hour.toString().padLeft(2, '0')}:00',
-                          style: GoogleFonts.spaceGrotesk(
+                          style: const TextStyle(
                             color: AppColors.textSecondary,
                             fontSize: 10,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 0.3,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),

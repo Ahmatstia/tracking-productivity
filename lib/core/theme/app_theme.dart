@@ -17,48 +17,26 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
 
-      textTheme: GoogleFonts.spaceGroteskTextTheme(
+      textTheme: GoogleFonts.plusJakartaSansTextTheme(
         const TextTheme(
           displayLarge: TextStyle(
             fontSize: 32,
-            fontWeight: FontWeight.w800, // Syne ExtraBold look
-            letterSpacing: -1.5, // Tighter for Syne aesthetic
+            fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
           ),
           displayMedium: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
             color: AppColors.textPrimary,
           ),
-          bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary, letterSpacing: 0.1),
-          bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary, letterSpacing: 0.1),
+          headlineMedium: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
+          bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary),
+          bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
           labelLarge: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-        ),
-      ).copyWith(
-        displayLarge: GoogleFonts.syne(
-          textStyle: const TextStyle(
-            fontSize: 34,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -1.5,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        displayMedium: GoogleFonts.syne(
-          textStyle: const TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.8,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        headlineMedium: GoogleFonts.syne(
-          textStyle: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.5,
-            color: AppColors.textPrimary,
-          ),
         ),
       ),
 
@@ -77,11 +55,10 @@ class AppTheme {
         elevation: 0,
         centerTitle: false,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
-        titleTextStyle: GoogleFonts.syne(
+        titleTextStyle: const TextStyle(
           color: AppColors.textPrimary,
-          fontSize: 22,
-          fontWeight: FontWeight.w800,
-          letterSpacing: -1.0,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
         ),
       ),
 
