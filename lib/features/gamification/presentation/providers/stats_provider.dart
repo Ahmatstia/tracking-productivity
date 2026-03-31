@@ -37,13 +37,20 @@ class StatsNotifier extends Notifier<GamificationState> {
 
     // Save score of today to history map continuously
     final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-    stats.dailyScores[dateKey] = score;
-    stats.save();
+    
+    // Only update if it's potentially different to avoid infinite loops if not careful
+    if (stats.dailyScores[dateKey] != score) {
+      stats.dailyScores[dateKey] = score;
+      stats.save();
+    }
 
     return GamificationState(stats, score);
   }
 
   int _calculateTodayScore(DateTime today) {
+    // ─── STRICT SCORING LOGIC ───
+    // Every day starts at 0. You only get points by completing what you planned.
+
     // 1. Task Score (40%)
     final tasks = ref.watch(tasksByDateProvider(today));
     double taskScore = 0;
@@ -51,26 +58,26 @@ class StatsNotifier extends Notifier<GamificationState> {
       final completed = tasks.where((t) => t.isCompleted).length;
       taskScore = (completed / tasks.length) * 40;
     } else {
-      taskScore = 40; // Jika tidak ada task, dianggap full credit atau 0? Biasanya full agar tidak merusak rating
+      // MODIFIED: If no tasks, score is 0, not 40.
+      taskScore = 0; 
     }
 
     // 2. Planner Blocks Score (40%)
-    final blocks = ref.watch(timeBlocksByDateProvider(today));
+    final blocks = ref.watch(todayTimeBlocksProvider);
     double blockScore = 0;
     if (blocks.isNotEmpty) {
       final completed = blocks.where((b) => b.isCompleted).length;
       blockScore = (completed / blocks.length) * 40;
     } else {
-      blockScore = 40;
+      // MODIFIED: If no blocks, score is 0, not 40.
+      blockScore = 0;
     }
 
     // 3. Focus Session (20%)
     final focusSessions = ref.watch(focusSessionsByDateProvider(today));
-    // Validasi fokus: Setidaknya ada 1 focus session hari ini bernilai 20 max
+    // Reward for active focus: setidaknya 1 sesi fokus memberikan 20 poin.
+    // Bisa ditingkatkan misal 20 poin per 1 jam fokus.
     double focusScore = focusSessions.isNotEmpty ? 20.0 : 0.0;
-
-    // Jika user TIDAK punya tugas DAN planner, skor murni nol agar realistik jika dia sama sekali gk ngapa-ngapain
-    if (tasks.isEmpty && blocks.isEmpty && focusSessions.isEmpty) return 0;
 
     final totalScore = (taskScore + blockScore + focusScore).clamp(0, 100).toInt();
     return totalScore;

@@ -54,7 +54,6 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
     final unAppliedHabits = ref.watch(unAppliedHabitsProvider(_today));
 
     final gamification = ref.watch(gamificationProvider);
-    final score = gamification.todayScore;
     final streak = gamification.stats.currentStreak;
 
     return Scaffold(
@@ -68,60 +67,48 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Builder(
-                            builder: (context) {
-                              return IconButton(
-                                icon: Icon(PhosphorIcons.list(), color: AppColors.textPrimary, size: 28),
-                                padding: EdgeInsets.zero,
-                                alignment: Alignment.centerLeft,
-                                onPressed: () {
-                                  ScaffoldState? outerScaffold = context.findRootAncestorStateOfType<ScaffoldState>();
-                                  if (outerScaffold != null) {
-                                    outerScaffold.openDrawer();
-                                  } else {
-                                    Scaffold.of(context).openDrawer();
-                                  }
-                                },
-                              );
-                            }
-                          ),
-                          const SizedBox(width: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _greeting(),
-                                style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    _formatDate(_today),
-                                    style: const TextStyle(
-                                      color: AppColors.primary,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  if (todayBlocks.isNotEmpty)
-                                    IconButton(
-                                      icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.7), size: 16),
-                                      onPressed: () => _confirmClearToday(),
-                                      tooltip: 'Bersihkan Jadwal',
-                                      padding: const EdgeInsets.only(left: 8),
-                                      constraints: const BoxConstraints(),
-                                    ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                      Builder(
+                        builder: (context) {
+                          return IconButton(
+                            icon: Icon(PhosphorIcons.list(), color: AppColors.textPrimary, size: 28),
+                            padding: EdgeInsets.zero,
+                            alignment: Alignment.centerLeft,
+                            onPressed: () {
+                              ScaffoldState? outerScaffold = context.findRootAncestorStateOfType<ScaffoldState>();
+                              if (outerScaffold != null) {
+                                outerScaffold.openDrawer();
+                              } else {
+                                Scaffold.of(context).openDrawer();
+                              }
+                            },
+                          );
+                        }
                       ),
-                      _ScoreRing(score: score, streak: streak),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _greeting(),
+                              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                            ),
+                            Text(
+                              _formatDate(_today),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      _StreakBadge(streak: streak),
                     ],
                   ).animate().fadeIn(duration: 400.ms),
 
@@ -146,50 +133,92 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                       },
                     ).animate().fadeIn(delay: 200.ms).slideY(begin: -0.1, end: 0),
 
-                  // TabBar Container
+                  // Minimalist TabBar with More Menu
                   const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: AppColors.textPrimary.withValues(alpha: 0.06),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: TabBar(
-                      controller: _tabController,
-                      indicator: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(9),
-                        border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.3),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TabBar(
+                          controller: _tabController,
+                          indicator: UnderlineTabIndicator(
+                            borderSide: const BorderSide(
+                              color: AppColors.textPrimary,
+                              width: 2.5,
+                            ),
+                            insets: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.1),
+                          ),
+                          dividerColor: AppColors.border.withValues(alpha: 0.1),
+                          labelColor: AppColors.textPrimary,
+                          unselectedLabelColor: AppColors.textSecondary,
+                          labelStyle: const TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 12,
+                            letterSpacing: -0.2,
+                          ),
+                          unselectedLabelStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                          tabs: [
+                            Tab(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(PhosphorIcons.clock(), size: 14),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      'JADWAL (${todayBlocks.length})',
+                                      overflow: TextOverflow.fade,
+                                      softWrap: false,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Tab(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(PhosphorIcons.tray(), size: 14),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      'INBOX (${todayTasks.length})',
+                                      overflow: TextOverflow.fade,
+                                      softWrap: false,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      dividerColor: Colors.transparent,
-                      labelColor: AppColors.primary,
-                      unselectedLabelColor: AppColors.textSecondary,
-                      labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-                      tabs: [
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(PhosphorIcons.clock(), size: 14),
-                              const SizedBox(width: 6),
-                              Text('Jadwal (${todayBlocks.length})'),
-                            ],
-                          ),
+                      if (todayBlocks.isNotEmpty)
+                        PopupMenuButton<String>(
+                          icon: Icon(PhosphorIcons.dotsThreeVertical(), color: AppColors.textSecondary, size: 24),
+                          position: PopupMenuPosition.under,
+                          padding: EdgeInsets.zero,
+                          color: AppColors.surface,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          onSelected: (value) {
+                            if (value == 'clear') _confirmClearToday();
+                          },
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: 'clear',
+                              child: Row(
+                                children: [
+                                  Icon(PhosphorIcons.trash(), size: 18, color: AppColors.error),
+                                  const SizedBox(width: 12),
+                                  const Text('Bersihkan Hari Ini', style: TextStyle(color: AppColors.textPrimary, fontSize: 13, fontWeight: FontWeight.w600)),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        Tab(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(PhosphorIcons.tray(), size: 14),
-                              const SizedBox(width: 6),
-                              Text('Kotak Masuk (${todayTasks.length})'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -201,7 +230,7 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                 controller: _tabController,
                 physics: const BouncingScrollPhysics(),
                 children: [
-                  _buildPlannerTab(todayBlocks.isEmpty),
+                  DailyPlannerWidget(date: _today), // <── ALWAYS Direct Hour List
                   _buildTasksTab(todayTasks),
                 ],
               ),
@@ -212,23 +241,9 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
     );
   }
 
-  Widget _buildPlannerTab(bool isEmpty) {
-    if (isEmpty) {
-      return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            _EmptyPlannerState(),
-          ],
-        ),
-      );
-    }
-    return DailyPlannerWidget(date: _today);
-  }
-
   Widget _buildTasksTab(List tasks) {
+    if (tasks.isEmpty) return const _EmptyTasksState();
+    
     final carriedOver = tasks.where((t) => t.isCarriedOver == true).toList();
 
     return SingleChildScrollView(
@@ -250,10 +265,7 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
             ...carriedOver.map((t) => TaskCard(task: t)),
             const SizedBox(height: 16),
           ],
-          if (tasks.isEmpty)
-            const _EmptyTasksState()
-          else
-            ...tasks.map((t) => TaskCard(task: t)),
+          ...tasks.map((t) => TaskCard(task: t)),
         ],
       ),
     );
@@ -294,65 +306,42 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
 // Supporting Widgets
 // ─────────────────────────────────────────────────────────────
 
-class _ScoreRing extends StatelessWidget {
-  final int score;
+class _StreakBadge extends StatelessWidget {
   final int streak;
 
-  const _ScoreRing({required this.score, required this.streak});
+  const _StreakBadge({required this.streak});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (streak > 0)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            margin: const EdgeInsets.only(bottom: 6),
-            decoration: BoxDecoration(
-              color: AppColors.textSecondary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.textSecondary.withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('🔥', style: TextStyle(fontSize: 12)),
-                const SizedBox(width: 4),
-                Text('$streak', style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 12)),
-              ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.textPrimary,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.textPrimary.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('🔥', style: TextStyle(fontSize: 16)),
+          const SizedBox(width: 6),
+          Text(
+            '$streak Hari',
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+              fontSize: 14,
+              letterSpacing: -0.5,
             ),
           ),
-        SizedBox(
-          width: 56,
-          height: 56,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              CircularProgressIndicator(
-                value: score / 100.0,
-                strokeWidth: 4,
-                backgroundColor: AppColors.border,
-                valueColor: AlwaysStoppedAnimation(
-                  score >= 80 ? AppColors.secondary : AppColors.primary,
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '$score',
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -417,59 +406,33 @@ class _HabitSuggestionBanner extends StatelessWidget {
   }
 }
 
-class _EmptyPlannerState extends StatelessWidget {
-  const _EmptyPlannerState();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 320,
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(PhosphorIcons.calendarBlank(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
-          const SizedBox(height: 16),
-          const Text(
-            'Jadwal Hari Ini Kosong',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Klik tombol + di tengah bawah untuk\nmerencanakan pekerjaan hari ini.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _EmptyTasksState extends StatelessWidget {
   const _EmptyTasksState();
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 280,
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(PhosphorIcons.checkCircle(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
-          const SizedBox(height: 16),
-          const Text(
-            'Kotak Masuk Kosong',
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Tidak ada tugas lepas.\nSemua kegiatan sudah terjadwal rapi.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-          ),
-        ],
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: SizedBox(
+        height: 280,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(PhosphorIcons.checkCircle(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+            const SizedBox(height: 16),
+            const Text(
+              'Kotak Masuk Kosong',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Tidak ada tugas lepas.\nSemua kegiatan sudah terjadwal rapi.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+            ),
+          ],
+        ),
       ),
     );
   }

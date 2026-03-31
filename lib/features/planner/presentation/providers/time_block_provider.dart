@@ -36,6 +36,10 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
       linkedTaskId: linkedTaskId,
       note: note,
     );
+
+    // ── Exclusive Scheduling: Overwrite overlaps before adding ──
+    deleteOverlappingBlocks(date, block.startMinutes, block.endMinutes);
+
     _box.put(block.id, block);
     NotificationService().scheduleTimeBlockNotification(block);
     _refresh();
@@ -57,6 +61,10 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
   }
 
   void updateBlock(TimeBlockModel updated) {
+    // ── Exclusive Scheduling: Overwrite overlaps when updating ──
+    // Exclude the ID being updated to prevent self-deletion
+    deleteOverlappingBlocks(updated.date, updated.startMinutes, updated.endMinutes, excludeId: updated.id);
+
     _box.put(updated.id, updated);
     NotificationService().scheduleTimeBlockNotification(updated);
     _refresh();
@@ -65,6 +73,9 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
   // Apply a list of time blocks for a specific date (from habit auto-complete)
   void applyBlocksForDate(List<TimeBlockModel> blocks) {
     for (final block in blocks) {
+      // ── Exclusive Scheduling: Habit overwrites manual ──
+      deleteOverlappingBlocks(block.date, block.startMinutes, block.endMinutes);
+      
       _box.put(block.id, block);
       NotificationService().scheduleTimeBlockNotification(block);
     }
@@ -72,8 +83,10 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
   }
 
   /// Delete existing blocks on a specific date that overlap with the given time range
-  int deleteOverlappingBlocks(DateTime date, int startMin, int endMin) {
+  int deleteOverlappingBlocks(DateTime date, int startMin, int endMin, {String? excludeId}) {
     final overlaps = _box.values.where((b) {
+      if (excludeId != null && b.id == excludeId) return false;
+
       final isSameDate = b.date.year == date.year &&
           b.date.month == date.month &&
           b.date.day == date.day;
@@ -88,7 +101,8 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
       NotificationService().cancelNotification(block.id);
     }
     
-    if (overlaps.isNotEmpty) _refresh();
+    // No direct refresh here if part of a bigger transaction, 
+    // but the final caller will call _refresh()
     return overlaps.length;
   }
 
