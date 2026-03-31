@@ -205,61 +205,49 @@ class RoutinesPage extends ConsumerWidget {
                                     ),
                                 ],
                               ),
-                              const SizedBox(height: 16),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 2,
-                                    child: ElevatedButton.icon(
+                              SizedBox(
+                                width: double.infinity,
+                                child: isAlreadyApplied 
+                                  ? OutlinedButton.icon(
+                                      onPressed: () {
+                                        ref.read(routineProvider.notifier).removeRoutineFromDate(routine.id, DateTime.now());
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Penerapan Rutinitas dibatalkan')),
+                                        );
+                                      },
+                                      icon: Icon(PhosphorIcons.xCircle(), size: 18),
+                                      label: const Text('Batalkan Penerapan', 
+                                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: AppColors.error,
+                                        side: BorderSide(color: AppColors.error.withValues(alpha: 0.4)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                      ),
+                                    )
+                                  : ElevatedButton.icon(
                                       onPressed: () async {
                                         await ref.read(routineProvider.notifier).applyRoutineToDate(routine.id, DateTime.now());
                                         if (context.mounted) {
                                           ScaffoldMessenger.of(context).showSnackBar(
                                             SnackBar(
-                                              content: Text(isAlreadyApplied 
-                                                ? '${routine.name} berhasil diperbarui!' 
-                                                : '${routine.name} berhasil diterapkan!'
-                                              ),
+                                              content: Text('${routine.name} berhasil diterapkan!'),
                                               backgroundColor: AppColors.textSecondaryAccent.withValues(alpha: 0.8),
                                             ),
                                           );
                                         }
                                       },
-                                      icon: Icon(isAlreadyApplied ? PhosphorIcons.arrowsClockwise() : PhosphorIcons.checkCircle(), 
-                                          color: Colors.white, size: 16),
-                                      label: Text(isAlreadyApplied ? 'Update Terapan' : 'Terapkan Ke Hari Ini', 
-                                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                                      icon: Icon(PhosphorIcons.checkCircle(), color: Colors.white, size: 18),
+                                      label: const Text('Terapkan Ke Hari Ini', 
+                                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: isAlreadyApplied ? AppColors.textSecondary : AppColors.textPrimary,
+                                        backgroundColor: AppColors.textPrimary,
                                         foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                         elevation: 0,
                                         padding: const EdgeInsets.symmetric(vertical: 12),
                                       ),
                                     ),
-                                  ),
-                                  if (isAlreadyApplied) ...[
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      flex: 1,
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          ref.read(routineProvider.notifier).removeRoutineFromDate(routine.id, DateTime.now());
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Penerapan Rutinitas dibatalkan')),
-                                          );
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          foregroundColor: AppColors.error,
-                                          side: BorderSide(color: AppColors.error.withValues(alpha: 0.3)),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                          padding: const EdgeInsets.symmetric(vertical: 12),
-                                        ),
-                                        child: const Text('Batalkan', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                                      ),
-                                    ),
-                                  ],
-                                ],
                               ),
                             ],
                           ),

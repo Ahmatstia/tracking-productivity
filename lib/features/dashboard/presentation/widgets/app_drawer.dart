@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/gamification/presentation/providers/stats_provider.dart';
@@ -403,10 +402,10 @@ class AppDrawer extends ConsumerWidget {
                               setDialogState(() => selectedAvatar = idx),
                           borderRadius: BorderRadius.circular(30),
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeOutBack,
-                            width: isSelected ? 52 : 46,
-                            height: isSelected ? 52 : 46,
+                            duration: const Duration(milliseconds: 200),
+                            curve: Curves.easeInOut,
+                            width: isSelected ? 50 : 44,
+                            height: isSelected ? 50 : 44,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: isSelected ? color : color.withValues(alpha: 0.1),
@@ -414,23 +413,23 @@ class AppDrawer extends ConsumerWidget {
                                 color: isSelected ? color : AppColors.border.withValues(alpha: 0.5),
                                 width: isSelected ? 3 : 1,
                               ),
-                              boxShadow: isSelected ? [
+                              boxShadow: [
                                 BoxShadow(
-                                  color: color.withValues(alpha: 0.3),
-                                  blurRadius: 12,
-                                  spreadRadius: 2,
+                                  color: isSelected ? color.withValues(alpha: 0.4) : Colors.transparent,
+                                  blurRadius: isSelected ? 12 : 0,
+                                  spreadRadius: isSelected ? 1 : 0,
                                 )
-                              ] : [],
+                              ],
                             ),
                             child: Center(
                               child: Icon(
                                 isSelected ? PhosphorIcons.check() : PhosphorIcons.paintBrush(),
                                 color: isSelected ? Colors.white : color,
-                                size: isSelected ? 22 : 18,
+                                size: isSelected ? 20 : 18,
                               ),
                             ),
                           ),
-                        ).animate().scale(delay: (idx * 50).ms, duration: 300.ms, curve: Curves.easeOut);
+                        );
                       }).toList(),
                     ),
                     const SizedBox(height: 12),
