@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
@@ -92,16 +93,22 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                           children: [
                             Text(
                               _greeting(),
-                              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                              style: GoogleFonts.spaceGrotesk(
+                                color: AppColors.textSecondary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.3,
+                              ),
                             ),
                             Text(
                               _formatDate(_today),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: GoogleFonts.syne(
                                 color: AppColors.primary,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
+                                fontSize: 24, // Bigger for Syne aesthetic
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -1.2,
                               ),
                             ),
                           ],
@@ -150,14 +157,15 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                           dividerColor: AppColors.border.withValues(alpha: 0.1),
                           labelColor: AppColors.textPrimary,
                           unselectedLabelColor: AppColors.textSecondary,
-                          labelStyle: const TextStyle(
+                          labelStyle: GoogleFonts.syne(
                             fontWeight: FontWeight.w900,
-                            fontSize: 12,
-                            letterSpacing: -0.2,
+                            fontSize: 13,
+                            letterSpacing: -0.5,
                           ),
-                          unselectedLabelStyle: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
+                          unselectedLabelStyle: GoogleFonts.syne(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                            letterSpacing: -0.5,
                           ),
                           tabs: [
                             Tab(

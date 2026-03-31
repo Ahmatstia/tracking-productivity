@@ -17,15 +17,48 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
 
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(
+      textTheme: GoogleFonts.spaceGroteskTextTheme(
         const TextTheme(
           displayLarge: TextStyle(
             fontSize: 32,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w800, // Syne ExtraBold look
+            letterSpacing: -1.5, // Tighter for Syne aesthetic
             color: AppColors.textPrimary,
           ),
-          bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary),
-          bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary),
+          displayMedium: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.8,
+            color: AppColors.textPrimary,
+          ),
+          bodyLarge: TextStyle(fontSize: 16, color: AppColors.textPrimary, letterSpacing: 0.1),
+          bodyMedium: TextStyle(fontSize: 14, color: AppColors.textSecondary, letterSpacing: 0.1),
+          labelLarge: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+        ),
+      ).copyWith(
+        displayLarge: GoogleFonts.syne(
+          textStyle: const TextStyle(
+            fontSize: 34,
+            fontWeight: FontWeight.w800,
+            letterSpacing: -1.5,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        displayMedium: GoogleFonts.syne(
+          textStyle: const TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.8,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        headlineMedium: GoogleFonts.syne(
+          textStyle: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.5,
+            color: AppColors.textPrimary,
+          ),
         ),
       ),
 
@@ -39,14 +72,16 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
       ),
 
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: AppColors.textPrimary),
-        titleTextStyle: TextStyle(
+        centerTitle: false,
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        titleTextStyle: GoogleFonts.syne(
           color: AppColors.textPrimary,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+          fontSize: 22,
+          fontWeight: FontWeight.w800,
+          letterSpacing: -1.0,
         ),
       ),
 
