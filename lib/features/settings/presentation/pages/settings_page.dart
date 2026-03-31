@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
-import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
+import 'package:life_os_productivity/features/settings/presentation/pages/notification_settings_page.dart';
 import 'package:hive/hive.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -10,7 +10,6 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profile = ref.watch(profileProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -31,16 +30,14 @@ class SettingsPage extends ConsumerWidget {
           _buildSectionHeader('Preferensi & Notifikasi'),
           _buildSettingsTile(
             icon: PhosphorIcons.bell(),
-            title: 'Notifikasi Harian',
-            subtitle: 'Ingatkan saya untuk aktivitas planner',
-            trailing: Switch.adaptive(
-              value: profile.notificationsEnabled,
-              activeTrackColor: AppColors.primary.withValues(alpha: 0.5),
-              activeThumbColor: AppColors.primary,
-              onChanged: (val) {
-                ref.read(profileProvider.notifier).updateNotifications(val);
-              },
-            ),
+            title: 'Pusat Notifikasi',
+            subtitle: 'Kelola pengingat jadwal, kebiasaan, dan target.',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const NotificationSettingsPage()),
+              );
+            },
           ),
           _buildSettingsTile(
             icon: PhosphorIcons.clock(),

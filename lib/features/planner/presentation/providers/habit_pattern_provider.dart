@@ -4,14 +4,18 @@ import 'package:uuid/uuid.dart';
 import 'package:life_os_productivity/features/planner/domain/habit_pattern_model.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
 import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
+import 'package:life_os_productivity/core/services/notification_service.dart';
+import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
+import 'package:life_os_productivity/features/profile/domain/user_profile_model.dart';
 
 final habitPatternBoxProvider =
     Provider((ref) => Hive.box<HabitPatternModel>('habit_patterns_box'));
 
 class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
   final Box<HabitPatternModel> _box;
+  final UserProfileModel _settings;
 
-  HabitPatternNotifier(this._box) : super(_box.values.toList());
+  HabitPatternNotifier(this._box, this._settings) : super(_box.values.toList());
 
   void _refresh() => state = _box.values.toList();
 
@@ -49,6 +53,7 @@ class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
         note: note,
       );
       _box.put(pattern.id, pattern);
+      NotificationService().scheduleHabitReminder(pattern, settings: _settings);
     }
     _refresh();
   }
@@ -58,12 +63,18 @@ class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
     if (p != null) {
       p.isActive = !p.isActive;
       p.save();
+      if (p.isActive) {
+        NotificationService().scheduleHabitReminder(p, settings: _settings);
+      } else {
+        NotificationService().cancelNotification(p.id);
+      }
       _refresh();
     }
   }
 
   void deletePattern(String id) {
     _box.delete(id);
+    NotificationService().cancelNotification(id);
     _refresh();
   }
 
@@ -81,7 +92,8 @@ class HabitPatternNotifier extends StateNotifier<List<HabitPatternModel>> {
 final habitPatternProvider =
     StateNotifierProvider<HabitPatternNotifier, List<HabitPatternModel>>((ref) {
   final box = ref.watch(habitPatternBoxProvider);
-  return HabitPatternNotifier(box);
+  final profile = ref.watch(profileProvider);
+  return HabitPatternNotifier(box, profile);
 });
 
 // Active habits for a specific day (weekday 1-7)

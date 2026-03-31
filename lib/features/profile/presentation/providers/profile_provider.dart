@@ -32,6 +32,36 @@ class ProfileNotifier extends StateNotifier<UserProfileModel> {
     state = _clone(state);
   }
 
+  void updatePlannerReminders(bool enabled) {
+    state.plannerReminders = enabled;
+    state.save();
+    state = _clone(state);
+  }
+
+  void updateHabitReminders(bool enabled) {
+    state.habitReminders = enabled;
+    state.save();
+    state = _clone(state);
+  }
+
+  void updateGoalReminders(bool enabled) {
+    state.goalReminders = enabled;
+    state.save();
+    state = _clone(state);
+  }
+
+  void updateFocusAlerts(bool enabled) {
+    state.focusAlerts = enabled;
+    state.save();
+    state = _clone(state);
+  }
+
+  void updateSounds(bool enabled) {
+    state.soundsEnabled = enabled;
+    state.save();
+    state = _clone(state);
+  }
+
   // Helper to trigger UI rebuild
   UserProfileModel _clone(UserProfileModel original) {
     return UserProfileModel(
@@ -39,6 +69,11 @@ class ProfileNotifier extends StateNotifier<UserProfileModel> {
       avatarIndex: original.avatarIndex,
       avatarPath: original.avatarPath,
       notificationsEnabled: original.notificationsEnabled,
+      plannerReminders: original.plannerReminders,
+      habitReminders: original.habitReminders,
+      goalReminders: original.goalReminders,
+      focusAlerts: original.focusAlerts,
+      soundsEnabled: original.soundsEnabled,
     );
   }
 }

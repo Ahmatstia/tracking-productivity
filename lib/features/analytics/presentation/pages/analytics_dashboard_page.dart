@@ -25,7 +25,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 24),
-              
+
               // ── Header ──────────────────────────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,7 +55,7 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                   ),
                 ],
               ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.05, end: 0),
-              
+
               const SizedBox(height: 32),
 
               // ── Top Stats Row ───────────────────────
@@ -89,7 +89,10 @@ class AnalyticsDashboardPage extends ConsumerWidget {
               Center(
                 child: Text(
                   'Hari paling produktif adalah ${analytics.peakProductivityDay}',
-                  style: const TextStyle(color: AppColors.textSecondary, fontSize: 12, fontStyle: FontStyle.italic),
+                  style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic),
                 ),
               ),
 
@@ -97,14 +100,14 @@ class AnalyticsDashboardPage extends ConsumerWidget {
 
               // ── Average Score Section ──────────────
               _ScoreSummaryBanner(score: analytics.avgProductivityScore),
-              
+
               const SizedBox(height: 40),
 
               // ── Heatmap ────────────────────────────
               const _SectionLabel(label: 'KONSISTENSI AKTIVITAS'),
               const SizedBox(height: 16),
               _ActivityHeatmap(dailyScores: stats.dailyScores),
-              
+
               const SizedBox(height: 40),
 
               // ── Detailed Task Completion ───────────
@@ -118,10 +121,12 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                 ),
                 padding: const EdgeInsets.all(20),
                 child: Column(
-                  children: analytics.days.reversed.map((d) => _CompletionProgressRow(day: d)).toList(),
+                  children: analytics.days.reversed
+                      .map((d) => _CompletionProgressRow(day: d))
+                      .toList(),
                 ),
               ),
-              
+
               const SizedBox(height: 120), // Bottom padding for Nav
             ],
           ),
@@ -158,7 +163,8 @@ class _StatItem extends StatelessWidget {
   final String value;
   final IconData icon;
 
-  const _StatItem({required this.label, required this.value, required this.icon});
+  const _StatItem(
+      {required this.label, required this.value, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -169,11 +175,17 @@ class _StatItem extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary),
           ),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+                fontSize: 11,
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -188,7 +200,7 @@ class _WeeklyBarChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dayNamesShort = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
-    
+
     return Container(
       height: 200,
       width: double.infinity,
@@ -209,7 +221,11 @@ class _WeeklyBarChart extends StatelessWidget {
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('${day.score}', style: const TextStyle(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
+              Text('${day.score}',
+                  style: const TextStyle(
+                      fontSize: 9,
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               AnimatedContainer(
                 duration: 500.ms,
@@ -217,7 +233,9 @@ class _WeeklyBarChart extends StatelessWidget {
                 width: 24,
                 height: barHeight,
                 decoration: BoxDecoration(
-                  color: isToday ? AppColors.textPrimary : AppColors.textSecondary.withValues(alpha: 0.2),
+                  color: isToday
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
@@ -227,7 +245,8 @@ class _WeeklyBarChart extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: isToday ? FontWeight.w900 : FontWeight.normal,
-                  color: isToday ? AppColors.textPrimary : AppColors.textSecondary,
+                  color:
+                      isToday ? AppColors.textPrimary : AppColors.textSecondary,
                 ),
               ),
             ],
@@ -245,7 +264,7 @@ class _ScoreSummaryBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rounded = score.round();
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -261,29 +280,38 @@ class _ScoreSummaryBanner extends StatelessWidget {
               children: [
                 const Text(
                   'Average Productivity',
-                  style: TextStyle(color: Colors.white60, fontSize: 12, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white60,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '$rounded%',
-                  style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 36,
+                      fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   _getMotivation(rounded),
-                  style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+                  style: const TextStyle(
+                      color: Colors.white70, fontSize: 13, height: 1.4),
                 ),
               ],
             ),
           ),
-          Icon(PhosphorIcons.chartLineUp(), color: Colors.white.withValues(alpha: 0.2), size: 64),
+          Icon(PhosphorIcons.chartLineUp(),
+              color: Colors.white.withValues(alpha: 0.2), size: 64),
         ],
       ),
     );
   }
 
   String _getMotivation(int score) {
-    if (score >= 80) return 'Luar biasa! Konsistensi Anda adalah kunci kesuksesan.';
+    if (score >= 80)
+      return 'Luar biasa! Konsistensi Anda adalah kunci kesuksesan.';
     if (score >= 50) return 'Anda berada di jalur yang benar. Tetap semangat!';
     return 'Setiap hari adalah awal baru. Mari mulai lebih fokus hari ini.';
   }
@@ -297,15 +325,17 @@ class _ActivityHeatmap extends StatelessWidget {
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final List<Widget> cells = [];
-    
+
     // Display last 70 days
     for (int i = 69; i >= 0; i--) {
       final day = now.subtract(Duration(days: i));
-      final dateStr = '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+      final dateStr =
+          '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
       final scoreCount = dailyScores[dateStr] ?? 0;
-      
+
       // Mono scale opacity
-      final opacity = scoreCount == 0 ? 0.05 : (scoreCount / 100).clamp(0.2, 1.0);
+      final opacity =
+          scoreCount == 0 ? 0.05 : (scoreCount / 100).clamp(0.2, 1.0);
 
       cells.add(
         Container(
@@ -336,18 +366,26 @@ class _ActivityHeatmap extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const Text('Less', style: TextStyle(color: AppColors.textSecondary, fontSize: 9)),
+              const Text('Less',
+                  style:
+                      TextStyle(color: AppColors.textSecondary, fontSize: 9)),
               const SizedBox(width: 6),
-              ...List.generate(4, (i) => Container(
-                width: 10, height: 10,
-                margin: const EdgeInsets.only(left: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.textPrimary.withValues(alpha: (i + 1) * 0.25),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              )),
+              ...List.generate(
+                  4,
+                  (i) => Container(
+                        width: 10,
+                        height: 10,
+                        margin: const EdgeInsets.only(left: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.textPrimary
+                              .withValues(alpha: (i + 1) * 0.25),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      )),
               const SizedBox(width: 6),
-              const Text('More', style: TextStyle(color: AppColors.textSecondary, fontSize: 9)),
+              const Text('More',
+                  style:
+                      TextStyle(color: AppColors.textSecondary, fontSize: 9)),
             ],
           ),
         ],
@@ -362,7 +400,15 @@ class _CompletionProgressRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dayNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+    final dayNames = [
+      'Senin',
+      'Selasa',
+      'Rabu',
+      'Kamis',
+      'Jumat',
+      'Sabtu',
+      'Minggu'
+    ];
     final label = dayNames[day.date.weekday - 1];
     final rate = day.completionRate;
 
@@ -374,8 +420,14 @@ class _CompletionProgressRow extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-              Text('${day.tasksCompleted}/${day.totalTasks}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+              Text(label,
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary)),
+              Text('${day.tasksCompleted}/${day.totalTasks}',
+                  style: const TextStyle(
+                      fontSize: 11, color: AppColors.textSecondary)),
             ],
           ),
           const SizedBox(height: 8),
@@ -384,13 +436,17 @@ class _CompletionProgressRow extends StatelessWidget {
               Container(
                 height: 4,
                 width: double.infinity,
-                decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
+                decoration: BoxDecoration(
+                    color: AppColors.border,
+                    borderRadius: BorderRadius.circular(2)),
               ),
               FractionallySizedBox(
                 widthFactor: rate.isNaN ? 0 : rate,
                 child: Container(
                   height: 4,
-                  decoration: BoxDecoration(color: AppColors.textPrimary, borderRadius: BorderRadius.circular(2)),
+                  decoration: BoxDecoration(
+                      color: AppColors.textPrimary,
+                      borderRadius: BorderRadius.circular(2)),
                 ),
               ),
             ],

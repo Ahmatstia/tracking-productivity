@@ -2,17 +2,26 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:life_os_productivity/features/planner/domain/time_block_model.dart';
+import 'package:life_os_productivity/features/planner/domain/habit_pattern_model.dart';
+import 'package:life_os_productivity/features/profile/domain/user_profile_model.dart';
 import 'package:life_os_productivity/core/services/notification_service.dart';
+import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
+import 'package:life_os_productivity/features/planner/presentation/providers/habit_pattern_provider.dart';
 
 final timeBlockBoxProvider =
     Provider((ref) => Hive.box<TimeBlockModel>('time_blocks_box'));
 
 class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
   final Box<TimeBlockModel> _box;
+  final UserProfileModel _settings;
 
-  TimeBlockNotifier(this._box) : super(_box.values.toList()) {
+  TimeBlockNotifier(this._box, List<HabitPatternModel> habits, this._settings) : super(_box.values.toList()) {
     // Reschedule all today's notification on startup
-    NotificationService().rescheduleAllTodayNotifications(state);
+    NotificationService().rescheduleAllTodayNotifications(
+      blocks: state,
+      habits: habits,
+      settings: _settings,
+    );
   }
 
   void _refresh() => state = _box.values.toList();
@@ -41,7 +50,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
     deleteOverlappingBlocks(date, block.startMinutes, block.endMinutes);
 
     _box.put(block.id, block);
-    NotificationService().scheduleTimeBlockNotification(block);
+    NotificationService().scheduleTimeBlockNotification(block, settings: _settings);
     _refresh();
   }
 
@@ -66,7 +75,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
     deleteOverlappingBlocks(updated.date, updated.startMinutes, updated.endMinutes, excludeId: updated.id);
 
     _box.put(updated.id, updated);
-    NotificationService().scheduleTimeBlockNotification(updated);
+    NotificationService().scheduleTimeBlockNotification(updated, settings: _settings);
     _refresh();
   }
 
@@ -77,7 +86,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
       deleteOverlappingBlocks(block.date, block.startMinutes, block.endMinutes);
       
       _box.put(block.id, block);
-      NotificationService().scheduleTimeBlockNotification(block);
+      NotificationService().scheduleTimeBlockNotification(block, settings: _settings);
     }
     _refresh();
   }
@@ -126,7 +135,9 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
 final timeBlockProvider =
     StateNotifierProvider<TimeBlockNotifier, List<TimeBlockModel>>((ref) {
   final box = ref.watch(timeBlockBoxProvider);
-  return TimeBlockNotifier(box);
+  final habits = ref.watch(habitPatternProvider);
+  final profile = ref.watch(profileProvider);
+  return TimeBlockNotifier(box, habits, profile);
 });
 
 // Filter blocks by a specific date

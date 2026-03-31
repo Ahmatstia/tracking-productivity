@@ -16,10 +16,30 @@ class UserProfileModel extends HiveObject {
   @HiveField(3)
   bool notificationsEnabled;
 
+  @HiveField(4)
+  bool plannerReminders;
+
+  @HiveField(5)
+  bool habitReminders;
+
+  @HiveField(6)
+  bool goalReminders;
+
+  @HiveField(7)
+  bool focusAlerts;
+
+  @HiveField(8)
+  bool soundsEnabled;
+
   UserProfileModel({
     this.name = 'Sobat Produktif',
     this.avatarIndex = 0,
     this.avatarPath,
     this.notificationsEnabled = true,
+    this.plannerReminders = true,
+    this.habitReminders = true,
+    this.goalReminders = true,
+    this.focusAlerts = true,
+    this.soundsEnabled = true,
   });
 }
