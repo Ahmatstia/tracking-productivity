@@ -22,7 +22,7 @@ class TaskCard extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: task.isCompleted
@@ -131,8 +131,8 @@ class TaskCard extends ConsumerWidget {
                     const SizedBox(width: 4),
                     Text(
                       '${task.startTime} - ${task.endTime}',
-                      style: const TextStyle(
-                        color: AppColors.primary,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),

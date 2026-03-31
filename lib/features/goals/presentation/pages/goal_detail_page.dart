@@ -71,7 +71,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 elevation: 0,
               ),
@@ -169,7 +169,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                       const SizedBox(height: 4),
                       Text(targetText,
-                          style: const TextStyle(color: AppColors.secondary, fontSize: 13, fontWeight: FontWeight.w600)),
+                          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 13, fontWeight: FontWeight.w600)),
                     ],
                   ),
                 ),
@@ -213,7 +213,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                   onTap: _showAddSubTaskDialog,
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, borderRadius: BorderRadius.circular(10)),
                     child: Icon(PhosphorIcons.plus(), color: Colors.white, size: 20),
                   ),
                 )
@@ -364,10 +364,10 @@ class _ProgressCircle extends StatelessWidget {
               value: progress,
               strokeWidth: 6,
               backgroundColor: AppColors.border,
-              valueColor: AlwaysStoppedAnimation(progress == 1.0 ? AppColors.secondary : AppColors.primary),
+              valueColor: AlwaysStoppedAnimation(progress == 1.0 ? AppColors.secondary : Theme.of(context).colorScheme.primary),
             ),
           ),
-          Text("${(progress * 100).toInt()}%", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
+          Text("${(progress * 100).toInt()}%", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.primary)),
         ],
       ),
     );

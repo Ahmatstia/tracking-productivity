@@ -204,7 +204,7 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
             child: ElevatedButton(
               onPressed: _saveGoal,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 elevation: 0,
               ),

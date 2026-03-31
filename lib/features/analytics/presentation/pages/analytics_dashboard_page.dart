@@ -97,7 +97,9 @@ class AnalyticsDashboardPage extends ConsumerWidget {
               const SizedBox(height: 12),
               Center(
                 child: Text(
-                  'Hari paling produktif adalah ${analytics.peakProductivityDay}',
+                  analytics.peakProductivityDay == "-" 
+                      ? 'Analitik akan muncul setelah Anda mulai produktif'
+                      : 'Hari paling produktif adalah ${analytics.peakProductivityDay}',
                   style: const TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 12,
@@ -228,8 +230,8 @@ class _WeeklyBarChart extends StatelessWidget {
                 height: barHeight,
                 decoration: BoxDecoration(
                   color: isToday
-                      ? AppColors.textPrimary
-                      : AppColors.textSecondary.withValues(alpha: 0.2),
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
@@ -240,7 +242,7 @@ class _WeeklyBarChart extends StatelessWidget {
                   fontSize: 10,
                   fontWeight: isToday ? FontWeight.w900 : FontWeight.normal,
                   color:
-                      isToday ? AppColors.textPrimary : AppColors.textSecondary,
+                      isToday ? Theme.of(context).colorScheme.primary : AppColors.textSecondary,
                 ),
               ),
             ],
@@ -263,7 +265,7 @@ class _ScoreSummaryBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.textPrimary,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
@@ -337,7 +339,7 @@ class _ActivityHeatmap extends StatelessWidget {
           height: 14,
           margin: const EdgeInsets.all(1.5),
           decoration: BoxDecoration(
-            color: AppColors.textPrimary.withValues(alpha: opacity),
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: opacity),
             borderRadius: BorderRadius.circular(3),
           ),
         ),
@@ -371,7 +373,7 @@ class _ActivityHeatmap extends StatelessWidget {
                         height: 10,
                         margin: const EdgeInsets.only(left: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.textPrimary
+                          color: Theme.of(context).colorScheme.primary
                               .withValues(alpha: (i + 1) * 0.25),
                           borderRadius: BorderRadius.circular(2),
                         ),
@@ -439,7 +441,7 @@ class _CompletionProgressRow extends StatelessWidget {
                                 child: Container(
                   height: 4,
                   decoration: BoxDecoration(
-                      color: AppColors.textPrimary,
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(2)),
                 ),
               ),

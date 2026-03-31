@@ -14,6 +14,8 @@ import 'package:life_os_productivity/core/services/notification_service.dart';
 import 'package:life_os_productivity/features/analytics/domain/daily_review_model.dart';
 import 'package:life_os_productivity/features/profile/domain/user_profile_model.dart';
 import 'package:life_os_productivity/features/categories/domain/category_model.dart';
+import 'package:life_os_productivity/core/constants/app_colors.dart';
+import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -87,15 +89,18 @@ void main() async {
   );
 }
 
-class LifeOSApp extends StatelessWidget {
+class LifeOSApp extends ConsumerWidget {
   const LifeOSApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profile = ref.watch(profileProvider);
+    final themeColor = AppColors.themeColors[profile.avatarIndex % AppColors.themeColors.length];
+
     return MaterialApp(
       title: 'MyLife OS',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.getTheme(themeColor),
       locale: const Locale('id', 'ID'),
       supportedLocales: const [
         Locale('id', 'ID'),

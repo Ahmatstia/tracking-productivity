@@ -136,12 +136,12 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         controller: titleCtrl,
                         autofocus: true,
                         style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Nama Aktivitas',
-                          hintStyle: TextStyle(color: AppColors.textSecondary),
-                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
-                          contentPadding: EdgeInsets.symmetric(vertical: 12),
+                          hintStyle: const TextStyle(color: AppColors.textSecondary),
+                          enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.primary)),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 12),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -346,9 +346,9 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                             height: 38,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primary : Colors.transparent,
+                              color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
                               shape: BoxShape.circle,
-                              border: Border.all(color: isSelected ? AppColors.primary : AppColors.border),
+                              border: Border.all(color: isSelected ? Theme.of(context).colorScheme.primary : AppColors.border),
                             ),
                             child: Text(
                               _days[index],
@@ -372,7 +372,8 @@ class _EditRoutinePageState extends ConsumerState<EditRoutinePage> {
                         TextButton.icon(
                           onPressed: () => _showAddBlockDialog(),
                           icon: Icon(PhosphorIcons.plus(), size: 16),
-                          label: const Text('Tambah'),
+                          label: Text('Tambah', style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+                          style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.primary),
                         )
                       ],
                     ),

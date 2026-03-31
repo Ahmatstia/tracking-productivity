@@ -116,10 +116,15 @@ final weeklyAnalyticsProvider = Provider<WeeklyAnalytics>((ref) {
   final totalTasksDone = dayStats.fold<int>(0, (s, d) => s + d.tasksCompleted);
   final avgScore = dayStats.isEmpty ? 0.0 : dayStats.fold<int>(0, (s, d) => s + d.score) / dayStats.length;
 
-  // Peak day logic
-  final peak = dayStats.reduce((a, b) => a.score >= b.score ? a : b);
-  final dayNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-  final peakDayLabel = dayNames[peak.date.weekday - 1];
+  // Peak day logic: only identify if there's at least one day with score > 0
+  final maxScore = dayStats.fold<int>(0, (max, d) => d.score > max ? d.score : max);
+  String peakDayLabel = "-";
+  
+  if (maxScore > 0) {
+    final peak = dayStats.reduce((a, b) => a.score >= b.score ? a : b);
+    final dayNames = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+    peakDayLabel = dayNames[peak.date.weekday - 1];
+  }
 
   return WeeklyAnalytics(
     days: dayStats,

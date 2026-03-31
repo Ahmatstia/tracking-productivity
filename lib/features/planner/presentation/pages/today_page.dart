@@ -102,8 +102,8 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                               _formatDate(_today),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: AppColors.primary,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -145,23 +145,16 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                         child: TabBar(
                           controller: _tabController,
                           indicator: UnderlineTabIndicator(
-                            borderSide: const BorderSide(
-                              color: AppColors.textPrimary,
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
                               width: 2.5,
                             ),
-                            insets: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.1),
                           ),
-                          dividerColor: AppColors.border.withValues(alpha: 0.1),
-                          labelColor: AppColors.textPrimary,
+                          labelColor: Theme.of(context).colorScheme.primary,
                           unselectedLabelColor: AppColors.textSecondary,
-                          labelStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                          unselectedLabelStyle: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
+                          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 13),
+                          dividerColor: Colors.transparent,
                           tabs: [
                             Tab(
                               child: Row(

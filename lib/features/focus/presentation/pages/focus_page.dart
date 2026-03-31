@@ -69,7 +69,7 @@ class FocusPage extends ConsumerWidget {
                     strokeWidth: 8,
                     backgroundColor: AppColors.border,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      pomodoro.isFocusMode ? AppColors.primary : AppColors.secondary,
+                      pomodoro.isFocusMode ? Theme.of(context).colorScheme.primary : AppColors.secondary,
                     ),
                   ),
                 ),
@@ -100,7 +100,7 @@ class FocusPage extends ConsumerWidget {
                   icon: pomodoro.isRunning ? PhosphorIcons.pause() : PhosphorIcons.play(),
                   isLarge: true,
                   onPressed: () => pomodoro.isRunning ? notifier.pause() : notifier.start(),
-                  backgroundColor: pomodoro.isFocusMode ? AppColors.primary : AppColors.secondary,
+                  backgroundColor: pomodoro.isFocusMode ? Theme.of(context).colorScheme.primary : AppColors.secondary,
                   color: Colors.white,
                 ),
                 const SizedBox(width: 30),
@@ -191,7 +191,7 @@ class _TaskSelector extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(PhosphorIcons.target(), size: 16, color: selectedTask != null ? AppColors.primary : AppColors.textSecondary),
+            Icon(PhosphorIcons.target(), size: 16, color: selectedTask != null ? Theme.of(context).colorScheme.primary : AppColors.textSecondary),
             const SizedBox(width: 8),
             Flexible(
               child: Text(
@@ -237,7 +237,7 @@ class _FocusHistory extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Hari Ini', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
-              Text('$totalMinutes menit total', style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold)),
+              Text('$totalMinutes menit total', style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold)),
             ],
           ),
           const SizedBox(height: 12),
@@ -294,7 +294,7 @@ class _ControlButton extends StatelessWidget {
           border: backgroundColor == null ? Border.all(color: AppColors.border) : null,
           boxShadow: isLarge ? [
             BoxShadow(
-              color: (backgroundColor ?? AppColors.primary).withValues(alpha: 0.3),
+              color: (backgroundColor ?? Theme.of(context).colorScheme.primary).withValues(alpha: 0.3),
               blurRadius: 16,
               offset: const Offset(0, 6),
             )

@@ -241,7 +241,7 @@ class RoutinesPage extends ConsumerWidget {
                                       label: const Text('Terapkan Ke Hari Ini', 
                                           style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.textPrimary,
+                                        backgroundColor: Theme.of(context).colorScheme.primary,
                                         foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                         elevation: 0,

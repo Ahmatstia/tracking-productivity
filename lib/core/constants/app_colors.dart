@@ -23,4 +23,13 @@ class AppColors {
   
   // Enhanced floating shadow (e.g. 10% black) to complement the off-white bg
   static const Color cardShadow = Color(0x14000000);    // 8% Black Shadow
+
+  // ── Theme Prefsets (Profile Colors) ──
+  static const List<Color> themeColors = [
+    Color(0xFF6366F1), // Indigo
+    Color(0xFF10B981), // Emerald
+    Color(0xFF8B5CF6), // Grape
+    Color(0xFFF59E0B), // Amber
+    Color(0xFFF43F5E), // Rose
+  ];
 }

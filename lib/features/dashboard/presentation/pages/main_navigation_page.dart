@@ -102,14 +102,14 @@ class MainNavigationPage extends ConsumerWidget {
       drawer: const AppDrawer(),
       body: pages[safeIndex],
       floatingActionButton: _buildFAB(context, ref, today),
-      bottomNavigationBar: _buildNavBar(ref, safeIndex),
+      bottomNavigationBar: _buildNavBar(context, ref, safeIndex),
     );
   }
 
   Widget _buildFAB(BuildContext context, WidgetRef ref, DateTime today) {
     return FloatingActionButton(
       onPressed: () => _showSuperFABSheet(context, ref, today),
-      backgroundColor: AppColors.primary,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: Icon(PhosphorIcons.plus(), color: Colors.white, size: 28),
@@ -117,6 +117,7 @@ class MainNavigationPage extends ConsumerWidget {
   }
 
   void _showSuperFABSheet(BuildContext context, WidgetRef ref, DateTime today) {
+    final themeColor = Theme.of(context).colorScheme.primary;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -139,7 +140,7 @@ class MainNavigationPage extends ConsumerWidget {
               icon: PhosphorIcons.checkSquareOffset(),
               title: 'Tugas Baru',
               subtitle: 'Tambahkan tugas lepas tanpa jadwal',
-              color: AppColors.primary,
+              color: themeColor,
               onTap: () {
                 Navigator.pop(ctx);
                 showModalBottomSheet(
@@ -196,12 +197,12 @@ class MainNavigationPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildNavBar(WidgetRef ref, int safeIndex) {
+  Widget _buildNavBar(BuildContext context, WidgetRef ref, int safeIndex) {
     return CurvedNavigationBar(
       index: safeIndex,
       backgroundColor: AppColors.background,
       color: AppColors.navBar,
-      buttonBackgroundColor: AppColors.primary,
+      buttonBackgroundColor: Theme.of(context).colorScheme.primary,
       animationDuration: const Duration(milliseconds: 300),
       onTap: (index) => ref.read(navIndexProvider.notifier).state = index,
       items: [

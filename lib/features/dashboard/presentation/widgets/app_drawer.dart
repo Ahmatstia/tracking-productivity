@@ -89,15 +89,8 @@ class AppDrawer extends ConsumerWidget {
 
   Widget _buildDrawerHeader(BuildContext context, WidgetRef ref,
       UserStatsModel userStats, dynamic profile) {
-    final List<Color> avatarColors = [
-      const Color(0xFF6366F1), // Indigo
-      const Color(0xFF10B981), // Emerald
-      const Color(0xFF8B5CF6), // Grape
-      const Color(0xFFF59E0B), // Amber
-      const Color(0xFFF43F5E), // Rose
-    ];
     final selectedColor =
-        avatarColors[profile.avatarIndex % avatarColors.length];
+        AppColors.themeColors[profile.avatarIndex % AppColors.themeColors.length];
 
     return InkWell(
       onLongPress: () => _pickCoverImage(context, ref),
@@ -321,14 +314,6 @@ class AppDrawer extends ConsumerWidget {
     String? tempAvatarPath = profile.avatarPath;
     String? tempCoverPath = profile.coverImagePath;
 
-    final List<Color> avatarColors = [
-      const Color(0xFF6366F1), // Indigo
-      const Color(0xFF10B981), // Emerald
-      const Color(0xFF8B5CF6), // Grape
-      const Color(0xFFF59E0B), // Amber
-      const Color(0xFFF43F5E), // Rose
-    ];
-
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -393,19 +378,19 @@ class AppDrawer extends ConsumerWidget {
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: avatarColors.asMap().entries.map((entry) {
+                      children: AppColors.themeColors.asMap().entries.map((entry) {
                         final idx = entry.key;
                         final color = entry.value;
                         final isSelected = selectedAvatar == idx;
-                        return InkWell(
-                          onTap: () =>
-                              setDialogState(() => selectedAvatar = idx),
-                          borderRadius: BorderRadius.circular(30),
+                        return GestureDetector(
+                          onTap: () {
+                            setDialogState(() => selectedAvatar = idx);
+                          },
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            curve: Curves.easeInOut,
-                            width: isSelected ? 50 : 44,
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeOutCubic,
                             height: isSelected ? 50 : 44,
+                            width: isSelected ? 50 : 44,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: isSelected ? color : color.withValues(alpha: 0.1),
@@ -414,11 +399,12 @@ class AppDrawer extends ConsumerWidget {
                                 width: isSelected ? 3 : 1,
                               ),
                               boxShadow: [
-                                BoxShadow(
-                                  color: isSelected ? color.withValues(alpha: 0.4) : Colors.transparent,
-                                  blurRadius: isSelected ? 12 : 0,
-                                  spreadRadius: isSelected ? 1 : 0,
-                                )
+                                if (isSelected)
+                                  BoxShadow(
+                                    color: color.withValues(alpha: 0.4),
+                                    blurRadius: 12,
+                                    spreadRadius: 1,
+                                  )
                               ],
                             ),
                             child: Center(
@@ -558,7 +544,7 @@ class AppDrawer extends ConsumerWidget {
                       height: 52,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: avatarColors[selectedAvatar],
+                          backgroundColor: AppColors.themeColors[selectedAvatar],
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16)),

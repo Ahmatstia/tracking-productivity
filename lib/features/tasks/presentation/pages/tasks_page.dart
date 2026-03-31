@@ -18,19 +18,20 @@ class _TasksPageState extends ConsumerState<TasksPage> {
   int _filterPriority = -1;
   bool _showCompleted = true;
 
-  static const _priorityFilters = [
-    {'label': 'Semua', 'value': -1, 'color': AppColors.textSecondary},
-    {'label': '🔴 Urgent', 'value': 2, 'color': AppColors.error},
-    {'label': '⭐ Penting', 'value': 1, 'color': AppColors.primary},
-    {'label': 'Normal', 'value': 0, 'color': AppColors.textSecondary},
-  ];
-
   String _formatDate(DateTime date) {
     return DateFormat.yMMMMEEEEd('id_ID').format(date);
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeColor = Theme.of(context).colorScheme.primary;
+    final priorityFilters = [
+      {'label': 'Semua', 'value': -1, 'color': AppColors.textSecondary},
+      {'label': '🔴 Urgent', 'value': 2, 'color': AppColors.error},
+      {'label': '⭐ Penting', 'value': 1, 'color': themeColor},
+      {'label': 'Normal', 'value': 0, 'color': AppColors.textSecondary},
+    ];
+
     final today = DateTime.now();
     final tasksToday = ref.watch(tasksByDateProvider(today));
 
@@ -111,7 +112,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
                             value: progress,
                             backgroundColor: AppColors.border,
                             valueColor: AlwaysStoppedAnimation(
-                              progress >= 1.0 ? AppColors.secondary : AppColors.primary,
+                              progress >= 1.0 ? AppColors.secondary : themeColor,
                             ),
                             minHeight: 5,
                           ),
@@ -138,7 +139,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        ..._priorityFilters.map((f) {
+                        ...priorityFilters.map((f) {
                           final isSelected = _filterPriority == f['value'];
                           final color = f['color'] as Color;
                           return Padding(
@@ -218,7 +219,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
             // ── Task list ──
             Expanded(
               child: filtered.isEmpty
-                  ? _buildEmptyState(totalCount)
+                  ? _buildEmptyState(totalCount, themeColor)
                   : ListView.builder(
                       padding: const EdgeInsets.fromLTRB(20, 4, 20, 100),
                       physics: const BouncingScrollPhysics(),
@@ -234,7 +235,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
     );
   }
 
-  Widget _buildEmptyState(int totalCount) {
+  Widget _buildEmptyState(int totalCount, Color themeColor) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -252,7 +253,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
                 _filterPriority = -1;
                 _showCompleted = true;
               }),
-              child: const Text('Reset Filter', style: TextStyle(color: AppColors.primary)),
+              child: Text('Reset Filter', style: TextStyle(color: themeColor)),
             ),
           ] else ...[
             Icon(PhosphorIcons.checkCircle(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.15)),
