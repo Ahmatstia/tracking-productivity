@@ -68,7 +68,7 @@ class _TasksPageState extends ConsumerState<TasksPage> {
                           const Text(
                             "Tugas Saya",
                             style: TextStyle(
-                              fontSize: 28,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary,
                             ),

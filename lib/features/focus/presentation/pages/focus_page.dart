@@ -38,9 +38,9 @@ class FocusPage extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
             Text(
-              pomodoro.isFocusMode ? "Waktu Fokus" : "Waktu Istirahat",
+              pomodoro.isFocusMode ? "Fokus" : "Istirahat",
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppColors.textPrimary,
               ),

@@ -10,15 +10,16 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Pengaturan', 
-          style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 18)
-        ),
+        title: const Text('Pengaturan',
+            style: TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 18)),
         leading: IconButton(
           icon: Icon(PhosphorIcons.caretLeft(), color: AppColors.textPrimary),
           onPressed: () => Navigator.pop(context),
@@ -35,7 +36,8 @@ class SettingsPage extends ConsumerWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const NotificationSettingsPage()),
+                MaterialPageRoute(
+                    builder: (context) => const NotificationSettingsPage()),
               );
             },
           ),
@@ -49,10 +51,13 @@ class SettingsPage extends ConsumerWidget {
                 color: AppColors.secondary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Text('Aktif', style: TextStyle(color: AppColors.secondary, fontSize: 11, fontWeight: FontWeight.bold)),
+              child: const Text('Aktif',
+                  style: TextStyle(
+                      color: AppColors.secondary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold)),
             ),
           ),
-          
           const SizedBox(height: 24),
           _buildSectionHeader('Data & Keamanan'),
           _buildSettingsTile(
@@ -60,9 +65,8 @@ class SettingsPage extends ConsumerWidget {
             title: 'Cadangkan Data',
             subtitle: 'Simpan data ke penyimpanan lokal',
             onTap: () {
-               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Fitur Backup Segera Hadir!'))
-              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Fitur Backup Segera Hadir!')));
             },
           ),
           _buildSettingsTile(
@@ -72,13 +76,12 @@ class SettingsPage extends ConsumerWidget {
             color: AppColors.error,
             onTap: () => _confirmReset(context),
           ),
-          
           const SizedBox(height: 24),
           _buildSectionHeader('Info Aplikasi'),
           _buildSettingsTile(
             icon: PhosphorIcons.info(),
             title: 'Versi Aplikasi',
-            subtitle: '1.0.0 (Beta Maksimal)',
+            subtitle: '1.0.0',
           ),
           _buildSettingsTile(
             icon: PhosphorIcons.star(),
@@ -121,7 +124,10 @@ class SettingsPage extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border),
         boxShadow: [
-          BoxShadow(color: AppColors.cardShadow.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(
+              color: AppColors.cardShadow.withValues(alpha: 0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: ListTile(
@@ -135,9 +141,20 @@ class SettingsPage extends ConsumerWidget {
           ),
           child: Icon(icon, color: color, size: 18),
         ),
-        title: Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
-        subtitle: Text(subtitle, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
-        trailing: trailing ?? (onTap != null ? Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16) : null),
+        title: Text(title,
+            style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500)),
+        subtitle: Text(subtitle,
+            style:
+                const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+        trailing: trailing ??
+            (onTap != null
+                ? Icon(PhosphorIcons.caretRight(),
+                    color: AppColors.textSecondary.withValues(alpha: 0.3),
+                    size: 16)
+                : null),
       ),
     );
   }
@@ -147,7 +164,8 @@ class SettingsPage extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Hapus Semua Data?', style: TextStyle(color: AppColors.textPrimary)),
+        title: const Text('Hapus Semua Data?',
+            style: TextStyle(color: AppColors.textPrimary)),
         content: const Text(
           'Tindakan ini akan menghapus seluruh isi Planner, Habits, dan Profil Anda secara permanen. Lanjutkan?',
           style: TextStyle(color: AppColors.textSecondary),
@@ -155,7 +173,8 @@ class SettingsPage extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal', style: TextStyle(color: AppColors.textSecondary)),
+            child: const Text('Batal',
+                style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () async {
@@ -163,11 +182,12 @@ class SettingsPage extends ConsumerWidget {
               final messenger = ScaffoldMessenger.of(context);
               await Hive.deleteFromDisk();
               navigator.pop();
-              messenger.showSnackBar(
-                const SnackBar(content: Text('Data Dihapus. Mohon muat ulang aplikasi.'))
-              );
+              messenger.showSnackBar(const SnackBar(
+                  content: Text('Data Dihapus. Mohon muat ulang aplikasi.')));
             },
-            child: const Text('Reset Sekarang', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.bold)),
+            child: const Text('Reset Sekarang',
+                style: TextStyle(
+                    color: AppColors.error, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

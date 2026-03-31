@@ -42,8 +42,8 @@ class MainNavigationPage extends ConsumerWidget {
             children: [
               const SizedBox(height: 20),
               const Text(
-                "Impian Besar Saya",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                "Impian Saya",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               const Text(
                 "Pantau mimpi & target hidupmu",
@@ -132,12 +132,12 @@ class MainNavigationPage extends ConsumerWidget {
           children: [
             Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2))),
             const SizedBox(height: 24),
-            const Text('Apa yang ingin Anda buat?', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+            const Text('Buat Baru', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
             const SizedBox(height: 24),
             
             _SuperFABOption(
               icon: PhosphorIcons.checkSquareOffset(),
-              title: 'Tugas Baru (Kotak Masuk)',
+              title: 'Tugas Baru',
               subtitle: 'Tambahkan tugas lepas tanpa jadwal',
               color: AppColors.primary,
               onTap: () {
@@ -152,7 +152,7 @@ class MainNavigationPage extends ConsumerWidget {
             ),
             _SuperFABOption(
               icon: PhosphorIcons.clock(),
-              title: 'Jadwal Aktivitas Planner',
+              title: 'Jadwal Baru',
               subtitle: 'Blok waktu di kalender Hari Ini',
               color: AppColors.secondary, // Charcoal
               onTap: () {
@@ -167,7 +167,7 @@ class MainNavigationPage extends ConsumerWidget {
             ),
             _SuperFABOption(
               icon: PhosphorIcons.arrowsClockwise(),
-              title: 'Template Rutinitas',
+              title: 'Rutinitas',
               subtitle: 'Buat paket aktivitas yang berulang',
               color: AppColors.textSecondary, // Medium Grey
               onTap: () {
@@ -177,7 +177,7 @@ class MainNavigationPage extends ConsumerWidget {
             ),
             _SuperFABOption(
               icon: PhosphorIcons.target(),
-              title: 'Mimpi / Target',
+              title: 'Mimpi',
               subtitle: 'Buat capaian jangka panjang',
               color: AppColors.primaryAccent, // Dark Grey Accent
               onTap: () {
@@ -310,8 +310,8 @@ class _TaskAddSheetState extends ConsumerState<_TaskAddSheet> {
               decoration: BoxDecoration(color: AppColors.border, borderRadius: BorderRadius.circular(2)),
             ),
           ),
-          const Text('Tugas Kotak Masuk (Tanpa Jadwal)',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+          const Text('Tugas Baru',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
           const SizedBox(height: 16),
           TextField(
             controller: _titleController,

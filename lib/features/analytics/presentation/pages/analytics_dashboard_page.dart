@@ -34,10 +34,10 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Analitik Performa',
+                        'Analitik',
                         style: TextStyle(
                           color: AppColors.textPrimary,
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: FontWeight.w900,
                           letterSpacing: -0.5,
                         ),
@@ -61,23 +61,32 @@ class AnalyticsDashboardPage extends ConsumerWidget {
               // ── Top Stats Row ───────────────────────
               Row(
                 children: [
-                  _AnalyticsStatCard(
+                   _AnalyticsStatCard(
                     'Streak',
                     '${stats.currentStreak}',
-                    PhosphorIcons.lightning(),
                   ),
                   _AnalyticsStatCard(
                     'Fokus',
                     '${analytics.totalFocusMinutes}m',
-                    PhosphorIcons.timer(),
                   ),
                   _AnalyticsStatCard(
                     'Selesai',
                     '${analytics.tasksCompletedWeek}',
-                    PhosphorIcons.checkCircle(),
                   ),
                 ],
               ).animate().fadeIn(delay: 100.ms),
+
+              const SizedBox(height: 32),
+
+              // ── Average Score Section ──────────────
+              _ScoreSummaryBanner(score: analytics.avgProductivityScore),
+
+              const SizedBox(height: 40),
+
+              // ── Heatmap ────────────────────────────
+              const _SectionLabel(label: 'KONSISTENSI AKTIVITAS'),
+              const SizedBox(height: 16),
+              _ActivityHeatmap(dailyScores: stats.dailyScores),
 
               const SizedBox(height: 40),
 
@@ -95,18 +104,6 @@ class AnalyticsDashboardPage extends ConsumerWidget {
                       fontStyle: FontStyle.italic),
                 ),
               ),
-
-              const SizedBox(height: 40),
-
-              // ── Average Score Section ──────────────
-              _ScoreSummaryBanner(score: analytics.avgProductivityScore),
-
-              const SizedBox(height: 40),
-
-              // ── Heatmap ────────────────────────────
-              const _SectionLabel(label: 'KONSISTENSI AKTIVITAS'),
-              const SizedBox(height: 16),
-              _ActivityHeatmap(dailyScores: stats.dailyScores),
 
               const SizedBox(height: 40),
 
@@ -161,16 +158,14 @@ class _SectionLabel extends StatelessWidget {
 class _AnalyticsStatCard extends StatelessWidget {
   final String label;
   final String value;
-  final IconData icon;
 
-  const _AnalyticsStatCard(this.label, this.value, this.icon);
+  const _AnalyticsStatCard(this.label, this.value);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
         children: [
-          Icon(icon, color: AppColors.textPrimary, size: 20),
           const SizedBox(height: 8),
           Text(
             value,

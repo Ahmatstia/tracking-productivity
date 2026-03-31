@@ -104,9 +104,9 @@ class _AddGoalSheetState extends ConsumerState<AddGoalSheet> {
             ),
           ),
           const Text(
-            "Tulis Mimpi Baru",
+            "Mimpi Baru",
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.textPrimary,
             ),

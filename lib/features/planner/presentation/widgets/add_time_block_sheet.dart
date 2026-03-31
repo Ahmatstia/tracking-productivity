@@ -174,9 +174,9 @@ class _AddTimeBlockSheetState extends ConsumerState<AddTimeBlockSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  isEditing ? 'Edit Aktivitas' : 'Tambah Aktivitas',
+                  isEditing ? 'Edit Aktivitas' : 'Aktivitas Baru',
                   style: const TextStyle(
-                    fontSize: 22,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
                   ),

@@ -17,40 +17,21 @@ class RoutinesPage extends ConsumerWidget {
     
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 100,
-            backgroundColor: AppColors.background,
-            automaticallyImplyLeading: false,
-            actions: const [],
-            flexibleSpace: const FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(left: 20, bottom: 16),
-              title: Text(
-                'Kebiasaan & Rutinitas',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
-                ),
-              ),
-            ),
-          ),
-          // Action Header
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ── Header (Static) ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Daftar Rutinitas',
+                    'Rutinitas',
                     style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 1.2,
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                   ),
                   OutlinedButton.icon(
@@ -74,34 +55,55 @@ class RoutinesPage extends ConsumerWidget {
                 ],
               ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
-            sliver: routines.isEmpty
-                ? SliverFillRemaining(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(PhosphorIcons.arrowsClockwise(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'Belum Ada Template Rutinitas',
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Klik + di bawah untuk membuat rutinitas baru\ndan terapkan ke jadwal harianmu.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-                          ),
-                        ],
-                      ),
+
+            // Section Label
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(
+                children: [
+                  const Text(
+                    'DAFTAR RUTINITAS',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 1.2,
                     ),
-                  )
-                : SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  ),
+                ],
+              ),
+            ),
+
+            // Content
+            Expanded(
+              child: routines.isEmpty
+                  ? Center(
+                      child: SingleChildScrollView(
+                        physics: const NeverScrollableScrollPhysics(), // Prevent bounce scroll when empty
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(PhosphorIcons.arrowsClockwise(), size: 64, color: AppColors.textSecondary.withValues(alpha: 0.2)),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Belum Ada Rutinitas',
+                              style: TextStyle(color: AppColors.textSecondary, fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Klik + di bawah untuk membuat rutinitas baru\ndan terapkan ke jadwal harianmu.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: routines.length,
+                      itemBuilder: (context, index) {
                         final routine = routines[index];
                         final bool isAlreadyApplied = routine.blocks.isNotEmpty && 
                             routine.blocks.every((rb) => todayBlocks.any((tb) => tb.title == rb.title && tb.startTime == rb.startTime));
@@ -236,11 +238,10 @@ class RoutinesPage extends ConsumerWidget {
                           ),
                         );
                       },
-                      childCount: routines.length,
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -104,7 +104,7 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: AppColors.primary,
-                                fontSize: 20,
+                                fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -171,7 +171,7 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                                   const SizedBox(width: 4),
                                   Flexible(
                                     child: Text(
-                                      'JADWAL (${todayBlocks.length})',
+                                      'Jadwal (${todayBlocks.length})',
                                       overflow: TextOverflow.fade,
                                       softWrap: false,
                                     ),
@@ -187,7 +187,7 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
                                   const SizedBox(width: 4),
                                   Flexible(
                                     child: Text(
-                                      'INBOX (${todayTasks.length})',
+                                      'Inbox (${todayTasks.length})',
                                       overflow: TextOverflow.fade,
                                       softWrap: false,
                                     ),
@@ -260,7 +260,7 @@ class _TodayPageState extends ConsumerState<TodayPage> with SingleTickerProvider
               Icon(PhosphorIcons.arrowUpRight(), size: 14, color: AppColors.textSecondary),
               const SizedBox(width: 6),
               const Text(
-                'Tugas Terlewat (Dari kemarin)',
+                'Terlewat',
                 style: TextStyle(color: AppColors.textSecondary, fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ]),

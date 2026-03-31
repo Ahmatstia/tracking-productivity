@@ -166,7 +166,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(goal.title,
-                          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                       const SizedBox(height: 4),
                       Text(targetText,
                           style: const TextStyle(color: AppColors.secondary, fontSize: 13, fontWeight: FontWeight.w600)),
@@ -189,7 +189,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("FILOSOFI / DETAIL", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textSecondary, letterSpacing: 1.2)),
+                    const Text("DETAIL", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textSecondary, letterSpacing: 1.2)),
                     const SizedBox(height: 8),
                     Text(goal.description, style: const TextStyle(fontSize: 15, color: AppColors.textPrimary, height: 1.5)),
                   ],
@@ -204,7 +204,7 @@ class _GoalDetailPageState extends ConsumerState<GoalDetailPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("ROADMAP EKSEKUSI", style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.w900)),
+                    const Text("ROADMAP", style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w900)),
                     Text("${goal.subTasks.where((s) => s.isCompleted).length} dari ${goal.subTasks.length} milestone selesai", 
                         style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
                   ],
