@@ -46,6 +46,36 @@ class NotificationService {
         ?.requestNotificationsPermission();
   }
 
+  // --- Audio Logic ---
+
+  AndroidNotificationDetails _getAndroidDetails({
+    required String channelIdBase,
+    required String channelName,
+    required String channelDesc,
+    String? categorySound,
+    String? globalSound,
+    bool soundsEnabled = true,
+  }) {
+    final soundPath = categorySound ?? globalSound;
+
+    // On Android, if we want to change sound, we MUST use a different channel ID
+    // because sound is property of the channel and cannot be changed after creation.
+    // We use a hash of the sound path to make it unique.
+    final finalChannelId = soundPath != null
+        ? 'life_os_${channelIdBase}_${soundPath.hashCode}'
+        : 'life_os_${channelIdBase}_default';
+
+    return AndroidNotificationDetails(
+      finalChannelId,
+      channelName,
+      channelDescription: channelDesc,
+      importance: Importance.max,
+      priority: Priority.high,
+      playSound: soundsEnabled,
+      sound: soundPath != null ? UriAndroidNotificationSound(soundPath) : null,
+    );
+  }
+
   // --- Core Scheduling Logic ---
 
   Future<void> scheduleTimeBlockNotification(TimeBlockModel block, {UserProfileModel? settings}) async {
@@ -84,13 +114,13 @@ class NotificationService {
       body: 'Aktivitasmu akan dimulai dalam 5 menit.',
       scheduledDate: tzScheduledDate,
       notificationDetails: NotificationDetails(
-        android: AndroidNotificationDetails(
-          'life_os_planner_channel',
-          'Pengingat Planner',
-          channelDescription: 'Notifikasi untuk aktivitas jadwal harian Anda',
-          importance: Importance.max,
-          priority: Priority.high,
-          playSound: settings?.soundsEnabled ?? true,
+        android: _getAndroidDetails(
+          channelIdBase: 'planner',
+          channelName: 'Pengingat Planner',
+          channelDesc: 'Notifikasi untuk aktivitas jadwal harian Anda',
+          categorySound: settings?.plannerSoundPath,
+          globalSound: settings?.globalSoundPath,
+          soundsEnabled: settings?.soundsEnabled ?? true,
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -135,13 +165,13 @@ class NotificationService {
       body: 'Jangan lupa selesaikan kebiasaan harianmu sekarang.',
       scheduledDate: tzScheduledDate,
       notificationDetails: NotificationDetails(
-        android: AndroidNotificationDetails(
-          'life_os_habits_channel',
-          'Saran Kebiasaan',
-          channelDescription: 'Pengingat untuk pola hidup dan kebiasaan harian',
-          importance: Importance.max,
-          priority: Priority.high,
-          playSound: settings?.soundsEnabled ?? true,
+        android: _getAndroidDetails(
+          channelIdBase: 'habits',
+          channelName: 'Saran Kebiasaan',
+          channelDesc: 'Pengingat untuk pola hidup dan kebiasaan harian',
+          categorySound: settings?.habitSoundPath,
+          globalSound: settings?.globalSoundPath,
+          soundsEnabled: settings?.soundsEnabled ?? true,
         ),
       ),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,

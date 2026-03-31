@@ -61,20 +61,20 @@ class AnalyticsDashboardPage extends ConsumerWidget {
               // ── Top Stats Row ───────────────────────
               Row(
                 children: [
-                  _StatItem(
-                    label: 'Streak',
-                    value: '${stats.currentStreak}',
-                    icon: PhosphorIcons.lightning(),
+                  _AnalyticsStatCard(
+                    'Streak',
+                    '${stats.currentStreak}',
+                    PhosphorIcons.lightning(),
                   ),
-                  _StatItem(
-                    label: 'Fokus',
-                    value: '${analytics.totalFocusMinutes}m',
-                    icon: PhosphorIcons.timer(),
+                  _AnalyticsStatCard(
+                    'Fokus',
+                    '${analytics.totalFocusMinutes}m',
+                    PhosphorIcons.timer(),
                   ),
-                  _StatItem(
-                    label: 'Selesai',
-                    value: '${analytics.tasksCompletedWeek}',
-                    icon: PhosphorIcons.checkCircle(),
+                  _AnalyticsStatCard(
+                    'Selesai',
+                    '${analytics.tasksCompletedWeek}',
+                    PhosphorIcons.checkCircle(),
                   ),
                 ],
               ).animate().fadeIn(delay: 100.ms),
@@ -158,13 +158,12 @@ class _SectionLabel extends StatelessWidget {
   }
 }
 
-class _StatItem extends StatelessWidget {
+class _AnalyticsStatCard extends StatelessWidget {
   final String label;
   final String value;
   final IconData icon;
 
-  const _StatItem(
-      {required this.label, required this.value, required this.icon});
+  const _AnalyticsStatCard(this.label, this.value, this.icon);
 
   @override
   Widget build(BuildContext context) {
@@ -442,7 +441,7 @@ class _CompletionProgressRow extends StatelessWidget {
               ),
               FractionallySizedBox(
                 widthFactor: rate.isNaN ? 0 : rate,
-                child: Container(
+                                child: Container(
                   height: 4,
                   decoration: BoxDecoration(
                       color: AppColors.textPrimary,

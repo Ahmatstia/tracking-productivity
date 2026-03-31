@@ -1,14 +1,91 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
+import 'dart:io';
 
-class NotificationSettingsPage extends ConsumerWidget {
+class NotificationSettingsPage extends ConsumerStatefulWidget {
   const NotificationSettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<NotificationSettingsPage> createState() => _NotificationSettingsPageState();
+}
+
+class _NotificationSettingsPageState extends ConsumerState<NotificationSettingsPage> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  String? _playingPath;
+  Timer? _previewTimer;
+
+  @override
+  void dispose() {
+    _previewTimer?.cancel();
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickAndPreviewSound(String category, String? currentPath) async {
+    // 1. Pick File
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.audio,
+      allowMultiple: false,
+    );
+
+    if (result != null && result.files.single.path != null) {
+      final newPath = result.files.single.path!;
+      
+      // 2. Play Preview (5-10 seconds as standard)
+      await _playPreview(newPath);
+
+      // 3. Save to Profile
+      final notifier = ref.read(profileProvider.notifier);
+      switch (category) {
+        case 'global': notifier.updateGlobalSound(newPath); break;
+        case 'planner': notifier.updatePlannerSound(newPath); break;
+        case 'habit': notifier.updateHabitSound(newPath); break;
+        case 'focus': notifier.updateFocusSound(newPath); break;
+      }
+    }
+  }
+
+  Future<void> _playPreview(String path) async {
+    try {
+      _previewTimer?.cancel();
+      await _audioPlayer.stop();
+      
+      setState(() {
+        _playingPath = path;
+      });
+
+      await _audioPlayer.play(DeviceFileSource(path));
+      
+      // Stop after 8 seconds (common middle ground)
+      _previewTimer = Timer(const Duration(seconds: 8), () async {
+        await _audioPlayer.stop();
+        if (mounted) {
+          setState(() {
+            _playingPath = null;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('Error playing preview: $e');
+    }
+  }
+
+  void _stopPreview() async {
+    await _audioPlayer.stop();
+    _previewTimer?.cancel();
+    setState(() {
+      _playingPath = null;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final profile = ref.watch(profileProvider);
 
     return Scaffold(
@@ -46,6 +123,32 @@ class NotificationSettingsPage extends ConsumerWidget {
             enabled: profile.notificationsEnabled,
             onChanged: (val) => ref.read(profileProvider.notifier).updateSounds(val),
           ),
+
+          if (profile.soundsEnabled && profile.notificationsEnabled) ...[
+            const SizedBox(height: 24),
+            _buildSectionHeader('Estetika Suara (Hybrid)'),
+            _buildSoundPickerTile(
+              category: 'global',
+              title: 'Suara Utama (Global)',
+              subtitle: 'Suara default untuk semua kategori',
+              path: profile.globalSoundPath,
+              onReset: () => ref.read(profileProvider.notifier).updateGlobalSound(null),
+            ),
+            _buildSoundPickerTile(
+              category: 'planner',
+              title: 'Suara Planner',
+              subtitle: 'Musik kustom khusus jadwal harian',
+              path: profile.plannerSoundPath,
+              onReset: () => ref.read(profileProvider.notifier).updatePlannerSound(null),
+            ),
+            _buildSoundPickerTile(
+              category: 'habit',
+              title: 'Suara Kebiasaan',
+              subtitle: 'Musik kustom khusus rutinitas',
+              path: profile.habitSoundPath,
+              onReset: () => ref.read(profileProvider.notifier).updateHabitSound(null),
+            ),
+          ],
 
           const SizedBox(height: 24),
           _buildSectionHeader('Manajemen Jadwal'),
@@ -88,13 +191,6 @@ class NotificationSettingsPage extends ConsumerWidget {
             onChanged: (val) => ref.read(profileProvider.notifier).updateFocusAlerts(val),
           ),
           
-          const SizedBox(height: 40),
-          Center(
-            child: Text(
-              'Kelola dengan bijak untuk menjaga fokus harianmu.',
-              style: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5), fontSize: 11, fontStyle: FontStyle.italic),
-            ),
-          ),
           const SizedBox(height: 40),
         ],
       ),
@@ -139,6 +235,51 @@ class NotificationSettingsPage extends ConsumerWidget {
     );
   }
 
+  Widget _buildSoundPickerTile({
+    required String category,
+    required String title,
+    required String subtitle,
+    required String? path,
+    required VoidCallback onReset,
+  }) {
+    final fileName = path != null ? path.split(Platform.pathSeparator).last : 'Default Sistem';
+    final isPlaying = _playingPath == path && path != null;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        title: Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.bold)),
+        subtitle: Text(fileName, style: TextStyle(color: path != null ? AppColors.primary : AppColors.textSecondary, fontSize: 11)),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (path != null)
+              IconButton(
+                icon: Icon(isPlaying ? PhosphorIcons.stopCircle() : PhosphorIcons.playCircle(), 
+                  color: isPlaying ? AppColors.error : AppColors.textPrimary, size: 24),
+                onPressed: isPlaying ? _stopPreview : () => _playPreview(path),
+              ),
+            IconButton(
+              icon: Icon(path == null ? PhosphorIcons.musicNotesPlus() : PhosphorIcons.arrowsClockwise(), color: AppColors.textPrimary),
+              onPressed: () => _pickAndPreviewSound(category, path),
+            ),
+            if (path != null)
+              IconButton(
+                icon: Icon(PhosphorIcons.trash(), color: AppColors.error.withValues(alpha: 0.7), size: 20),
+                onPressed: onReset,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildNotificationTile({
     required IconData icon,
     required String title,
@@ -156,30 +297,11 @@ class NotificationSettingsPage extends ConsumerWidget {
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: AppColors.border),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.cardShadow.withValues(alpha: 0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          leading: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppColors.textPrimary.withValues(alpha: 0.05),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: AppColors.textPrimary, size: 20),
-          ),
-          title: Text(title, 
-            style: const TextStyle(color: AppColors.textPrimary, fontSize: 15, fontWeight: FontWeight.bold)
-          ),
-          subtitle: Text(subtitle, 
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)
-          ),
+          leading: Icon(icon, color: AppColors.textPrimary, size: 20),
+          title: Text(title, style: const TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.bold)),
+          subtitle: Text(subtitle, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
           trailing: Switch.adaptive(
             value: value,
             activeTrackColor: AppColors.textPrimary.withValues(alpha: 0.3),

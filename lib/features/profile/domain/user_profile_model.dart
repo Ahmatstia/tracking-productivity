@@ -31,6 +31,18 @@ class UserProfileModel extends HiveObject {
   @HiveField(8)
   bool soundsEnabled;
 
+  @HiveField(9)
+  String? globalSoundPath;
+
+  @HiveField(10)
+  String? plannerSoundPath;
+
+  @HiveField(11)
+  String? habitSoundPath;
+
+  @HiveField(12)
+  String? focusSoundPath;
+
   UserProfileModel({
     this.name = 'Sobat Produktif',
     this.avatarIndex = 0,
@@ -41,5 +53,9 @@ class UserProfileModel extends HiveObject {
     this.goalReminders = true,
     this.focusAlerts = true,
     this.soundsEnabled = true,
+    this.globalSoundPath,
+    this.plannerSoundPath,
+    this.habitSoundPath,
+    this.focusSoundPath,
   });
 }

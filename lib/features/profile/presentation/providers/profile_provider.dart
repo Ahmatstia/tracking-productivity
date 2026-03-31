@@ -62,6 +62,30 @@ class ProfileNotifier extends StateNotifier<UserProfileModel> {
     state = _clone(state);
   }
 
+  void updateGlobalSound(String? path) {
+    state.globalSoundPath = path;
+    state.save();
+    state = _clone(state);
+  }
+
+  void updatePlannerSound(String? path) {
+    state.plannerSoundPath = path;
+    state.save();
+    state = _clone(state);
+  }
+
+  void updateHabitSound(String? path) {
+    state.habitSoundPath = path;
+    state.save();
+    state = _clone(state);
+  }
+
+  void updateFocusSound(String? path) {
+    state.focusSoundPath = path;
+    state.save();
+    state = _clone(state);
+  }
+
   // Helper to trigger UI rebuild
   UserProfileModel _clone(UserProfileModel original) {
     return UserProfileModel(
@@ -74,6 +98,10 @@ class ProfileNotifier extends StateNotifier<UserProfileModel> {
       goalReminders: original.goalReminders,
       focusAlerts: original.focusAlerts,
       soundsEnabled: original.soundsEnabled,
+      globalSoundPath: original.globalSoundPath,
+      plannerSoundPath: original.plannerSoundPath,
+      habitSoundPath: original.habitSoundPath,
+      focusSoundPath: original.focusSoundPath,
     );
   }
 }
