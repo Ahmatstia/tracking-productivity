@@ -26,83 +26,69 @@ class AppDrawer extends ConsumerWidget {
         borderRadius: BorderRadius.horizontal(right: Radius.circular(24)),
       ),
       child: Column(
-          children: [
-            _buildDrawerHeader(context, ref, userStats, profile),
-            
-            const SizedBox(height: 12),
-            const Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
-            const SizedBox(height: 12),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Column(
-                children: [
-                  _MenuItem(
-                    icon: PhosphorIcons.timer(),
-                    title: 'Pomodoro Timer',
-                    subtitle: 'Mulai sesi fokus tanpa gangguan',
-                    color: AppColors.primary,
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const FocusPage()),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  _MenuItem(
-                    icon: PhosphorIcons.gear(),
-                    title: 'Pengaturan',
-                    subtitle: 'Notifikasi & Preferensi',
-                    color: AppColors.textSecondary,
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const SettingsPage()),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  _MenuItem(
-                    icon: PhosphorIcons.crown(),
-                    title: 'MyLife Premium',
-                    subtitle: 'Buka fitur profesional mingguan',
-                    color: AppColors.primary,
-                    onTap: () {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Anda Sedang Pakai Versi Beta Maksimal!')),
-                      );
-                    },
-                  ),
-                ],
-              ),
+        children: [
+          _buildDrawerHeader(context, ref, userStats, profile),
+          const SizedBox(height: 12),
+          const Divider(
+              color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Column(
+              children: [
+                _MenuItem(
+                  icon: PhosphorIcons.timer(),
+                  title: 'Pomodoro Timer',
+                  subtitle: 'Mulai sesi fokus tanpa gangguan',
+                  color: AppColors.primary,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const FocusPage()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 8),
+                _MenuItem(
+                  icon: PhosphorIcons.gear(),
+                  title: 'Pengaturan',
+                  subtitle: 'Notifikasi & Preferensi',
+                  color: AppColors.textSecondary,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SettingsPage()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 8),
+                _MenuItem(
+                  icon: PhosphorIcons.crown(),
+                  title: 'MyLife Premium',
+                  subtitle: 'Buka fitur profesional mingguan',
+                  color: AppColors.primary,
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content:
+                              Text('Anda Sedang Pakai Versi Beta Maksimal!')),
+                    );
+                  },
+                ),
+              ],
             ),
-
-            const Spacer(),
-            
-            const Divider(color: AppColors.border, thickness: 1, indent: 20, endIndent: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
-              child: _MenuItem(
-                icon: PhosphorIcons.signOut(),
-                title: 'Keluar',
-                subtitle: '',
-                color: AppColors.error,
-                compact: true,
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+          const Spacer(),
+        ],
+      ),
     );
   }
 
-  Widget _buildDrawerHeader(BuildContext context, WidgetRef ref, UserStatsModel userStats, dynamic profile) {
+  Widget _buildDrawerHeader(BuildContext context, WidgetRef ref,
+      UserStatsModel userStats, dynamic profile) {
     final List<Color> avatarColors = [
       AppColors.primary,
       AppColors.textSecondaryAccent,
@@ -110,7 +96,8 @@ class AppDrawer extends ConsumerWidget {
       AppColors.primary,
       AppColors.error,
     ];
-    final selectedColor = avatarColors[profile.avatarIndex % avatarColors.length];
+    final selectedColor =
+        avatarColors[profile.avatarIndex % avatarColors.length];
 
     return InkWell(
       onLongPress: () => _pickCoverImage(context, ref),
@@ -133,7 +120,10 @@ class AppDrawer extends ConsumerWidget {
                     errorBuilder: (context, error, stackTrace) => Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [AppColors.surface, AppColors.border.withValues(alpha: 0.5)],
+                          colors: [
+                            AppColors.surface,
+                            AppColors.border.withValues(alpha: 0.5)
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -143,14 +133,17 @@ class AppDrawer extends ConsumerWidget {
                 : Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [AppColors.surface, AppColors.border.withValues(alpha: 0.5)],
+                        colors: [
+                          AppColors.surface,
+                          AppColors.border.withValues(alpha: 0.5)
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
                   ),
           ),
-          
+
           // 2. Gradient Overlay for readability
           Container(
             height: 240,
@@ -179,7 +172,8 @@ class AppDrawer extends ConsumerWidget {
                   color: Colors.black.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(PhosphorIcons.camera(), color: Colors.white, size: 18),
+                child:
+                    Icon(PhosphorIcons.camera(), color: Colors.white, size: 18),
               ),
               onPressed: () => _pickCoverImage(context, ref),
             ),
@@ -209,25 +203,31 @@ class AppDrawer extends ConsumerWidget {
                       )
                     ],
                     gradient: LinearGradient(
-                      colors: [selectedColor.withValues(alpha: 0.8), selectedColor],
+                      colors: [
+                        selectedColor.withValues(alpha: 0.8),
+                        selectedColor
+                      ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                   ),
                   child: ClipOval(
                     child: profile.avatarPath != null
-                      ? Image.file(
-                          File(profile.avatarPath!),
-                          width: 64,
-                          height: 64,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Center(
-                            child: Icon(PhosphorIcons.user(), size: 28, color: Colors.white),
+                        ? Image.file(
+                            File(profile.avatarPath!),
+                            width: 64,
+                            height: 64,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Center(
+                              child: Icon(PhosphorIcons.user(),
+                                  size: 28, color: Colors.white),
+                            ),
+                          )
+                        : Center(
+                            child: Icon(PhosphorIcons.user(),
+                                size: 28, color: Colors.white),
                           ),
-                        )
-                      : Center(
-                          child: Icon(PhosphorIcons.user(), size: 28, color: Colors.white),
-                        ),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -258,24 +258,29 @@ class AppDrawer extends ConsumerWidget {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(PhosphorIcons.pencilSimple(), color: Colors.white70, size: 16),
-                      onPressed: () => _showEditProfileSheet(context, ref, profile),
+                      icon: Icon(PhosphorIcons.pencilSimple(),
+                          color: Colors.white70, size: 16),
+                      onPressed: () =>
+                          _showEditProfileSheet(context, ref, profile),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 // Streak Badge di atas gambar
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                    border:
+                        Border.all(color: Colors.white.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(PhosphorIcons.flame(), color: Colors.orangeAccent, size: 12),
+                      Icon(PhosphorIcons.flame(),
+                          color: Colors.orangeAccent, size: 12),
                       const SizedBox(width: 4),
                       Text(
                         '${userStats.currentStreak} Hari Beruntun',
@@ -297,20 +302,25 @@ class AppDrawer extends ConsumerWidget {
   }
 
   Future<void> _pickCoverImage(BuildContext context, WidgetRef ref) async {
-    if (await Permission.photos.request().isGranted || await Permission.storage.request().isGranted) {
-      final result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
+    if (await Permission.photos.request().isGranted ||
+        await Permission.storage.request().isGranted) {
+      final result = await FilePicker.platform
+          .pickFiles(type: FileType.image, allowMultiple: false);
       if (result != null && result.files.single.path != null) {
-        ref.read(profileProvider.notifier).updateCoverImage(result.files.single.path);
+        ref
+            .read(profileProvider.notifier)
+            .updateCoverImage(result.files.single.path);
       }
     }
   }
 
-  void _showEditProfileSheet(BuildContext context, WidgetRef ref, dynamic profile) {
+  void _showEditProfileSheet(
+      BuildContext context, WidgetRef ref, dynamic profile) {
     final nameController = TextEditingController(text: profile.name);
     int selectedAvatar = profile.avatarIndex;
     String? tempAvatarPath = profile.avatarPath;
     String? tempCoverPath = profile.coverImagePath;
-    
+
     final List<Color> avatarColors = [
       AppColors.primary,
       AppColors.textSecondaryAccent,
@@ -329,13 +339,21 @@ class AppDrawer extends ConsumerWidget {
             return Container(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
-                top: 24, left: 24, right: 24,
+                top: 24,
+                left: 24,
+                right: 24,
               ),
               decoration: BoxDecoration(
                 color: AppColors.sheetBackground,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(32)),
                 border: Border.all(color: AppColors.border),
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, -4))
+                ],
               ),
               child: SingleChildScrollView(
                 child: Column(
@@ -343,21 +361,33 @@ class AppDrawer extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Personalisasi Profil',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary)),
                     const SizedBox(height: 24),
-                    const Text('Nama Kamu:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    const Text('Nama Kamu:',
+                        style: TextStyle(
+                            color: AppColors.textSecondary, fontSize: 13)),
                     TextField(
                       controller: nameController,
-                      style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
+                      style: const TextStyle(
+                          color: AppColors.textPrimary, fontSize: 16),
                       decoration: InputDecoration(
                         hintText: 'Masukkan nama...',
-                        hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
-                        enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-                        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                        hintStyle: TextStyle(
+                            color:
+                                AppColors.textSecondary.withValues(alpha: 0.5)),
+                        enabledBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.border)),
+                        focusedBorder: const UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColors.primary)),
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const Text('Warna Tema Profil:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    const Text('Warna Tema Profil:',
+                        style: TextStyle(
+                            color: AppColors.textSecondary, fontSize: 13)),
                     const SizedBox(height: 12),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -365,7 +395,8 @@ class AppDrawer extends ConsumerWidget {
                         final idx = entry.key;
                         final color = entry.value;
                         return InkWell(
-                          onTap: () => setDialogState(() => selectedAvatar = idx),
+                          onTap: () =>
+                              setDialogState(() => selectedAvatar = idx),
                           child: Container(
                             width: 44,
                             height: 44,
@@ -373,12 +404,15 @@ class AppDrawer extends ConsumerWidget {
                               shape: BoxShape.circle,
                               color: color.withValues(alpha: 0.15),
                               border: Border.all(
-                                color: selectedAvatar == idx ? color : Colors.transparent,
+                                color: selectedAvatar == idx
+                                    ? color
+                                    : Colors.transparent,
                                 width: 2,
                               ),
                             ),
                             child: Center(
-                              child: Icon(PhosphorIcons.user(), color: color, size: 18),
+                              child: Icon(PhosphorIcons.user(),
+                                  color: color, size: 18),
                             ),
                           ),
                         );
@@ -387,21 +421,29 @@ class AppDrawer extends ConsumerWidget {
                     const SizedBox(height: 12),
                     InkWell(
                       onTap: () async {
-                         if (await Permission.photos.request().isGranted || await Permission.storage.request().isGranted) {
-                           final result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
-                           if (result != null && result.files.single.path != null) {
-                             setDialogState(() => tempAvatarPath = result.files.single.path);
-                           }
-                         } else {
-                           if (ctx.mounted) {
-                             ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Izin galeri diperlukan.')));
-                           }
-                         }
+                        if (await Permission.photos.request().isGranted ||
+                            await Permission.storage.request().isGranted) {
+                          final result = await FilePicker.platform.pickFiles(
+                              type: FileType.image, allowMultiple: false);
+                          if (result != null &&
+                              result.files.single.path != null) {
+                            setDialogState(() =>
+                                tempAvatarPath = result.files.single.path);
+                          }
+                        } else {
+                          if (ctx.mounted) {
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Izin galeri diperlukan.')));
+                          }
+                        }
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: AppColors.textSecondary.withValues(alpha: 0.05),
+                          color:
+                              AppColors.textSecondary.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.border),
                         ),
@@ -410,43 +452,60 @@ class AppDrawer extends ConsumerWidget {
                             if (tempAvatarPath != null)
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.file(File(tempAvatarPath!), width: 32, height: 32, fit: BoxFit.cover),
+                                child: Image.file(File(tempAvatarPath!),
+                                    width: 32, height: 32, fit: BoxFit.cover),
                               )
                             else
-                              Icon(PhosphorIcons.userCircle(), color: AppColors.textPrimary, size: 20),
+                              Icon(PhosphorIcons.userCircle(),
+                                  color: AppColors.textPrimary, size: 20),
                             const SizedBox(width: 12),
                             const Expanded(
-                              child: Text('Ubah Foto Profil', 
-                                style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                              child: Text('Ubah Foto Profil',
+                                  style: TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500)),
                             ),
                             if (tempAvatarPath != null)
-                              const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                              const Icon(Icons.check_circle,
+                                  color: Colors.green, size: 16),
                             const SizedBox(width: 8),
-                            Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary, size: 16),
+                            Icon(PhosphorIcons.caretRight(),
+                                color: AppColors.textSecondary, size: 16),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const Text('Latar Belakang Sidebar:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    const Text('Latar Belakang Sidebar:',
+                        style: TextStyle(
+                            color: AppColors.textSecondary, fontSize: 13)),
                     const SizedBox(height: 12),
                     InkWell(
                       onTap: () async {
-                         if (await Permission.photos.request().isGranted || await Permission.storage.request().isGranted) {
-                           final result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
-                           if (result != null && result.files.single.path != null) {
-                             setDialogState(() => tempCoverPath = result.files.single.path);
-                           }
-                         } else {
-                           if (ctx.mounted) {
-                             ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Izin galeri diperlukan.')));
-                           }
-                         }
+                        if (await Permission.photos.request().isGranted ||
+                            await Permission.storage.request().isGranted) {
+                          final result = await FilePicker.platform.pickFiles(
+                              type: FileType.image, allowMultiple: false);
+                          if (result != null &&
+                              result.files.single.path != null) {
+                            setDialogState(
+                                () => tempCoverPath = result.files.single.path);
+                          }
+                        } else {
+                          if (ctx.mounted) {
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Izin galeri diperlukan.')));
+                          }
+                        }
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          color: AppColors.textSecondary.withValues(alpha: 0.05),
+                          color:
+                              AppColors.textSecondary.withValues(alpha: 0.05),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.border),
                         ),
@@ -455,19 +514,26 @@ class AppDrawer extends ConsumerWidget {
                             if (tempCoverPath != null)
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: Image.file(File(tempCoverPath!), width: 32, height: 32, fit: BoxFit.cover),
+                                child: Image.file(File(tempCoverPath!),
+                                    width: 32, height: 32, fit: BoxFit.cover),
                               )
                             else
-                              Icon(PhosphorIcons.image(), color: AppColors.textPrimary, size: 20),
+                              Icon(PhosphorIcons.image(),
+                                  color: AppColors.textPrimary, size: 20),
                             const SizedBox(width: 12),
                             const Expanded(
-                              child: Text('Ubah Foto Latar Belakang', 
-                                style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                              child: Text('Ubah Foto Latar Belakang',
+                                  style: TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500)),
                             ),
                             if (tempCoverPath != null)
-                              const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                              const Icon(Icons.check_circle,
+                                  color: Colors.green, size: 16),
                             const SizedBox(width: 8),
-                            Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary, size: 16),
+                            Icon(PhosphorIcons.caretRight(),
+                                color: AppColors.textSecondary, size: 16),
                           ],
                         ),
                       ),
@@ -480,7 +546,8 @@ class AppDrawer extends ConsumerWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: avatarColors[selectedAvatar],
                           foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
                           elevation: 0,
                         ),
                         onPressed: () {
@@ -491,22 +558,25 @@ class AppDrawer extends ConsumerWidget {
                             notifier.updateAvatar(selectedAvatar);
                             notifier.updateAvatarPath(tempAvatarPath);
                             notifier.updateCoverImage(tempCoverPath);
-                            
+
                             Navigator.pop(ctx);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Profil diperbarui!'))
-                            );
+                                const SnackBar(
+                                    content: Text('Profil diperbarui!')));
                           } else {
                             ScaffoldMessenger.of(ctx).showSnackBar(
-                              const SnackBar(content: Text('Nama tidak boleh kosong'))
-                            );
+                                const SnackBar(
+                                    content: Text('Nama tidak boleh kosong')));
                           }
                         },
-                        child: const Text('Simpan Perubahan', 
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        child: const Text('Simpan Perubahan',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
                       ),
                     ),
-                    const SizedBox(height: 40), // Extra space to ensure button is above system nav or keyboard
+                    const SizedBox(
+                        height:
+                            40), // Extra space to ensure button is above system nav or keyboard
                   ],
                 ),
               ),
@@ -524,7 +594,6 @@ class _MenuItem extends StatelessWidget {
   final String subtitle;
   final Color color;
   final VoidCallback onTap;
-  final bool compact;
 
   const _MenuItem({
     required this.icon,
@@ -532,7 +601,6 @@ class _MenuItem extends StatelessWidget {
     required this.subtitle,
     required this.color,
     required this.onTap,
-    this.compact = false,
   });
 
   @override
@@ -543,7 +611,7 @@ class _MenuItem extends StatelessWidget {
       splashColor: color.withValues(alpha: 0.08),
       highlightColor: color.withValues(alpha: 0.04),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: compact ? 12 : 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
         ),
@@ -564,9 +632,9 @@ class _MenuItem extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.textPrimary,
-                      fontSize: compact ? 14 : 15,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -583,7 +651,9 @@ class _MenuItem extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary.withValues(alpha: 0.3), size: 16),
+            Icon(PhosphorIcons.caretRight(),
+                color: AppColors.textSecondary.withValues(alpha: 0.3),
+                size: 16),
           ],
         ),
       ),

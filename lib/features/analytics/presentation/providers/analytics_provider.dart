@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:life_os_productivity/features/tasks/presentation/providers/task_provider.dart';
 import 'package:life_os_productivity/features/focus/presentation/providers/focus_session_provider.dart';
 import 'package:life_os_productivity/features/gamification/presentation/providers/stats_provider.dart';
+import 'package:life_os_productivity/features/planner/presentation/providers/time_block_provider.dart';
 
 // ─── Analytics Summary data class ────────────────────────────────────────────
 class WeeklyAnalytics {
@@ -48,6 +49,7 @@ final weeklyAnalyticsProvider = Provider<WeeklyAnalytics>((ref) {
   final tasks = ref.watch(taskProvider);
   final focusSessions = ref.watch(focusSessionProvider);
   final userStats = ref.watch(gamificationProvider);
+  final allBlocks = ref.watch(timeBlockProvider); // Add Time Blocks
 
   final now = DateTime.now();
   final List<DayStats> dayStats = [];
@@ -56,33 +58,57 @@ final weeklyAnalyticsProvider = Provider<WeeklyAnalytics>((ref) {
     final day = now.subtract(Duration(days: i));
     final dayYMD = DateTime(day.year, day.month, day.day);
     
-    // Filter tasks for this specific YMD
+    // ── Filter Tasks ───────────────────────────
     final dayTasks = tasks.where((t) {
       final tDate = DateTime(t.date.year, t.date.month, t.date.day);
       return tDate == dayYMD;
     }).toList();
 
-    // Filter focus sessions for this specific YMD
+    // ── Filter Focus Sessions ──────────────────
     final dayFocus = focusSessions.where((f) {
       final fDate = DateTime(f.date.year, f.date.month, f.date.day);
       return fDate == dayYMD && f.isFocusMode;
     }).toList();
 
-    final completed = dayTasks.where((t) => t.isCompleted).length;
-    final total = dayTasks.length;
+    // ── Filter Time Blocks (Jadwal) ────────────
+    final dayBlocks = allBlocks.where((b) {
+      final bDate = DateTime(b.date.year, b.date.month, b.date.day);
+      return bDate == dayYMD;
+    }).toList();
+
+    final completedTasks = dayTasks.where((t) => t.isCompleted).length;
+    final totalTasks = dayTasks.length;
+    
+    final completedBlocks = dayBlocks.where((b) => b.isCompleted).length;
+    final totalBlocks = dayBlocks.length;
+
     final focusMin = dayFocus.fold<int>(0, (sum, f) => sum + (f.durationSeconds ~/ 60));
 
-    // Score calculation (0-100)
-    final taskScore = total == 0 ? 0 : (completed / total * 50).round();
-    final focusScore = (focusMin / 120 * 50).clamp(0, 50).round();
-    final score = taskScore + focusScore;
+    // ── Balanced Score Calculation (0-100) ─────
+    // Logic: 50% Tasks, 50% Blocks.
+    // If one is empty, the other takes 100% weight.
+    double dailyScoreVal = 0;
+    
+    if (totalTasks > 0 && totalBlocks > 0) {
+      // Both exist: 50/50 split
+      dailyScoreVal = (completedTasks / totalTasks * 50) + (completedBlocks / totalBlocks * 50);
+    } else if (totalTasks > 0) {
+      // Only tasks exist: 100% tasks
+      dailyScoreVal = (completedTasks / totalTasks * 100);
+    } else if (totalBlocks > 0) {
+      // Only blocks exist: 100% blocks
+      dailyScoreVal = (completedBlocks / totalBlocks * 100);
+    } else {
+      // Nothing scheduled: 0 score
+      dailyScoreVal = 0;
+    }
 
     dayStats.add(DayStats(
       date: dayYMD,
-      tasksCompleted: completed,
-      totalTasks: total,
+      tasksCompleted: completedTasks,
+      totalTasks: totalTasks,
       focusMinutes: focusMin,
-      score: score,
+      score: dailyScoreVal.round(),
     ));
   }
 
