@@ -43,6 +43,9 @@ class UserProfileModel extends HiveObject {
   @HiveField(12)
   String? focusSoundPath;
 
+  @HiveField(13)
+  String? coverImagePath;
+
   UserProfileModel({
     this.name = 'Sobat Produktif',
     this.avatarIndex = 0,
@@ -57,5 +60,6 @@ class UserProfileModel extends HiveObject {
     this.plannerSoundPath,
     this.habitSoundPath,
     this.focusSoundPath,
+    this.coverImagePath,
   });
 }

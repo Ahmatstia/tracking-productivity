@@ -7,6 +7,9 @@ import 'package:life_os_productivity/features/gamification/domain/user_stats_mod
 import 'package:life_os_productivity/features/focus/presentation/pages/focus_page.dart';
 import 'package:life_os_productivity/features/profile/presentation/providers/profile_provider.dart';
 import 'package:life_os_productivity/features/settings/presentation/pages/settings_page.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -110,109 +113,204 @@ class AppDrawer extends ConsumerWidget {
     final selectedColor = avatarColors[profile.avatarIndex % avatarColors.length];
 
     return InkWell(
-      onTap: () => _showEditProfileSheet(context, ref, profile),
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.fromLTRB(24, MediaQuery.of(context).padding.top + 32, 24, 24),
-        decoration: const BoxDecoration(
-          color: AppColors.surface,
-          border: Border(
-            bottom: BorderSide(color: AppColors.border, width: 1),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Avatar
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [selectedColor.withValues(alpha: 0.7), selectedColor],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: selectedColor.withValues(alpha: 0.2),
-                    blurRadius: 16,
-                    offset: const Offset(0, 8),
-                  )
-                ]
-              ),
-              child: Container(
-                margin: const EdgeInsets.all(3),
-                decoration: const BoxDecoration(
-                  color: AppColors.surface,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Icon(PhosphorIcons.user(), size: 30, color: selectedColor),
-                ),
+      onLongPress: () => _pickCoverImage(context, ref),
+      child: Stack(
+        children: [
+          // 1. Background Cover Image
+          Container(
+            height: 240,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: AppColors.surface,
+              border: Border(
+                bottom: BorderSide(color: AppColors.border, width: 1),
               ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        profile.name, 
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
+            child: profile.coverImagePath != null
+                ? Image.file(
+                    File(profile.coverImagePath!),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColors.surface, AppColors.border.withValues(alpha: 0.5)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'Versi Gratis', 
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppColors.surface, AppColors.border.withValues(alpha: 0.5)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                  ),
+          ),
+          
+          // 2. Gradient Overlay for readability
+          Container(
+            height: 240,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.black.withValues(alpha: 0.0),
+                  Colors.black.withValues(alpha: 0.1),
+                  Colors.black.withValues(alpha: 0.8),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+
+          // 3. Edit Cover Button (Top Right)
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10,
+            right: 16,
+            child: IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(PhosphorIcons.camera(), color: Colors.white, size: 18),
+              ),
+              onPressed: () => _pickCoverImage(context, ref),
+            ),
+          ),
+
+          // 4. Content (Avatar + Text)
+          Container(
+            height: 240,
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // Avatar dengan border putih bersih (Premium Look)
+                Container(
+                  width: 64,
+                  height: 64,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      )
+                    ],
+                    gradient: LinearGradient(
+                      colors: [selectedColor.withValues(alpha: 0.8), selectedColor],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  child: ClipOval(
+                    child: profile.avatarPath != null
+                      ? Image.file(
+                          File(profile.avatarPath!),
+                          width: 64,
+                          height: 64,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: Icon(PhosphorIcons.user(), size: 28, color: Colors.white),
+                          ),
+                        )
+                      : Center(
+                          child: Icon(PhosphorIcons.user(), size: 28, color: Colors.white),
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            profile.name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const Text(
+                            'MyLife Pro Edition', // User wanted production polish, let's make them feel Pro
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(PhosphorIcons.pencilSimple(), color: Colors.white70, size: 16),
+                      onPressed: () => _showEditProfileSheet(context, ref, profile),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                // Streak Badge di atas gambar
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(PhosphorIcons.flame(), color: Colors.orangeAccent, size: 12),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${userStats.currentStreak} Hari Beruntun',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Icon(PhosphorIcons.pencilSimple(), color: AppColors.textSecondary.withValues(alpha: 0.3), size: 18),
               ],
             ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.textSecondary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.textSecondary.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(PhosphorIcons.flame(), color: AppColors.textSecondary, size: 14),
-                  const SizedBox(width: 6),
-                  Text(
-                    '${userStats.currentStreak} Hari Beruntun',
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _pickCoverImage(BuildContext context, WidgetRef ref) async {
+    if (await Permission.photos.request().isGranted || await Permission.storage.request().isGranted) {
+      final result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
+      if (result != null && result.files.single.path != null) {
+        ref.read(profileProvider.notifier).updateCoverImage(result.files.single.path);
+      }
+    }
   }
 
   void _showEditProfileSheet(BuildContext context, WidgetRef ref, dynamic profile) {
     final nameController = TextEditingController(text: profile.name);
     int selectedAvatar = profile.avatarIndex;
+    String? tempAvatarPath = profile.avatarPath;
+    String? tempCoverPath = profile.coverImagePath;
+    
     final List<Color> avatarColors = [
       AppColors.primary,
       AppColors.textSecondaryAccent,
@@ -239,77 +337,178 @@ class AppDrawer extends ConsumerWidget {
                 border: Border.all(color: AppColors.border),
                 boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 20, offset: const Offset(0, -4))],
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Personalisasi Profil',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                  const SizedBox(height: 24),
-                  const Text('Nama Kamu:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-                  TextField(
-                    controller: nameController,
-                    style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
-                    decoration: InputDecoration(
-                      hintText: 'Masukkan nama...',
-                      hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
-                      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-                      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Personalisasi Profil',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    const SizedBox(height: 24),
+                    const Text('Nama Kamu:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    TextField(
+                      controller: nameController,
+                      style: const TextStyle(color: AppColors.textPrimary, fontSize: 16),
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan nama...',
+                        hintStyle: TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
+                        enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+                        focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  const Text('Warna Tema Profil:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: avatarColors.asMap().entries.map((entry) {
-                      final idx = entry.key;
-                      final color = entry.value;
-                      return InkWell(
-                        onTap: () => setDialogState(() => selectedAvatar = idx),
-                        child: Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: color.withValues(alpha: 0.15),
-                            border: Border.all(
-                              color: selectedAvatar == idx ? color : Colors.transparent,
-                              width: 2,
+                    const SizedBox(height: 24),
+                    const Text('Warna Tema Profil:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: avatarColors.asMap().entries.map((entry) {
+                        final idx = entry.key;
+                        final color = entry.value;
+                        return InkWell(
+                          onTap: () => setDialogState(() => selectedAvatar = idx),
+                          child: Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: color.withValues(alpha: 0.15),
+                              border: Border.all(
+                                color: selectedAvatar == idx ? color : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            child: Center(
+                              child: Icon(PhosphorIcons.user(), color: color, size: 18),
                             ),
                           ),
-                          child: Center(
-                            child: Icon(PhosphorIcons.user(), color: color, size: 18),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: avatarColors[selectedAvatar],
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        elevation: 0,
-                      ),
-                      onPressed: () {
-                        if (nameController.text.trim().isNotEmpty) {
-                          ref.read(profileProvider.notifier).updateName(nameController.text.trim());
-                          ref.read(profileProvider.notifier).updateAvatar(selectedAvatar);
-                          Navigator.pop(ctx);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Profil diperbarui!'))
-                          );
-                        }
-                      },
-                      child: const Text('Simpan Perubahan', 
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        );
+                      }).toList(),
                     ),
-                  )
-                ],
+                    const SizedBox(height: 12),
+                    InkWell(
+                      onTap: () async {
+                         if (await Permission.photos.request().isGranted || await Permission.storage.request().isGranted) {
+                           final result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
+                           if (result != null && result.files.single.path != null) {
+                             setDialogState(() => tempAvatarPath = result.files.single.path);
+                           }
+                         } else {
+                           if (ctx.mounted) {
+                             ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Izin galeri diperlukan.')));
+                           }
+                         }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.textSecondary.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Row(
+                          children: [
+                            if (tempAvatarPath != null)
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(File(tempAvatarPath!), width: 32, height: 32, fit: BoxFit.cover),
+                              )
+                            else
+                              Icon(PhosphorIcons.userCircle(), color: AppColors.textPrimary, size: 20),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Text('Ubah Foto Profil', 
+                                style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                            ),
+                            if (tempAvatarPath != null)
+                              const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                            const SizedBox(width: 8),
+                            Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary, size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const Text('Latar Belakang Sidebar:', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                    const SizedBox(height: 12),
+                    InkWell(
+                      onTap: () async {
+                         if (await Permission.photos.request().isGranted || await Permission.storage.request().isGranted) {
+                           final result = await FilePicker.platform.pickFiles(type: FileType.image, allowMultiple: false);
+                           if (result != null && result.files.single.path != null) {
+                             setDialogState(() => tempCoverPath = result.files.single.path);
+                           }
+                         } else {
+                           if (ctx.mounted) {
+                             ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(content: Text('Izin galeri diperlukan.')));
+                           }
+                         }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.textSecondary.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Row(
+                          children: [
+                            if (tempCoverPath != null)
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(File(tempCoverPath!), width: 32, height: 32, fit: BoxFit.cover),
+                              )
+                            else
+                              Icon(PhosphorIcons.image(), color: AppColors.textPrimary, size: 20),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Text('Ubah Foto Latar Belakang', 
+                                style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w500)),
+                            ),
+                            if (tempCoverPath != null)
+                              const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                            const SizedBox(width: 8),
+                            Icon(PhosphorIcons.caretRight(), color: AppColors.textSecondary, size: 16),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: avatarColors[selectedAvatar],
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          elevation: 0,
+                        ),
+                        onPressed: () {
+                          final name = nameController.text.trim();
+                          if (name.isNotEmpty) {
+                            final notifier = ref.read(profileProvider.notifier);
+                            notifier.updateName(name);
+                            notifier.updateAvatar(selectedAvatar);
+                            notifier.updateAvatarPath(tempAvatarPath);
+                            notifier.updateCoverImage(tempCoverPath);
+                            
+                            Navigator.pop(ctx);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Profil diperbarui!'))
+                            );
+                          } else {
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                              const SnackBar(content: Text('Nama tidak boleh kosong'))
+                            );
+                          }
+                        },
+                        child: const Text('Simpan Perubahan', 
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      ),
+                    ),
+                    const SizedBox(height: 40), // Extra space to ensure button is above system nav or keyboard
+                  ],
+                ),
               ),
             );
           },
