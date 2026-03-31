@@ -105,8 +105,7 @@ class RoutinesPage extends ConsumerWidget {
                       itemCount: routines.length,
                       itemBuilder: (context, index) {
                         final routine = routines[index];
-                        final bool isAlreadyApplied = routine.blocks.isNotEmpty && 
-                            routine.blocks.every((rb) => todayBlocks.any((tb) => tb.title == rb.title && tb.startTime == rb.startTime));
+                        final bool isAlreadyApplied = todayBlocks.any((tb) => tb.sourceRoutineId == routine.id);
 
                         return Container(
                           margin: const EdgeInsets.only(bottom: 16),
@@ -114,7 +113,12 @@ class RoutinesPage extends ConsumerWidget {
                           decoration: BoxDecoration(
                             color: AppColors.surface,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: AppColors.border.withValues(alpha: 0.8)),
+                            border: Border.all(
+                                color: isAlreadyApplied 
+                                  ? Color(int.parse(routine.colorCode.toString())).withValues(alpha: 0.3)
+                                  : AppColors.border.withValues(alpha: 0.8),
+                                width: isAlreadyApplied ? 1.5 : 1
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: AppColors.cardShadow.withValues(alpha: 0.05),
@@ -136,7 +140,7 @@ class RoutinesPage extends ConsumerWidget {
                                           width: 4,
                                           height: 24,
                                           decoration: BoxDecoration(
-                                            color: AppColors.textPrimary,
+                                            color: Color(int.parse(routine.colorCode.toString())),
                                             borderRadius: BorderRadius.circular(2),
                                           ),
                                         ),
@@ -201,39 +205,62 @@ class RoutinesPage extends ConsumerWidget {
                                     ),
                                 ],
                               ),
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton.icon(
-                                  onPressed: isAlreadyApplied ? null : () async {
-                                    final replacedCount = await ref.read(routineProvider.notifier).applyRoutineToDate(routine.id, DateTime.now());
-                                    
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            replacedCount > 0 
-                                                ? '${routine.name} diterapkan! ($replacedCount jadwal lama dibersihkan)'
-                                                : '${routine.name} berhasil diterapkan ke Hari Ini!'
-                                          ),
-                                          backgroundColor: replacedCount > 0 ? AppColors.textSecondaryAccent.withValues(alpha: 0.8) : null,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  icon: Icon(isAlreadyApplied ? PhosphorIcons.checks() : PhosphorIcons.checkCircle(), 
-                                      color: isAlreadyApplied ? AppColors.textSecondary : Colors.white, size: 16),
-                                  label: Text(isAlreadyApplied ? 'Sudah Terjadwal' : 'Terapkan ke Hari Ini', 
-                                      style: TextStyle(color: isAlreadyApplied ? AppColors.textSecondary : Colors.white)),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: isAlreadyApplied ? AppColors.inputFill : AppColors.textPrimary,
-                                    foregroundColor: isAlreadyApplied ? AppColors.textSecondary : (Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.white),
-                                    disabledBackgroundColor: AppColors.inputFill,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                    elevation: 0,
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () async {
+                                        await ref.read(routineProvider.notifier).applyRoutineToDate(routine.id, DateTime.now());
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(isAlreadyApplied 
+                                                ? '${routine.name} berhasil diperbarui!' 
+                                                : '${routine.name} berhasil diterapkan!'
+                                              ),
+                                              backgroundColor: AppColors.textSecondaryAccent.withValues(alpha: 0.8),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      icon: Icon(isAlreadyApplied ? PhosphorIcons.arrowsClockwise() : PhosphorIcons.checkCircle(), 
+                                          color: Colors.white, size: 16),
+                                      label: Text(isAlreadyApplied ? 'Update Terapan' : 'Terapkan Ke Hari Ini', 
+                                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: isAlreadyApplied ? AppColors.textSecondary : AppColors.textPrimary,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                        elevation: 0,
+                                        padding: const EdgeInsets.symmetric(vertical: 12),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              )
+                                  if (isAlreadyApplied) ...[
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      flex: 1,
+                                      child: OutlinedButton(
+                                        onPressed: () {
+                                          ref.read(routineProvider.notifier).removeRoutineFromDate(routine.id, DateTime.now());
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Penerapan Rutinitas dibatalkan')),
+                                          );
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          foregroundColor: AppColors.error,
+                                          side: BorderSide(color: AppColors.error.withValues(alpha: 0.3)),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                          padding: const EdgeInsets.symmetric(vertical: 12),
+                                        ),
+                                        child: const Text('Batalkan', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
                             ],
                           ),
                         );

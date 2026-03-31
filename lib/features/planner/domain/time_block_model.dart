@@ -31,6 +31,9 @@ class TimeBlockModel extends HiveObject {
   @HiveField(8)
   String? note;
 
+  @HiveField(9)
+  String? sourceRoutineId;
+
   TimeBlockModel({
     required this.id,
     required this.title,
@@ -41,6 +44,7 @@ class TimeBlockModel extends HiveObject {
     this.isCompleted = false,
     this.linkedTaskId,
     this.note,
+    this.sourceRoutineId,
   });
 
   // Helper: convert "HH:mm" to minutes since midnight

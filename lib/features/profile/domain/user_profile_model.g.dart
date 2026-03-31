@@ -21,13 +21,23 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       avatarIndex: fields[1] as int,
       avatarPath: fields[2] as String?,
       notificationsEnabled: fields[3] as bool,
+      plannerReminders: fields[4] as bool,
+      habitReminders: fields[5] as bool,
+      goalReminders: fields[6] as bool,
+      focusAlerts: fields[7] as bool,
+      soundsEnabled: fields[8] as bool,
+      globalSoundPath: fields[9] as String?,
+      plannerSoundPath: fields[10] as String?,
+      habitSoundPath: fields[11] as String?,
+      focusSoundPath: fields[12] as String?,
+      coverImagePath: fields[13] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserProfileModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +45,27 @@ class UserProfileModelAdapter extends TypeAdapter<UserProfileModel> {
       ..writeByte(2)
       ..write(obj.avatarPath)
       ..writeByte(3)
-      ..write(obj.notificationsEnabled);
+      ..write(obj.notificationsEnabled)
+      ..writeByte(4)
+      ..write(obj.plannerReminders)
+      ..writeByte(5)
+      ..write(obj.habitReminders)
+      ..writeByte(6)
+      ..write(obj.goalReminders)
+      ..writeByte(7)
+      ..write(obj.focusAlerts)
+      ..writeByte(8)
+      ..write(obj.soundsEnabled)
+      ..writeByte(9)
+      ..write(obj.globalSoundPath)
+      ..writeByte(10)
+      ..write(obj.plannerSoundPath)
+      ..writeByte(11)
+      ..write(obj.habitSoundPath)
+      ..writeByte(12)
+      ..write(obj.focusSoundPath)
+      ..writeByte(13)
+      ..write(obj.coverImagePath);
   }
 
   @override

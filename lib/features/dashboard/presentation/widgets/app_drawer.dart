@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:life_os_productivity/core/constants/app_colors.dart';
 import 'package:life_os_productivity/features/gamification/presentation/providers/stats_provider.dart';
@@ -90,11 +91,11 @@ class AppDrawer extends ConsumerWidget {
   Widget _buildDrawerHeader(BuildContext context, WidgetRef ref,
       UserStatsModel userStats, dynamic profile) {
     final List<Color> avatarColors = [
-      AppColors.primary,
-      AppColors.textSecondaryAccent,
-      Colors.purpleAccent,
-      AppColors.primary,
-      AppColors.error,
+      const Color(0xFF6366F1), // Indigo
+      const Color(0xFF10B981), // Emerald
+      const Color(0xFF8B5CF6), // Grape
+      const Color(0xFFF59E0B), // Amber
+      const Color(0xFFF43F5E), // Rose
     ];
     final selectedColor =
         avatarColors[profile.avatarIndex % avatarColors.length];
@@ -322,11 +323,11 @@ class AppDrawer extends ConsumerWidget {
     String? tempCoverPath = profile.coverImagePath;
 
     final List<Color> avatarColors = [
-      AppColors.primary,
-      AppColors.textSecondaryAccent,
-      Colors.purpleAccent,
-      AppColors.primary,
-      AppColors.error,
+      const Color(0xFF6366F1), // Indigo
+      const Color(0xFF10B981), // Emerald
+      const Color(0xFF8B5CF6), // Grape
+      const Color(0xFFF59E0B), // Amber
+      const Color(0xFFF43F5E), // Rose
     ];
 
     showModalBottomSheet(
@@ -387,35 +388,49 @@ class AppDrawer extends ConsumerWidget {
                     const SizedBox(height: 24),
                     const Text('Warna Tema Profil:',
                         style: TextStyle(
-                            color: AppColors.textSecondary, fontSize: 13)),
-                    const SizedBox(height: 12),
+                            color: AppColors.textSecondary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: avatarColors.asMap().entries.map((entry) {
                         final idx = entry.key;
                         final color = entry.value;
+                        final isSelected = selectedAvatar == idx;
                         return InkWell(
                           onTap: () =>
                               setDialogState(() => selectedAvatar = idx),
-                          child: Container(
-                            width: 44,
-                            height: 44,
+                          borderRadius: BorderRadius.circular(30),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeOutBack,
+                            width: isSelected ? 52 : 46,
+                            height: isSelected ? 52 : 46,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: color.withValues(alpha: 0.15),
+                              color: isSelected ? color : color.withValues(alpha: 0.1),
                               border: Border.all(
-                                color: selectedAvatar == idx
-                                    ? color
-                                    : Colors.transparent,
-                                width: 2,
+                                color: isSelected ? color : AppColors.border.withValues(alpha: 0.5),
+                                width: isSelected ? 3 : 1,
                               ),
+                              boxShadow: isSelected ? [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.3),
+                                  blurRadius: 12,
+                                  spreadRadius: 2,
+                                )
+                              ] : [],
                             ),
                             child: Center(
-                              child: Icon(PhosphorIcons.user(),
-                                  color: color, size: 18),
+                              child: Icon(
+                                isSelected ? PhosphorIcons.check() : PhosphorIcons.paintBrush(),
+                                color: isSelected ? Colors.white : color,
+                                size: isSelected ? 22 : 18,
+                              ),
                             ),
                           ),
-                        );
+                        ).animate().scale(delay: (idx * 50).ms, duration: 300.ms, curve: Curves.easeOut);
                       }).toList(),
                     ),
                     const SizedBox(height: 12),

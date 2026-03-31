@@ -34,6 +34,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
     required DateTime date,
     String? linkedTaskId,
     String? note,
+    String? sourceRoutineId,
   }) {
     final block = TimeBlockModel(
       id: const Uuid().v4(),
@@ -44,6 +45,7 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
       date: date,
       linkedTaskId: linkedTaskId,
       note: note,
+      sourceRoutineId: sourceRoutineId,
     );
 
     // ── Exclusive Scheduling: Overwrite overlaps before adding ──
@@ -52,6 +54,23 @@ class TimeBlockNotifier extends StateNotifier<List<TimeBlockModel>> {
     _box.put(block.id, block);
     NotificationService().scheduleTimeBlockNotification(block, settings: _settings);
     _refresh();
+  }
+
+  /// Delete all blocks from a specific routine on a specific date
+  void deleteBlocksBySourceRoutine(DateTime date, String routineId) {
+    final toDelete = _box.values.where((b) {
+      final isSameDate = b.date.year == date.year &&
+          b.date.month == date.month &&
+          b.date.day == date.day;
+      return isSameDate && b.sourceRoutineId == routineId;
+    }).toList();
+
+    for (final block in toDelete) {
+      _box.delete(block.id);
+      NotificationService().cancelNotification(block.id);
+    }
+    
+    if (toDelete.isNotEmpty) _refresh();
   }
 
   void toggleBlock(String id) {

@@ -46,29 +46,32 @@ class RoutineNotifier extends StateNotifier<List<RoutineTemplateModel>> {
     final routine = _box.get(routineId);
     if (routine == null) return 0;
 
-    int replacedCount = 0;
     final notifier = _ref.read(timeBlockProvider.notifier);
 
+    // 1. First, clear any existing blocks that were applied BY THIS ROUTINE
+    // (This ensures we don't have duplicates and syncs any new/removed items)
+    notifier.deleteBlocksBySourceRoutine(date, routineId);
+
+    int replacedCount = 0;
     for (final block in routine.blocks) {
-      // 1. Calculate the time range in minutes
-      final startParts = block.startTime.split(':');
-      final endParts = block.endTime.split(':');
-      final startMin = int.parse(startParts[0]) * 60 + int.parse(startParts[1]);
-      final endMin = int.parse(endParts[0]) * 60 + int.parse(endParts[1]);
-
-      // 2. Clean up any existing blocks that overlap with this slot
-      replacedCount += notifier.deleteOverlappingBlocks(date, startMin, endMin);
-
-      // 3. Add the new habit block
+      // 2. Add the new habit block with sourceRoutineId
       notifier.addBlock(
         title: block.title,
         startTime: block.startTime,
         endTime: block.endTime,
         category: block.category,
         date: date,
+        sourceRoutineId: routineId,
       );
+      replacedCount++;
     }
     return replacedCount;
+  }
+
+  /// Batalkan penerapan routine pada hari tertentu
+  void removeRoutineFromDate(String routineId, DateTime date) {
+    final notifier = _ref.read(timeBlockProvider.notifier);
+    notifier.deleteBlocksBySourceRoutine(date, routineId);
   }
 }
 
